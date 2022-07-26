@@ -1,17 +1,21 @@
-import { createRouter, createWebHistory,RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
-const routes:Array<RouteRecordRaw> = [{
-    path: "/arcgismap",
-    component: () => import('../views/arcgis/DisplayAMap.vue')
-},
-{
-    path: "/olmap",
-    component: () => import('../views/tile.vue')
-}
+// 定义一些路由
+// 每个路由都需要映射到一个组件
+const routes:Array<RouteRecordRaw> = [
+    {
+        path: "/arcgismap",
+        component: () => import('../views/arcgis/DisplayAMap.vue')
+    },
+    {
+        path: "/olmap",
+        component: () => import('../views/tile.vue')
+    }
 ]
 
+// 创建路由实例并传递`routes`配置
 const router = createRouter({
-    history: createWebHistory("/gisshow"),    // 设置根目录
+    history: createWebHashHistory(),  // 改为hash模式，在nginx部署时正常访问路由
     routes
 })
 
