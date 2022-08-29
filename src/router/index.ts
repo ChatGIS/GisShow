@@ -9,7 +9,7 @@ const routes:Array<RouteRecordRaw> = [
     },
     {
         path: "/olmap",
-        component: () => import('../views/tile.vue')
+        component: () => import('../views/openlayers/baseMap.vue')
     }
 ]
 

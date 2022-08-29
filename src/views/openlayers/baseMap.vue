@@ -25,7 +25,7 @@
 
     onMounted(() => {
         map.value = new Map({
-        layers: [gaodeTileLayer, osmTileLayer         
+        layers: [gaodeTileLayer         
         ],
         target: 'map',
         view: new View({
