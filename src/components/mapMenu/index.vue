@@ -103,15 +103,15 @@ const locationShow = () => {
         <el-button @click="zoomIn">缩小</el-button>
         <el-button @click="dialogVisible = true">定位</el-button>
         <el-dialog v-model="dialogVisible" title="定位">
-            <span>输入坐标（格式：112.021334,37.346521）</span>
             <el-form :model="form">
                 <el-form-item label="坐标" :label-width="formLabelWidth">
-                    <el-input v-model="form.lonlat" autocomplete="off" />
+                    <el-input v-model="form.lonlat" autocomplete="off" placeholder="格式：112.021334,37.346521"/>
                 </el-form-item>
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
                     <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button @click="form.lonlat = ''">清空</el-button>
                     <el-button type="primary" @click="locationShow">定位</el-button>
                 </span>
             </template>
