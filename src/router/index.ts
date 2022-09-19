@@ -10,6 +10,12 @@ const routes:Array<RouteRecordRaw> = [
     {
         path: "/olmap",
         component: () => import('../views/openlayers/baseMap.vue')
+    },{
+        path: "/colormap",
+        component: () => import('../views/openlayers/colorMap.vue')
+    },{
+        path: "/weathermap",
+        component: () => import('../views/openlayers/weatherMap.vue')
     }
 ]
 
