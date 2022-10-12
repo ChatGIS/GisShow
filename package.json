@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "npm run copy && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets",
     "postinstall": "npm run copy"

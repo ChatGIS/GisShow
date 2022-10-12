@@ -88,7 +88,7 @@ function playAuto (time: any) {
 <template>
     <div id="timeline">
     <div id="timelineControl">
-        <img id="timlineControlImg" src="../../assets/image/map/timeline/play.png" alt="播放" title="播放" @click="playAuto(1000)">
+        <img id="timlineControlImg" :src="PlayImg" alt="播放" title="播放" @click="playAuto(1000)">
         <!-- <button id="timelineButton" @click="playAuto(1000)">播放</button> -->
     </div>
     <div id="timelineShow">

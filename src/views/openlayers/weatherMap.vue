@@ -35,7 +35,7 @@ onMounted(() => {
 <template>
     <mapMenu id="mapMenu" :map="map"></mapMenu>
     <WeatherTimeLine></WeatherTimeLine>
-    <!-- <div id="weatherMenu">
+    <div id="weatherMenu">
         <div class="tooltipWeather" id="wJiangyu" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @click="mouseClick('jy')">
             <button id="btnWJiangyu">
                 <svg width="16" height="16" viewBox="0 0 47 73" fill="#767676">
@@ -100,7 +100,7 @@ onMounted(() => {
                 风速
             </span>
         </div>
-    </div> -->
+    </div>
     <!-- 整体盒子 -->
     <div id="box">
 		  <!-- 进度条整体 -->
