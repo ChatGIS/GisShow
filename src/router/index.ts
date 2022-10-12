@@ -4,6 +4,10 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 // 每个路由都需要映射到一个组件
 const routes:Array<RouteRecordRaw> = [
     {
+        path: "/",
+        component: () => import('../views/system/menu.vue')
+    },
+    {
         path: "/arcgismap",
         component: () => import('../views/arcgis/DisplayAMap.vue')
     },
