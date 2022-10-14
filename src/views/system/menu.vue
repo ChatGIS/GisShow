@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import getAssetsFile from '../../utils/sys-use'
+import getAssetsFile from '@/utils/sys-use'
 
 const menus = [{
     title: '基础地图',
@@ -40,6 +40,7 @@ img {
 .info {
     margin: 5px;
 }
+
 .desc {
     font-size: smaller;
     height: 50px;
