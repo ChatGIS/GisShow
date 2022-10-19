@@ -20,6 +20,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: "/weathermap",
         component: () => import('../views/openlayers/weatherMap.vue')
+    },{
+        path: "/adsorbeditor",
+        component: () => import('../views/openlayers/adsorbEditor.vue')
     }
 ]
 

@@ -11,6 +11,11 @@ const menus = [{
     imgSrc: getAssetsFile('map2.png'),
     showRoute: '/colormap',
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
+}, {
+    title: '编辑吸附',
+    imgSrc: getAssetsFile('map2.png'),
+    showRoute: '/adsorbeditor',
+    desc: '编辑要素时，快速吸附'
 }]
 
 </script>
