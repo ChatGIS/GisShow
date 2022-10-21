@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang='ts'>
 import getAssetsFile from '@/utils/sys-use'
 
@@ -23,7 +24,7 @@ const menus = [{
 <template>
     <h1>功能菜单</h1>
     <el-row :gutter="20">
-        <el-col v-for="(item, index) in menus" :key="item" :span="4">
+        <el-col v-for="(item) in menus" :key="item" :span="4">
             <el-card :body-style="{ padding: '0px' }">
                 <div class="info">
                     <router-link :to="item.showRoute">{{item.title}}</router-link>
