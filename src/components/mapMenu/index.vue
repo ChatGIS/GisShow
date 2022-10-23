@@ -41,7 +41,7 @@ const locationShow = () => {
 
     // 定位样式
     const vectorLayer = new VectorLayer({
-	  source: new VectorSource(),
+        source: new VectorSource(),
 	});
     vectorLayer.set('name', 'LocationLayer')
     // for(let i = 0; i < props.map?.getLayers().array_; i++){
@@ -88,7 +88,7 @@ const locationShow = () => {
 		} else {
 			feature.setStyle(styleGreen);
 			flag = 1;
-		 }
+        }
 	},400);
     feature.setStyle(styleRed)
     vectorLayer.getSource()?.addFeature(feature)

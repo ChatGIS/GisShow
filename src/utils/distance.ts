@@ -3,12 +3,12 @@
   * param { String } lonlat 两个点的经纬度，形如：'120,30,121,31'
   * return { String} 返回值 
 */
-function distancePtPt(lonlat: String) {
+function distancePtPt(lonlat: string) {
   const lonlatsArr = lonlat.split(",");
-  const lon1: number = Number(lonlatsArr[0]);
-  const lat1: number = Number(lonlatsArr[1]);
-  const lon2: number = Number(lonlatsArr[2]);
-  const lat2: number = Number(lonlatsArr[3]);
+  const lon1 = Number(lonlatsArr[0]);
+  const lat1 = Number(lonlatsArr[1]);
+  const lon2 = Number(lonlatsArr[2]);
+  const lat2 = Number(lonlatsArr[3]);
 
   const radLat1 = lat1 * Math.PI / 180.0;
   const radLat2 = lat2 * Math.PI / 180.0;
