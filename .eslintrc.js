@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     'env': {
         'browser': true,
         'es2021': true
@@ -8,21 +8,13 @@ export default {
         'plugin:vue/vue3-essential',
         'plugin:@typescript-eslint/recommended'
     ],
-    'overrides': [{
-        files: ['*.js', '*.jsx'],
-        parser: '@babel/eslint-parser'
-    }, {
-        files: ['*.ts'],
-        parser: '@typescript-eslint/parser',
-    }, {
-        files: ['*.vue'],
-        parser: 'vue-eslint-parser',
-    }
+    'overrides': [
     ],
-    // 'parser': 'vue-eslint-parser',
+    'parser': 'vue-eslint-parser',
     'parserOptions': {
         'ecmaVersion': 'latest',
-        'sourceType': 'module'
+        'sourceType': 'module',
+        'parser': '@typescript-eslint/parser',
     },
     'plugins': [
         'vue',
@@ -31,7 +23,7 @@ export default {
     'rules': {
         // 'indent': [
         //     'error',
-        //     4
+        //     3
         // ],
         // 'linebreak-style': [
         //     'error',
@@ -41,8 +33,9 @@ export default {
         //     'error',
         //     'single'
         // ],
-        'semi': [
-            'error', 'never'
-        ]
+        // 'semi': [
+        //     'error',
+        //     'never'
+        // ]
     }
 }
