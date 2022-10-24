@@ -4,24 +4,24 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 // 每个路由都需要映射到一个组件
 const routes:Array<RouteRecordRaw> = [
     {
-        path: "/",
+        path: '/',
         component: () => import('../views/system/menu.vue')
     },
     {
-        path: "/arcgismap",
+        path: '/arcgismap',
         component: () => import('../views/arcgis/DisplayAMap.vue')
     },
     {
-        path: "/olmap",
+        path: '/olmap',
         component: () => import('../views/openlayers/baseMap.vue')
     },{
-        path: "/colormap",
+        path: '/colormap',
         component: () => import('../views/openlayers/colorMap.vue')
     },{
-        path: "/weathermap",
+        path: '/weathermap',
         component: () => import('../views/openlayers/weatherMap.vue')
     },{
-        path: "/adsorbeditor",
+        path: '/adsorbeditor',
         component: () => import('../views/openlayers/adsorbEditor.vue')
     }
 ]

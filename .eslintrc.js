@@ -22,24 +22,24 @@ module.exports = {
         '@typescript-eslint'
     ],
     'rules': {
-        "vue/multi-word-component-names": ["error",{
-            "ignores": ["index"]  //需要忽略的组件名
-         }]
-        // 'indent': [
-        //     'error',
-        //     3
-        // ],
-        // 'linebreak-style': [
-        //     'error',
-        //     'windows'
-        // ],
-        // 'quotes': [
-        //     'error',
-        //     'single'
-        // ],
-        // 'semi': [
-        //     'error',
-        //     'never'
-        // ]
+        'vue/multi-word-component-names': ['error',{
+            'ignores': ['index']  //需要忽略的组件名
+        }],
+        'indent': [
+            'error',
+            4
+        ],
+        'linebreak-style': [
+            'error',
+            'windows'
+        ],
+        'quotes': [
+            'error',
+            'single'
+        ],
+        'semi': [
+            'error',
+            'never'
+        ]
     }
 }
