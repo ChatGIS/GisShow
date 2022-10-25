@@ -1,5 +1,5 @@
 # 项目架构
-Vite + Vue 3 + TypeScript + Vue Router + Element Plus
+Vite + Vue 3 + TypeScript + Vue Router + Element Plus  
 ESLint代码检查
 
 # GIS插件
