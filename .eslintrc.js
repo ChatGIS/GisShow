@@ -40,6 +40,7 @@ module.exports = {
         'semi': [
             'error',
             'never'
-        ]
+        ],
+        'no-debugger': 'warn'  // 禁用 debugger
     }
 }
