@@ -23,6 +23,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/adsorbeditor',
         component: () => import('../views/openlayers/adsorbEditor.vue')
+    },{
+        path: '/datatype',
+        component: () => import('@/views/openlayers/dataType.vue')
     }
 ]
 

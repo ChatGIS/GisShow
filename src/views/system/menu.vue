@@ -17,6 +17,11 @@ const menus = [{
     imgSrc: getAssetsFile('map2.png'),
     showRoute: '/adsorbeditor',
     desc: '编辑要素时，快速吸附'
+}, {
+    title: 'GIS数据类型',
+    imgSrc: getAssetsFile('datatype.png'),
+    showRoute: '/datatype',
+    desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 }]
 
 </script>
