@@ -6,7 +6,7 @@ ESLint代码检查
 OpenLayers 7.1.0
 
 # 实现功能
-[aa](public/assets/menu.png)
+![功能](public/assets/menu.png)
 
 # 待办功能
 地理编码
