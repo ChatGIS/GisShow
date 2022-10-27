@@ -8,6 +8,7 @@ import { Draw, Interaction, Modify, Snap } from 'ol/interaction'
 import { GeoJSON, WKT, EsriJSON, KML } from 'ol/format'
 import { Type } from 'ol/geom/Geometry'
 import { onMounted, ref } from 'vue'
+import { saveAs } from 'file-saver'
 
 let map = new Map({})
 const gaodeTileLayer = new TileLayer({
@@ -123,7 +124,8 @@ function closeDrawer() {
 }
 // 下载数据
 function downloadFile() {
-    console.log('下载成功')
+    var file = new File([geojsonDrawTextarea.value], 'GeoJsonDraw.geojson', {type: 'text/plain;charset=utf-8'})
+    saveAs(file)
 }
 </script>
 
