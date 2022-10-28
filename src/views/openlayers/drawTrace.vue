@@ -5,7 +5,7 @@ import Map from 'ol/Map'
 import View from 'ol/View'
 import { XYZ, Vector as VectorSource } from 'ol/source'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
-import { Draw, Interaction, Modify, Snap } from 'ol/interaction'
+import { Draw, Snap } from 'ol/interaction'
 import { Type } from 'ol/geom/Geometry'
 import { GeoJSON } from 'ol/format'
 
@@ -85,7 +85,16 @@ const addInteractions = () => {
             'circle-radius': 5,
             'circle-fill-color': 'rgba(10, 255, 255, 1)',
         },
-        stopClick: true
+        condition: function (event) {
+            if (event.originalEvent.button == 0) {
+                return true
+            } else if (event.originalEvent.button == 2) {
+                drawInteraction.removeLastPoint()
+                return false
+            } else {
+                return true
+            }
+        },
     })
     map.addInteraction(drawInteraction)
     map.addInteraction(snapInteraction)
@@ -140,6 +149,7 @@ const backPrePoint = () => {
     left: 40px;
     top: 20px;
 }
+
 .el-button {
     margin: 0 10px;
 }

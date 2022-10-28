@@ -14,10 +14,10 @@ const menus = [{
     showRoute: '/colormap',
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
-    title: '编辑吸附',
-    imgSrc: getAssetsFile('map2.png'),
-    showRoute: '/adsorbeditor',
-    desc: '编辑要素时，快速吸附'
+    title: '捕捉追踪',
+    imgSrc: getAssetsFile('drawtrace.gif'),
+    showRoute: '/drawtrace',
+    desc: '捕捉要素，追踪已有要素，快速绘制'
 }, {
     title: 'GIS数据类型',
     imgSrc: getAssetsFile('datatype.gif'),

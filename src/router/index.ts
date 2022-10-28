@@ -21,7 +21,7 @@ const routes:Array<RouteRecordRaw> = [
         path: '/weathermap',
         component: () => import('../views/openlayers/weatherMap.vue')
     },{
-        path: '/adsorbeditor',
+        path: '/drawtrace',
         component: () => import('../views/openlayers/drawTrace.vue')
     },{
         path: '/datatype',
