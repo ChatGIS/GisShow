@@ -26,6 +26,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/datatype',
         component: () => import('@/views/openlayers/dataType.vue')
+    },{
+        path: '/hellocesium',
+        component: () => import('@/views/cesium/helloCesium.vue')
     }
 ]
 

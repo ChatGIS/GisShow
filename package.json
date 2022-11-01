@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@arcgis/core": "^4.24.7",
+    "cesium": "^1.98.1",
     "element-plus": "^2.2.12",
     "file-saver": "^2.0.5",
     "npc": "^0.0.1",
     "ol": "^7.1.0",
+    "vite-plugin-cesium": "^1.2.22",
     "vue": "^3.2.25",
     "vue-router": "^4.0.16"
   },

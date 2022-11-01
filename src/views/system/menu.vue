@@ -23,6 +23,11 @@ const menus = [{
     imgSrc: getAssetsFile('datatype.gif'),
     showRoute: '/datatype',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
+}, {
+    title: 'HelloCesium',
+    imgSrc: getAssetsFile('datatype.gif'),
+    showRoute: '/hellocesium',
+    desc: 'Cesium基础功能'
 }]
 // 跳转页面
 const toPage = (route: string) => {
