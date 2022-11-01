@@ -6,27 +6,27 @@ import router from '@/router'
 const menus = [{
     title: '基础地图',
     imgSrc: getAssetsFile('map1.png'),
-    showRoute: '/olmap',
+    showRoute: '/map-base',
     desc: '基础高德地图展示，包括放大、缩小、定位等功能'
 }, {
     title: '底图换色',
     imgSrc: getAssetsFile('map2.png'),
-    showRoute: '/colormap',
+    showRoute: '/map-color',
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
     title: '捕捉追踪',
-    imgSrc: getAssetsFile('drawtrace.gif'),
-    showRoute: '/drawtrace',
+    imgSrc: getAssetsFile('draw_trace.gif'),
+    showRoute: '/draw-trace',
     desc: '捕捉要素，追踪已有要素，快速绘制'
 }, {
     title: 'GIS数据类型',
-    imgSrc: getAssetsFile('datatype.gif'),
-    showRoute: '/datatype',
+    imgSrc: getAssetsFile('data_type.gif'),
+    showRoute: '/data-type',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 }, {
     title: 'HelloCesium',
-    imgSrc: getAssetsFile('datatype.gif'),
-    showRoute: '/hellocesium',
+    imgSrc: getAssetsFile('data_type.gif'),
+    showRoute: '/hello-cesium',
     desc: 'Cesium基础功能'
 }]
 // 跳转页面

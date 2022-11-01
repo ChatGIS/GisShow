@@ -5,30 +5,28 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 const routes:Array<RouteRecordRaw> = [
     {
         path: '/',
-        component: () => import('../views/system/menu.vue')
-    },
-    {
+        component: () => import('../views/system/BaseMenu.vue')
+    },{
         path: '/arcgismap',
-        component: () => import('../views/arcgis/DisplayAMap.vue')
-    },
-    {
-        path: '/olmap',
-        component: () => import('../views/openlayers/baseMap.vue')
+        component: () => import('@/views/arcgis/DisplayAMap.vue')
     },{
-        path: '/colormap',
-        component: () => import('../views/openlayers/colorMap.vue')
+        path: '/map-base',
+        component: () => import('@/views/openlayers/MapBase.vue')
     },{
-        path: '/weathermap',
-        component: () => import('../views/openlayers/weatherMap.vue')
+        path: '/map-color',
+        component: () => import('@/views/openlayers/MapColor.vue')
     },{
-        path: '/drawtrace',
-        component: () => import('../views/openlayers/drawTrace.vue')
+        path: '/map-weather',
+        component: () => import('@/views/openlayers/MapWeather.vue')
     },{
-        path: '/datatype',
-        component: () => import('@/views/openlayers/dataType.vue')
+        path: '/draw-trace',
+        component: () => import('@/views/openlayers/DrawTrace.vue')
     },{
-        path: '/hellocesium',
-        component: () => import('@/views/cesium/helloCesium.vue')
+        path: '/data-type',
+        component: () => import('@/views/openlayers/DataType.vue')
+    },{
+        path: '/hello-cesium',
+        component: () => import('@/views/cesium/HelloCesium.vue')
     }
 ]
 
