@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
 import Map from 'ol/Map'
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Feature from 'ol/Feature';
-import { Point } from 'ol/geom';
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
+import Feature from 'ol/Feature'
+import { Point } from 'ol/geom'
 import Style from 'ol/style/Style'
 import {Circle, Stroke, Fill} from 'ol/style'
 import Icon from 'ol/style/Icon'
@@ -21,75 +21,75 @@ const props = defineProps({
 })
 // 缩小函数
 const zoomIn = () => {
-    const view = props.map!.getView();
-    const zoom = view.getZoom()!;
-    view.setZoom(zoom - 1);
+    const view = props.map!.getView()
+    const zoom = view.getZoom()!
+    view.setZoom(zoom - 1)
 }
 // 放大函数
 const zoomOut = () => {
-    const view = (props.map as Map).getView();
-    const zoom: number = view.getZoom()!;
-    view.setZoom(zoom + 1);
+    const view = (props.map as Map).getView()
+    const zoom: number = view.getZoom()!
+    view.setZoom(zoom + 1)
 }
 
 // 定位函数
 const locationShow = () => {
-    const lonlatArr: number[] = [];
-    lonlatArr.push(Number(form.lonlat.split(",")[0]))
-    lonlatArr.push(Number(form.lonlat.split(",")[1]))
+    const lonlatArr: number[] = []
+    lonlatArr.push(Number(form.lonlat.split(',')[0]))
+    lonlatArr.push(Number(form.lonlat.split(',')[1]))
     props.map!.getView().setCenter(lonlatArr)
 
     // 定位样式
     const vectorLayer = new VectorLayer({
         source: new VectorSource(),
-	});
+    })
     vectorLayer.set('name', 'LocationLayer')
     // for(let i = 0; i < props.map?.getLayers().array_; i++){
 
     // }
     const feature = new Feature({
         geometry: new Point(lonlatArr)
-    });
+    })
     var styleRed = new Style({
         image: new Icon({
             anchor: [15, 30],
-            anchorXUnits: "pixels",
-            anchorYUnits: "pixels",
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
             opacity: 1,
-            src: "assets/images/location-red.png"
+            src: 'assets/images/location-red.png'
         })
-    });
+    })
     var styleGreen = new Style({
         image: new Icon({
             anchor: [15, 30],
-            anchorXUnits: "pixels",
-            anchorYUnits: "pixels",
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
             opacity: 1,
-            src: "assets/images/location-green.png"
+            src: 'assets/images/location-green.png'
         })
-    });
+    })
     var style1 = new Style({
-		image: new Circle({
-			radius: 10,
-			stroke: new Stroke({
-				color: 'yellow',
-				width: 0.5
-			}),
-			fill: new Fill({
-				color: 'green'
-			})
-		})
-	});
-    let flag = 1;
-	setInterval(function flashStyle(){
-		if(flag == 1){
-			feature.setStyle(styleRed);
-			flag = 2;
-		} else {
-			feature.setStyle(styleGreen);
-			flag = 1;
+        image: new Circle({
+            radius: 10,
+            stroke: new Stroke({
+                color: 'yellow',
+                width: 0.5
+            }),
+            fill: new Fill({
+                color: 'green'
+            })
+        })
+    })
+    let flag = 1
+    setInterval(function flashStyle(){
+        if(flag == 1){
+            feature.setStyle(styleRed)
+            flag = 2
+        } else {
+            feature.setStyle(styleGreen)
+            flag = 1
         }
-	},400);
+    },400)
     feature.setStyle(styleRed)
     vectorLayer.getSource()?.addFeature(feature)
     props.map?.addLayer(vectorLayer)

@@ -1,13 +1,25 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang='ts'>
 import getAssetsFile from '@/utils/sys-use'
 import router from '@/router'
+import { computed } from 'vue'
 
-const menus = [{
+interface Menu {
+    title: string;
+    imgSrc: string;
+    showRoute: string;
+    desc: string;
+}
+// 所有菜单项
+const allMenu = [{
     title: '基础地图',
     imgSrc: getAssetsFile('map1.png'),
     showRoute: '/map-base',
     desc: '基础高德地图展示，包括放大、缩小、定位等功能'
+}, {
+    title: '地图纠偏',
+    imgSrc: getAssetsFile('map2.png'),
+    showRoute: '/map-rectification',
+    desc: '纠偏高德底图；进行坐标转换'
 }, {
     title: '底图换色',
     imgSrc: getAssetsFile('map2.png'),
@@ -23,12 +35,25 @@ const menus = [{
     imgSrc: getAssetsFile('data_type.gif'),
     showRoute: '/data-type',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
-}, {
+},{
     title: 'HelloCesium',
     imgSrc: getAssetsFile('data_type.gif'),
     showRoute: '/hello-cesium',
     desc: 'Cesium基础功能'
 }]
+
+// 计算属性，拆为二维数组
+const menus = computed(() => {
+    const menuArr: Menu[][] = []
+    allMenu.forEach((item: Menu, index: number) => {
+        const row = Math.floor(index / 3)
+        if (!menuArr[row]) {
+            menuArr[row] = []
+        }
+        menuArr[row].push(item)
+    })
+    return menuArr
+})
 // 跳转页面
 const toPage = (route: string) => {
     router.push(route)
@@ -38,8 +63,8 @@ const toPage = (route: string) => {
 <template>
     <div id="menu-div">
         <h1>功能菜单</h1>
-        <el-row :gutter="20" justify="center">
-            <el-col v-for="(item) in menus" :key="item" :span="4">
+        <el-row :gutter="20" justify="center" v-for="(items, index) in menus" :key="index">
+            <el-col v-for="(item) in items" :key="item" :span="4">
                 <el-card :body-style="{ padding: '0px' }" @click="toPage(item.showRoute)" shadow="hover">
                     <img style="width:200px; height:100px" :src="item.imgSrc" class="image" />
                     <div class="info">

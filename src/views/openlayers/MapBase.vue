@@ -1,48 +1,52 @@
 <script setup lang='ts'>
-    import 'ol/ol.css'
-    import Map from 'ol/Map'
-    import OSM from 'ol/source/OSM'
-    import TileLayer from 'ol/layer/Tile'
-    import View from 'ol/View'
-    import XYZ from 'ol/source/XYZ'
-    import { ref, onMounted } from 'vue'
-    import { distancePtPt } from '../../utils/distance'
-    import mapMenu from '../../components/mapMenu/index.vue'
-    
-    const distance = ref(0);
-    distance.value = distancePtPt("112.5007257350843,37.902408272070495,112.50733183000011,37.90022938800007");
+import 'ol/ol.css'
+import Map from 'ol/Map'
+import TileLayer from 'ol/layer/Tile'
+import View from 'ol/View'
+import XYZ from 'ol/source/XYZ'
+import { onMounted } from 'vue'
+import mapMenu from '../../components/mapMenu/index.vue'
+import { OSM } from 'ol/source'
 
-    const map = ref();
-    const gaodeTileLayer = new TileLayer({
-		source: new XYZ({
-			url:'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
-		})
-	});
-    
-    const osmTileLayer = new TileLayer({
-        source: new OSM()
+let map = new Map({})
+const gaodeTileLayer = new TileLayer({
+    source: new XYZ({
+        url:'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
     })
+})
 
-    onMounted(() => {
-        map.value = new Map({
-        layers: [gaodeTileLayer         
-        ],
+const osmLayer = new TileLayer({
+    source: new OSM()
+})
+const mapLayers = [{
+    id: 1,
+    name: '高德底图',
+    layer: gaodeTileLayer,
+    check: true
+},{
+    id: 2,
+    name: 'OSM底图',
+    layer: 'osmLayer',
+    check: false
+}]
+
+onMounted(() => {
+    map = new Map({
+        layers: [gaodeTileLayer, osmLayer],
         target: 'map',
         view: new View({
             center: [117, 37],
             zoom: 10,
-            projection: "EPSG:4326",
+            projection: 'EPSG:4326',
         })
     })
-    })
-    
-
-
+})
 </script>
 
 <template>
-    <mapMenu id="mapMenu" :map="map"></mapMenu>
-    <span>{{distance}}</span>
+    <el-card class="box-card">
+        <el-checkbox v-for="(item) in mapLayers" :key="item.id" v-model="item.check" :label="item.name" size="large" />
+    </el-card>
     <div id="map" class="map">
     </div>
 </template>

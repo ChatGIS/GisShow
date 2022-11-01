@@ -5,7 +5,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 const routes:Array<RouteRecordRaw> = [
     {
         path: '/',
-        component: () => import('../views/system/BaseMenu.vue')
+        component: () => import('@/views/system/BaseMenu.vue')
     },{
         path: '/arcgismap',
         component: () => import('@/views/arcgis/DisplayAMap.vue')
@@ -27,6 +27,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/hello-cesium',
         component: () => import('@/views/cesium/HelloCesium.vue')
+    },{
+        path: '/map-rectification',
+        component: () => import('@/views/openlayers/MapRectification.vue')
     }
 ]
 
