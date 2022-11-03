@@ -5,8 +5,8 @@ import TileLayer from 'ol/layer/Tile'
 import View from 'ol/View'
 import XYZ from 'ol/source/XYZ'
 import { onMounted, reactive, ref } from 'vue'
-import { OSM, TileImage } from 'ol/source'
-import { MousePosition} from 'ol/control'
+import { OSM } from 'ol/source'
+import { MousePosition } from 'ol/control'
 import gcjMecator from '@/utils/gcj-trans'
 import keyJson from '@/assets/private/private.json'
 import transCoor from '@/utils/trans-coor'
@@ -17,9 +17,8 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import Feature from 'ol/Feature'
 import { Point } from 'ol/geom'
-import { Icon, Text, Style, Circle, Stroke, Fill } from 'ol/style'
+import { Icon, Text, Style, Fill } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
-import TileGrid from 'ol/tilegrid/TileGrid'
 
 // 定义map
 let map = new Map({})
@@ -58,47 +57,7 @@ const osmLayer = new TileLayer({
     source: new OSM(),
     visible: false
 })
-// 百度图层
-// 自定义分辨率和瓦片坐标系
-var resolutions = []
-var maxZoom = 18
- 
-// 计算百度使用的分辨率
-for(var i=0; i<=maxZoom; i++){
-    resolutions[i] = Math.pow(2, maxZoom-i)//(幂运算)
-}
-var tilegrid  = new TileGrid({
-    origin: [0,0],    // 设置原点坐标
-    resolutions: resolutions    // 设置分辨率
-})
- 
-// 创建百度地图的数据源
-var baiduSource = new TileImage({
-    projection: 'EPSG:3857',    
-    tileGrid: tilegrid,
-    tileUrlFunction: function(tileCoord, pixelRatio, proj){
-        var z = tileCoord[0] as any
-        var x = tileCoord[1] as any
-        var y = tileCoord[2] as any
- 
-        // 百度瓦片服务url将负数使用M前缀来标识
-        if(x<0){
-            x = 'M' + (x)
-        }
-        if(y<0){
-            y = 'M' + (y)
-        }
- 
-        return 'http://online3.map.bdimg.com/onlinelabel/?qt=tile&x='+x+'&y='+y+'&z='+z+'&styles=pl&udt=20160426&scaler=1&p=1'
-    }
-})
- 
-// 百度地图层
-var baiduMapLayer = new TileLayer({
-    source: baiduSource,
-    visible: false
-})
-    
+
 // 定位图层
 const locateSource = new VectorSource({})
 const locateLayer = new VectorLayer({
@@ -115,13 +74,8 @@ const mapLayers = reactive([{
     name: '高德纠偏',
     layer: gaodeRectificationLayer,
     check: false
-},{
-    id: 2,
-    name: '百度底图',
-    layer: baiduMapLayer,
-    check: false
 }, {
-    id: 23,
+    id: 2,
     name: '天地图',
     layer: tileLayerTianDiTu,
     check: false
@@ -146,7 +100,7 @@ const controlMousePosition = new MousePosition({
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, gaodeRectificationLayer, baiduMapLayer, tileLayerTianDiTu, tileLayerTianDiTuZhuJi, osmLayer, locateLayer],
+        layers: [gaodeTileLayer, gaodeRectificationLayer, tileLayerTianDiTu, tileLayerTianDiTuZhuJi, osmLayer, locateLayer],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -158,7 +112,7 @@ onMounted(() => {
     map.addControl(controlMousePosition)
     // 坐标拾取
     map.on('click', evt => {
-        coordinateInput.value = evt.coordinate       
+        coordinateInput.value = evt.coordinate
     })
 })
 
@@ -166,7 +120,7 @@ onMounted(() => {
 const activeNamesCollapse = ref(['1'])
 // 坐标类型
 const coordinateInput = ref()
-const coordinateType = ref(['WGS84'])
+const coordinateType = ref(['GCJ02'])
 const coordinateTextarea = ref()
 // 控制图层显隐
 const checkLayer = (index: number) => {
@@ -190,33 +144,41 @@ const transLonLat = () => {
     if (!coordinateInput.value) {
         ElMessage('请输入坐标')
     } else {
-        if(coordinateType.value[0] === 'WGS84'){
+        if (coordinateType.value[0] === 'WGS84') {
             coorWGS84 = coordinateInput.value
             coorGCJ02 = transCoor(coordinateInput.value, 1, 2)
-            coorBD09 = transCoor(coordinateInput.value, 1, 2)
+            coorBD09 = transCoor(coorGCJ02, 2, 3)
+        } else if (coordinateType.value[0] === 'GCJ02') {
+            coorWGS84 = transCoor(coordinateInput.value, 2, 1)
+            coorGCJ02 = coordinateInput.value
+            coorBD09 = transCoor(coordinateInput.value, 2, 3)
         }
         const featureWGS84 = new Feature(new Point(coorWGS84))
         const featureGCJ02 = new Feature(new Point(coorGCJ02 as Coordinate))
         const featureBD09 = new Feature(new Point(coorBD09 as Coordinate))
         featureWGS84.setStyle(styleLocateWGS84)
         featureGCJ02.setStyle(styleLocateGCJ02)
-        
+        featureBD09.setStyle(styleLocateBD09)
+        locateSource.clear()
         locateSource.addFeature(featureWGS84)
         locateSource.addFeature(featureGCJ02)
+        locateSource.addFeature(featureBD09)
+        // 输出坐标
+        coordinateTextarea.value = `WGS84：${coorWGS84}  GCJ02：${coorGCJ02}  BD09：${coorBD09}`
     }
 }
 // 定位点样式
 const styleLocateWGS84 = new Style({
     image: new Icon({
         src: getAssetsFile('locate-red.png'),
-        size:[64,64],
-        offset:[-17, -5]
+        size: [64, 64],
+        offset: [-17, -5]
     }),
     text: new Text({
-        text:'WGS84',
-        font:'15px sans-serif',
-        offsetX:-3,
-        offsetY:-32,
+        text: 'WGS84',
+        font: '15px sans-serif',
+        offsetX: -3,
+        offsetY: -32,
         fill: new Fill({
             color: 'red'
         })
@@ -225,14 +187,14 @@ const styleLocateWGS84 = new Style({
 const styleLocateGCJ02 = new Style({
     image: new Icon({
         src: getAssetsFile('locate-blue.png'),
-        size:[64,64],
-        offset:[-17, -5]
+        size: [64, 64],
+        offset: [-17, -5]
     }),
     text: new Text({
-        text:'GCJ-02',
-        font:'15px sans-serif',
-        offsetX:-3,
-        offsetY:-32,
+        text: 'GCJ-02',
+        font: '15px sans-serif',
+        offsetX: -3,
+        offsetY: -32,
         fill: new Fill({
             color: 'blue'
         })
@@ -241,14 +203,14 @@ const styleLocateGCJ02 = new Style({
 const styleLocateBD09 = new Style({
     image: new Icon({
         src: getAssetsFile('locate-green.png'),
-        size:[64,64],
-        offset:[-17, -5]
+        size: [64, 64],
+        offset: [-17, -5]
     }),
     text: new Text({
-        text:'BD-09',
-        font:'15px sans-serif',
-        offsetX:-3,
-        offsetY:-32,
+        text: 'BD-09',
+        font: '15px sans-serif',
+        offsetX: -3,
+        offsetY: -32,
         fill: new Fill({
             color: 'green'
         })
@@ -313,11 +275,11 @@ const styleLocateBD09 = new Style({
 .el-collapse-item__content {
     padding-left: 20px;
 }
+
 /* 鼠标位置坐标展示 */
 :deep .custom-mouse-position {
     position: absolute;
     bottom: 20px;
     right: 20px;
 }
-
 </style>

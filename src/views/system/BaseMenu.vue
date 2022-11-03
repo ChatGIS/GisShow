@@ -17,7 +17,7 @@ const allMenu = [{
     desc: '基础高德地图展示，包括放大、缩小、定位等功能'
 }, {
     title: '地图纠偏',
-    imgSrc: getAssetsFile('map2.png'),
+    imgSrc: getAssetsFile('menu_map_rectification.gif'),
     showRoute: '/map-rectification',
     desc: '纠偏高德底图；进行坐标转换'
 }, {
@@ -27,17 +27,17 @@ const allMenu = [{
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
     title: '捕捉追踪',
-    imgSrc: getAssetsFile('draw_trace.gif'),
+    imgSrc: getAssetsFile('menu_draw_trace.gif'),
     showRoute: '/draw-trace',
     desc: '捕捉要素，追踪已有要素，快速绘制'
 }, {
     title: 'GIS数据类型',
-    imgSrc: getAssetsFile('data_type.gif'),
+    imgSrc: getAssetsFile('menu_data_type.gif'),
     showRoute: '/data-type',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 },{
     title: 'HelloCesium',
-    imgSrc: getAssetsFile('data_type.gif'),
+    imgSrc: getAssetsFile('menu_hello_cesium.gif'),
     showRoute: '/hello-cesium',
     desc: 'Cesium基础功能'
 }]

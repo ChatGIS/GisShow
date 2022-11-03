@@ -9,6 +9,4 @@ OpenLayers 7.1.0
 ![功能](public/assets/menu.png)
 
 # 待办功能
-地理编码
-底图偏移
-地图定位
+测量工具
