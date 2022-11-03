@@ -2,6 +2,7 @@
 import getAssetsFile from '@/utils/sys-use'
 import router from '@/router'
 import { computed } from 'vue'
+import menuBackground from '@/assets/image/menu-background.jpg'
 
 interface Menu {
     title: string;
@@ -61,7 +62,7 @@ const toPage = (route: string) => {
 </script>
 
 <template>
-    <div id="menu-div">
+    <div id="menu-div" :style="'background-image:url(' + menuBackground + ')'">
         <h1>功能菜单</h1>
         <el-row :gutter="20" justify="center" v-for="(items, index) in menus" :key="index">
             <el-col v-for="(item) in items" :key="item" :span="4">
@@ -81,7 +82,7 @@ const toPage = (route: string) => {
 
 <style scoped>
 #menu-div {
-    background-image: url("assets/images/menu-background.jpg");
+    /* background-image: url(); */
     width:100%;
     height:100%;
     position:fixed;
