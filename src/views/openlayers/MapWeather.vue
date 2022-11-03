@@ -9,12 +9,12 @@ import { ref, onMounted } from 'vue'
 import mapMenu from '../../components/mapMenu/index.vue'
 import WeatherTimeLine from '../../components/WeatherTimeLine.vue'
 
-const map = ref();
+const map = ref()
 const gaodeTileLayer = new TileLayer({
     source: new XYZ({
         url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
     })
-});
+})
 
 onMounted(() => {
     map.value = new Map({
@@ -24,7 +24,7 @@ onMounted(() => {
         view: new View({
             center: [117, 37],
             zoom: 10,
-            projection: "EPSG:4326",
+            projection: 'EPSG:4326',
         })
     })
 })
@@ -36,7 +36,8 @@ onMounted(() => {
     <mapMenu id="mapMenu" :map="map"></mapMenu>
     <WeatherTimeLine></WeatherTimeLine>
     <div id="weatherMenu">
-        <div class="tooltipWeather" id="wJiangyu" @mouseenter="mouseEnter" @mouseleave="mouseLeave" @click="mouseClick('jy')">
+        <div class="tooltipWeather" id="wJiangyu" @mouseenter="mouseEnter" @mouseleave="mouseLeave"
+            @click="mouseClick('jy')">
             <button id="btnWJiangyu">
                 <svg width="16" height="16" viewBox="0 0 47 73" fill="#767676">
                     <path
@@ -103,16 +104,16 @@ onMounted(() => {
     </div>
     <!-- 整体盒子 -->
     <div id="box">
-		  <!-- 进度条整体 -->
-	      <div id="progress">
-			  	<!-- 进度条长度 -->
-		       <div id="progress_head"></div>
-			  	<!-- 进度条移动条 -->
-			   <!-- <span id="span" @mousedown="mouseDown"></span> -->
-          </div>
-			<!-- 显示数据 -->
-		  <div id="percentage">0%</div>
-	</div>
+<!-- 进度条整体 -->
+        <div id="progress">
+            <!-- 进度条长度 -->
+            <div id="progress_head"></div>
+            <!-- 进度条移动条 -->
+            <!-- <span id="span" @mousedown="mouseDown"></span> -->
+        </div>
+        <!-- 显示数据 -->
+        <div id="percentage">0%</div>
+    </div>
     <div id="map" class="map">
     </div>
 </template>
@@ -185,45 +186,49 @@ onMounted(() => {
     border-bottom-color: #FFD02C;
 }
 
-#box{
-		   position: absolute;
-		   width:1000px;
-		   height:30px;
-		   margin:100px auto;
-           bottom: 100px;
-           left: 100px;
-           z-index: 1;
-		}	
-		#progress{
-		   position:relative;
-		   width:900px;
-		   height:30px;
-		   background:#999999;
-		   border-radius:8px;
-		   margin:0 auto; 
-		}
-		#progress_head{
-		   width:0px;
-		   height:100%;
-		   border-top-left-radius:8px;
-		   border-bottom-left-radius:8px;
-		   background:#9933CC;
-		   
-		}
-		span{
-		   position:absolute;
-		   width:20px;
-		   height:38px;
-		   background:#9933CC;
-		   top:-4px;
-		   left:0px;
-		   cursor:pointer;
-		}
-		#percentage{
-		   position:absolute;
-		   line-height:30px;
-		   text-align:center;
-		   right:-44px;
-		   top:0;
-		}
+#box {
+    position: absolute;
+    width: 1000px;
+    height: 30px;
+    margin: 100px auto;
+    bottom: 100px;
+    left: 100px;
+    z-index: 1;
+}
+
+#progress {
+    position: relative;
+    width: 900px;
+    height: 30px;
+    background: #999999;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
+#progress_head {
+    width: 0px;
+    height: 100%;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background: #9933CC;
+
+}
+
+span {
+    position: absolute;
+    width: 20px;
+    height: 38px;
+    background: #9933CC;
+    top: -4px;
+    left: 0px;
+    cursor: pointer;
+}
+
+#percentage {
+    position: absolute;
+    line-height: 30px;
+    text-align: center;
+    right: -44px;
+    top: 0;
+}
 </style>
