@@ -1,66 +1,63 @@
 <script setup lang='ts'>
 import 'ol/ol.css'
 import Map from 'ol/Map'
-import TileLayer from 'ol/layer/Tile'
+import { Tile as TileLayer } from 'ol/layer'
+import { XYZ } from 'ol/source'
 import View from 'ol/View'
-import XYZ from 'ol/source/XYZ'
 import { onMounted } from 'vue'
-import mapMenu from '../../components/mapMenu/index.vue'
-import { OSM } from 'ol/source'
+import { MousePosition } from 'ol/control'
+import { createStringXY } from 'ol/coordinate'
 
-let map = new Map({})
-const gaodeTileLayer = new TileLayer({
-    source: new XYZ({
-        url:'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
-    })
-})
-
-const osmLayer = new TileLayer({
-    source: new OSM()
-})
-const mapLayers = [{
-    id: 1,
-    name: '高德底图',
-    layer: gaodeTileLayer,
-    check: true
-},{
-    id: 2,
-    name: 'OSM底图',
-    layer: 'osmLayer',
-    check: false
-}]
+// 定义map
+const mapObj = {
+    center: [117.024, 36.676],
+    zoom: 15
+}
 
 onMounted(() => {
-    map = new Map({
-        layers: [gaodeTileLayer, osmLayer],
+    const map = new Map({
+        layers: [gaodeTileLayer],
         target: 'map',
         view: new View({
-            center: [117, 37],
-            zoom: 10,
+            center: mapObj.center,
+            zoom: mapObj.zoom,
             projection: 'EPSG:4326',
         })
     })
+    // 添加鼠标位置
+    map.addControl(controlMousePosition)
+})
+
+// 高德瓦片
+const gaodeTileLayer = new TileLayer({
+    source: new XYZ({
+        url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+    })
+})
+
+// 鼠标拾取位置坐标控件
+const controlMousePosition = new MousePosition({
+    coordinateFormat: createStringXY(6),
+    projection: 'EPSG:4326',
+    className: 'custom-mouse-position',
+    target: document.getElementById('mouse-position') as HTMLElement
 })
 </script>
 
 <template>
-    <el-card class="box-card">
-        <el-checkbox v-for="(item) in mapLayers" :key="item.id" v-model="item.check" :label="item.name" size="large" />
-    </el-card>
-    <div id="map" class="map">
-    </div>
+    <div id="map" class="map"></div>
 </template>
 
 <style scoped>
-    .map {
-        width: 100%;
-        height: 100%;
-    }
+.map {
+    width: 100%;
+    height: 100%;
+}
 
-    #mapMenu {
-        z-index: 1;
-        position: absolute;
-        top: 40px;
-        left: 50px;
-    }
+/* 鼠标位置坐标展示 */
+:deep .custom-mouse-position {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
 </style>

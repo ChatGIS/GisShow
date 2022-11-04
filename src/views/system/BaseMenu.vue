@@ -22,6 +22,11 @@ const allMenu = [{
     showRoute: '/map-rectification',
     desc: '纠偏高德底图；进行坐标转换'
 }, {
+    title: '测量工具',
+    imgSrc: getAssetsFile('menu_map_rectification.gif'),
+    showRoute: '/measure-tool',
+    desc: '长度测量、面积测量'
+}, {
     title: '底图换色',
     imgSrc: getAssetsFile('map2.png'),
     showRoute: '/map-color',

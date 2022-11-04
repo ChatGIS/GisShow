@@ -30,6 +30,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/map-rectification',
         component: () => import('@/views/openlayers/MapRectification.vue')
+    },{
+        path: '/measure-tool',
+        component: () => import('@/views/openlayers/MeasureTool.vue')
     }
 ]
 
