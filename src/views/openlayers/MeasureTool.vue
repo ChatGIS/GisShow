@@ -44,7 +44,6 @@ onMounted(() => {
 })
 
 const typeMeasure = ref(1)  // 测量类型
-const isDrawing = ref(true)  // 是否在绘制过程中
 let sketch: Feature  // 当前画的要素
 let draw: Draw  // 绘制交互
 let listener: EventsKey  // 监听事件
@@ -106,10 +105,11 @@ const addDrawInteraction = (typeMea: Type) => {
     })
     map.addInteraction(draw)
 
-    createMeasureTooltip()
+    
     createHelpTooltip()
     draw.on('drawstart', (evt: DrawEvent) => {
-        isDrawing.value = true
+        createMeasureTooltip()
+        measureTooltipElement.className = 'ol-tooltip ol-tooltip-measure'
         sketch = evt.feature
         let tooltipCoord = evt.target.finishCoordinate_
         listener = sketch.getGeometry()?.on('change', (evt) => {
@@ -127,13 +127,12 @@ const addDrawInteraction = (typeMea: Type) => {
         }) as EventsKey
     })
     draw.on('drawend', () => {
-        isDrawing.value = false
         measureTooltip.setOffset([0, -7])
         // unset sketch
         sketch = new Feature(new Geometry)
         // unset tooltip so that a new one can be created
-        measureTooltipElement.innerHTML = ''
-        createMeasureTooltip()
+        measureTooltipElement.className = 'ol-tooltip ol-tooltip-static'
+        // createMeasureTooltip()
         unByKey(listener)
     })
 }
@@ -184,7 +183,9 @@ const pointMoveHandler = (evt: MapBrowserEvent<UIEvent>) => {
 }
 // 长度格式化
 const formatLength = (line: LineString) => {
-    const length = getLength(line)
+    const length = getLength(line, {
+        projection: 'EPSG:4326'
+    })
     let output
     if (length > 100) {
         output = Math.round((length / 1000) * 100) / 100 + ' ' + 'km'
@@ -195,7 +196,9 @@ const formatLength = (line: LineString) => {
 }
 // 面积格式化
 const formatArea = (polygon: Polygon) => {
-    const area = getArea(polygon)
+    const area = getArea(polygon, {
+        projection: 'EPSG:4326'
+    })
     let output
     if (area > 10000) {
         output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'km<sup>2</sup>'
@@ -225,7 +228,7 @@ const changeTypeMeasure = () => {
         <el-radio :label="2">面积测量</el-radio>
     </el-radio-group>
     </el-card>
-    <div id="element-measure-overlay" :class="[isDrawing ? 'ol-tooltip ol-tooltip-static' : 'ol-tooltip-measure']"></div>
+    <div id="element-measure-overlay" class="ol-tooltip ol-tooltip-measure"></div>
     <div id="element-help-overlay"></div>
 </template>
 
