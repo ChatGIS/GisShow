@@ -37,6 +37,11 @@ const allMenu = [{
     showRoute: '/map-color',
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
+    title: '在线地图',
+    imgSrc: getAssetsFile('map2.png'),
+    showRoute: '/map-online',
+    desc: '常用在线地图'
+}, {
     title: '捕捉追踪',
     imgSrc: getAssetsFile('menu_draw_trace.gif'),
     showRoute: '/draw-trace',
@@ -57,7 +62,7 @@ const allMenu = [{
 const menus = computed(() => {
     const menuArr: Menu[][] = []
     allMenu.forEach((item: Menu, index: number) => {
-        const row = Math.floor(index / 4)
+        const row = Math.floor(index / 2)
         if (!menuArr[row]) {
             menuArr[row] = []
         }

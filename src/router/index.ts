@@ -36,6 +36,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/map-swipe',
         component: () => import('@/views/openlayers/MapSwipe.vue')
+    },{
+        path: '/map-online',
+        component: () => import('@/views/openlayers/MapOnline.vue')
     }
 ]
 
