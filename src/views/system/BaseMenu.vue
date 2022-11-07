@@ -27,6 +27,11 @@ const allMenu = [{
     showRoute: '/measure-tool',
     desc: '长度测量、面积测量'
 }, {
+    title: '地图卷帘',
+    imgSrc: getAssetsFile('menu_map_rectification.gif'),
+    showRoute: '/map-swipe',
+    desc: '地图卷帘效果'
+}, {
     title: '底图换色',
     imgSrc: getAssetsFile('map2.png'),
     showRoute: '/map-color',
@@ -52,7 +57,7 @@ const allMenu = [{
 const menus = computed(() => {
     const menuArr: Menu[][] = []
     allMenu.forEach((item: Menu, index: number) => {
-        const row = Math.floor(index / 3)
+        const row = Math.floor(index / 4)
         if (!menuArr[row]) {
             menuArr[row] = []
         }

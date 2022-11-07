@@ -33,6 +33,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/measure-tool',
         component: () => import('@/views/openlayers/MeasureTool.vue')
+    },{
+        path: '/map-swipe',
+        component: () => import('@/views/openlayers/MapSwipe.vue')
     }
 ]
 
