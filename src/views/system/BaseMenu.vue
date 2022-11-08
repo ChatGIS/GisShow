@@ -10,6 +10,7 @@ interface Menu {
     showRoute: string;
     desc: string;
 }
+
 // 所有菜单项
 const allMenu = [{
     title: '基础地图',
@@ -51,7 +52,7 @@ const allMenu = [{
     imgSrc: getAssetsFile('menu_data_type.gif'),
     showRoute: '/data-type',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
-},{
+}, {
     title: 'HelloCesium',
     imgSrc: getAssetsFile('menu_hello_cesium.gif'),
     showRoute: '/hello-cesium',
@@ -62,13 +63,17 @@ const allMenu = [{
 const menus = computed(() => {
     const menuArr: Menu[][] = []
     allMenu.forEach((item: Menu, index: number) => {
-        const row = Math.floor(index / 2)
+        const row = Math.floor(index / 4)
         if (!menuArr[row]) {
             menuArr[row] = []
         }
         menuArr[row].push(item)
     })
     return menuArr
+})
+// 计算数量
+const menuNum = computed(() => {
+    return allMenu.length
 })
 // 跳转页面
 const toPage = (route: string) => {
@@ -78,33 +83,42 @@ const toPage = (route: string) => {
 
 <template>
     <div id="menu-div" :style="'background-image:url(' + menuBackground + ')'">
-        <h1>功能菜单</h1>
-        <el-row :gutter="20" justify="center" v-for="(items, index) in menus" :key="index">
-            <el-col v-for="(item) in items" :key="item" :span="4">
-                <el-card :body-style="{ padding: '0px' }" @click="toPage(item.showRoute)" shadow="hover">
-                    <img style="width:200px; height:100px" :src="item.imgSrc" class="image" />
-                    <div class="info">
-                        <span>{{item.title}}</span>
-                    </div>
-                    <div class="desc">
-                        <span>{{item.desc}}</span>
-                    </div>
-                </el-card>
-            </el-col>
-        </el-row>
+        <h1>功能菜单（{{ menuNum }}）</h1>
+        <el-scrollbar>
+            <el-row :gutter="20" justify="center" v-for="(items, index) in menus" :key="index">
+                <el-col v-for="(item) in items" :key="item" :span="4">
+                    <el-card :body-style="{ padding: '0px' }" @click="toPage(item.showRoute)" shadow="hover">
+                        <img style="width:200px; height:100px" :src="item.imgSrc" class="image" />
+                        <div class="info">
+                            <span>{{ item.title }}</span>
+                        </div>
+                        <div class="desc">
+                            <span>{{ item.desc }}</span>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
+        </el-scrollbar>
     </div>
 </template>
 
 <style scoped>
 #menu-div {
     /* background-image: url(); */
-    width:100%;
-    height:100%;
-    position:fixed;
-    background-size:100% 100%;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-size: 100% 100%;
 }
+
 h1 {
     color: #FFFFFF;
+}
+.el-scrollbar {
+    height: calc(100% - 85px);
+}
+.el-scrollbar__wrap {
+  overflow-x: hidden;
 }
 .el-row {
     margin: 10px 100px;
@@ -123,7 +137,8 @@ img {
     font-size: smaller;
     height: 50px;
 }
+
 .el-card {
-    cursor:pointer;
+    cursor: pointer;
 }
 </style>
