@@ -29,9 +29,9 @@ const allMenu = [{
     desc: '长度测量、面积测量'
 }, {
     title: '地图卷帘',
-    imgSrc: getAssetsFile('menu_map_rectification.gif'),
+    imgSrc: getAssetsFile('map_swipe.gif'),
     showRoute: '/map-swipe',
-    desc: '地图卷帘效果'
+    desc: '基于canvas实现地图卷帘效果'
 }, {
     title: '底图换色',
     imgSrc: getAssetsFile('map2.png'),
