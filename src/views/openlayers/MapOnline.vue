@@ -4,7 +4,7 @@ import Map from 'ol/Map'
 import { Tile as TileLayer } from 'ol/layer'
 import { XYZ } from 'ol/source'
 import View from 'ol/View'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 
@@ -14,6 +14,7 @@ const mapObj = {
     zoom: 15
 }
 let map = new Map({})
+let zoom = ref(0)
 onMounted(() => {
     map = new Map({
         // layers: [layerTileBaseGaode],
@@ -26,6 +27,11 @@ onMounted(() => {
     })
     // 添加鼠标位置
     map.addControl(controlMousePosition)
+    // 获取地图层级
+    map.on('moveend', () => {
+        zoom.value = Math.round(map.getView().getZoom() as number)
+    })
+    
     // 初始化加载
     // map.addLayer(layerTileBaseGaode)
 })
@@ -98,6 +104,7 @@ const controlMousePosition = new MousePosition({
             <el-checkbox v-model="item.check" :label="item.name" size="large" @change="checkLayer(item.check, item.layer as TileLayer<XYZ>)"/>
         </div>
     </el-card>
+    <div id="zoom-level-now">当前级别：{{zoom}}</div>
     <div id="map" class="map"></div>
 </template>
 
@@ -121,5 +128,12 @@ const controlMousePosition = new MousePosition({
 }
 .card-item {
     text-align: left;
+}
+
+#zoom-level-now {
+    position: absolute;
+    bottom: 20px;
+    right: 200px;
+    z-index: 1;
 }
 </style>
