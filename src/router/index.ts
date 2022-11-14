@@ -39,6 +39,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/map-online',
         component: () => import('@/views/openlayers/MapOnline.vue')
+    },{
+        path: '/hello-canvas',
+        component: () => import('@/views/openlayers/HelloCanvas.vue')
     }
 ]
 

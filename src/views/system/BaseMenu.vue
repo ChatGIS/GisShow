@@ -60,7 +60,7 @@ const allMenu = [{
     desc: 'Cesium基础功能'
 }, {
     title: 'HelloCanvas',
-    imgSrc: getAssetsFile('menu_hello_cesium.gif'),
+    imgSrc: getAssetsFile('hello_canvas.png'),
     showRoute: '/hello-canvas',
     desc: 'Canvas基础'
 }]
