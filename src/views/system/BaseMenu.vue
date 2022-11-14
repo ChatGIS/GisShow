@@ -3,6 +3,7 @@ import getAssetsFile from '@/utils/sys-use'
 import router from '@/router'
 import { computed } from 'vue'
 import menuBackground from '@/assets/image/menu-background.jpg'
+import ImageProjectIcon from '@/assets/image/project_icon_transparent.png'
 
 interface Menu {
     title: string;
@@ -57,6 +58,11 @@ const allMenu = [{
     imgSrc: getAssetsFile('menu_hello_cesium.gif'),
     showRoute: '/hello-cesium',
     desc: 'Cesium基础功能'
+}, {
+    title: 'HelloCanvas',
+    imgSrc: getAssetsFile('menu_hello_cesium.gif'),
+    showRoute: '/hello-canvas',
+    desc: 'Canvas基础'
 }]
 
 // 计算属性，拆为二维数组
@@ -83,6 +89,7 @@ const toPage = (route: string) => {
 
 <template>
     <div id="menu-div" :style="'background-image:url(' + menuBackground + ')'">
+        <el-image style="width: 100px; height: 100px" :src="ImageProjectIcon" fit="fill"/>
         <h1>功能菜单（{{ menuNum }}）</h1>
         <el-scrollbar>
             <el-row :gutter="20" justify="center" v-for="(items, index) in menus" :key="index">
@@ -140,5 +147,22 @@ img {
 
 .el-card {
     cursor: pointer;
+}
+/* 图片旋转 */
+.el-image:hover {
+    animation-play-state: paused;
+}
+.el-image {
+    position: absolute;
+    left: 20px;
+    animation: rotate 10s linear infinite;
+}
+@keyframes rotate {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
 }
 </style>
