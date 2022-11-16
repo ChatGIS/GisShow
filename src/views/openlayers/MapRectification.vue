@@ -112,14 +112,15 @@ onMounted(() => {
     map.addControl(controlMousePosition)
     // 坐标拾取
     map.on('click', evt => {
-        coordinateInput.value = evt.coordinate
+        coordinateInput.value = evt.coordinate[0] + ',' + evt.coordinate[1]
     })
 })
 
 // 折叠面板
 const activeNamesCollapse = ref(['1'])
+const activeNamesCollapseCoor = ref([])
 // 坐标类型
-const coordinateInput = ref()
+const coordinateInput = ref('')
 const coordinateType = ref(['GCJ02'])
 const coordinateTextarea = ref()
 // 控制图层显隐
@@ -144,16 +145,17 @@ const transLonLat = () => {
     if (!coordinateInput.value) {
         ElMessage('请输入坐标')
     } else {
+        debugger
         if (coordinateType.value[0] === 'WGS84') {
             coorWGS84 = coordinateInput.value
-            coorGCJ02 = transCoor(coordinateInput.value, 1, 2)
+            coorGCJ02 = transCoor(coordinateInput.value.split(',').map(Number), 1, 2)
             coorBD09 = transCoor(coorGCJ02, 2, 3)
         } else if (coordinateType.value[0] === 'GCJ02') {
-            coorWGS84 = transCoor(coordinateInput.value, 2, 1)
+            coorWGS84 = transCoor(coordinateInput.value.split(',').map(Number), 2, 1)
             coorGCJ02 = coordinateInput.value
-            coorBD09 = transCoor(coordinateInput.value, 2, 3)
+            coorBD09 = transCoor(coordinateInput.value.split(',').map(Number), 2, 3)
         }
-        const featureWGS84 = new Feature(new Point(coorWGS84))
+        const featureWGS84 = new Feature(new Point(coorWGS84 as Coordinate))
         const featureGCJ02 = new Feature(new Point(coorGCJ02 as Coordinate))
         const featureBD09 = new Feature(new Point(coorBD09 as Coordinate))
         featureWGS84.setStyle(styleLocateWGS84)
@@ -220,27 +222,44 @@ const styleLocateBD09 = new Style({
 </script>
 
 <template>
-    <el-collapse v-model="activeNamesCollapse">
+    <el-collapse class="collapse-layer" v-model="activeNamesCollapse">
         <el-collapse-item title="&nbsp&nbsp&nbsp&nbsp图层管理" name="1">
             <div class="box-in-collapse">
                 <el-checkbox v-for="(item) in mapLayers" :key="item.id" v-model="item.check" :label="item.name"
                     size="large" @change="checkLayer(item.id)" />
             </div>
         </el-collapse-item>
+    </el-collapse>
+    <el-collapse class="collapse-coor" v-model="activeNamesCollapseCoor">
         <el-collapse-item title="&nbsp&nbsp&nbsp&nbsp坐标转换" name="2">
-            <div class="box-in-collapse">
-                <span>输入坐标</span>
-                <el-input v-model="coordinateInput" :rows="2" type="textarea" />
-                <span>选择坐标类型</span>
-                <el-checkbox-group v-model="coordinateType" @change="statusChange">
-                    <el-checkbox label="WGS84"></el-checkbox>
-                    <el-checkbox label="GCJ02"></el-checkbox>
-                    <el-checkbox label="BD09"></el-checkbox>
-                </el-checkbox-group>
-                <el-button @click="transLonLat">转换</el-button>
-                <br>
-                <span>输出坐标</span>
-                <el-input v-model="coordinateTextarea" :rows="8" type="textarea" />
+            <div id="collapse-item-coor">
+                <div class="box-in-collapse container-input-coor">
+                    <span>输入坐标</span>
+                    <el-input v-model="coordinateInput" :rows="2" type="textarea" />
+                    <span>选择坐标类型</span>
+                    <el-checkbox-group v-model="coordinateType" @change="statusChange">
+                        <el-checkbox label="WGS84"></el-checkbox>
+                        <el-checkbox label="GCJ02"></el-checkbox>
+                        <el-checkbox label="BD09"></el-checkbox>
+                    </el-checkbox-group>
+                </div>
+                <div class="box-in-collapse">
+                    <el-button type="primary" @click="transLonLat">
+                        转换<el-icon>
+                            <DArrowRight />
+                        </el-icon>
+                    </el-button>
+                    <br>
+                    <el-button type="primary" @click="transLonLat">
+                        转换并聚焦<el-icon>
+                            <Aim />
+                        </el-icon>
+                    </el-button>
+                </div>
+                <div class="box-in-collapse container-output-coor">
+                    <span>输出坐标</span>
+                    <el-input v-model="coordinateTextarea" :rows="8" type="textarea" />
+                </div>
             </div>
         </el-collapse-item>
     </el-collapse>
@@ -257,6 +276,8 @@ const styleLocateBD09 = new Style({
 /* 折叠面板 */
 .box-in-collapse {
     margin: 10px;
+    padding: 10px;
+    border-radius: 1rem;
 }
 
 .el-checkbox {
@@ -264,7 +285,20 @@ const styleLocateBD09 = new Style({
     margin-right: 0;
 }
 
-.el-collapse {
+#collapse-item-coor {
+    display: flex;
+    flex-direction: row;
+}
+
+.container-output-coor {
+    background-color: #d0e9a8;
+}
+
+.container-input-coor {
+    background-color: #aed3ff;
+}
+
+.collapse-layer {
     position: absolute;
     top: 20px;
     left: 50px;
@@ -272,10 +306,20 @@ const styleLocateBD09 = new Style({
     z-index: 10;
 }
 
+.collapse-coor {
+    position: absolute;
+    top: 20px;
+    left: 300px;
+    z-index: 10;
+}
+
 .el-collapse-item__content {
     padding-left: 20px;
 }
 
+.el-button {
+    margin-top: 10px;
+}
 /* 鼠标位置坐标展示 */
 :deep .custom-mouse-position {
     position: absolute;
