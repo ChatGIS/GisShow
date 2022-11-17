@@ -35,7 +35,7 @@ const allMenu = [{
     desc: '基于canvas实现地图卷帘效果'
 }, {
     title: '底图换色',
-    imgSrc: getAssetsFile('map2.png'),
+    imgSrc: getAssetsFile('menu_map_color.gif'),
     showRoute: '/map-color',
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
