@@ -255,7 +255,13 @@ const getLengthAndShowOfTwoPoint = () => {
     map.getView().fit(geomLineTwoPoint)
     map.getView().setZoom(map.getView().getZoom() as number - 1)
 }
-
+const locatePointToMap = (index: number) => {
+    if(index === 1) {
+        map.getView().setCenter(inputCoorFirstPoint.value.split(',').map(Number))
+    } else {
+        map.getView().setCenter(inputCoorSecondPoint.value.split(',').map(Number))
+    }
+}
 const styleLocateSecondPoint = new Style({
     image: new Icon({
         src: getAssetsFile('locate-blue.png'),
@@ -327,10 +333,16 @@ const lengthLabelStyle = new Style({
         </template>
         <span>点1：</span>
         <el-input placeholder="输入格式如：112,37" v-model="inputCoorFirstPoint"></el-input>
-        <el-button type="primary" circle />
+        <el-button type="primary" circle @click="locatePointToMap(1)">
+            <el-icon><Location /></el-icon>
+        </el-button>
         <br>
         <span>点2：</span>
-        <el-input placeholder="输入格式如：112,37" v-model="inputCoorSecondPoint"></el-input><br>
+        <el-input placeholder="输入格式如：112,37" v-model="inputCoorSecondPoint"></el-input>
+        <el-button type="primary" circle @click="locatePointToMap(2)">
+            <el-icon><Location /></el-icon>
+        </el-button>
+        <br>
         <el-button class="button" type="primary" @click="getLengthAndShowOfTwoPoint">输出</el-button>
         <el-input placeholder="输出结果" v-model="lengthTwoPoint"></el-input>
     </el-card>

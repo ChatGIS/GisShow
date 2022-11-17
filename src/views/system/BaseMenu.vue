@@ -25,7 +25,7 @@ const allMenu = [{
     desc: '纠偏高德底图；进行坐标转换'
 }, {
     title: '测量工具',
-    imgSrc: getAssetsFile('menu_map_rectification.gif'),
+    imgSrc: getAssetsFile('menu_measure_tool.gif'),
     showRoute: '/measure-tool',
     desc: '长度测量、面积测量'
 }, {
