@@ -118,7 +118,7 @@ onMounted(() => {
 
 // 折叠面板
 const activeNamesCollapse = ref(['1'])
-const activeNamesCollapseCoor = ref([])
+const activeNamesCollapseCoor = ref(['2'])
 // 坐标类型
 const coordinateInput = ref('')
 const coordinateType = ref(['GCJ02'])
@@ -145,14 +145,13 @@ const transLonLat = () => {
     if (!coordinateInput.value) {
         ElMessage('请输入坐标')
     } else {
-        debugger
         if (coordinateType.value[0] === 'WGS84') {
-            coorWGS84 = coordinateInput.value
+            coorWGS84 = coordinateInput.value.split(',').map(Number)
             coorGCJ02 = transCoor(coordinateInput.value.split(',').map(Number), 1, 2)
             coorBD09 = transCoor(coorGCJ02, 2, 3)
         } else if (coordinateType.value[0] === 'GCJ02') {
             coorWGS84 = transCoor(coordinateInput.value.split(',').map(Number), 2, 1)
-            coorGCJ02 = coordinateInput.value
+            coorGCJ02 = coordinateInput.value.split(',').map(Number)
             coorBD09 = transCoor(coordinateInput.value.split(',').map(Number), 2, 3)
         }
         const featureWGS84 = new Feature(new Point(coorWGS84 as Coordinate))
@@ -168,6 +167,10 @@ const transLonLat = () => {
         // 输出坐标
         coordinateTextarea.value = `WGS84：${coorWGS84}  GCJ02：${coorGCJ02}  BD09：${coorBD09}`
     }
+}
+// 聚焦函数
+const focusMapWithInputCoor = () => {
+    map.getView().setCenter(coordinateInput.value.split(',').map(Number))
 }
 // 定位点样式
 const styleLocateWGS84 = new Style({
@@ -234,7 +237,7 @@ const styleLocateBD09 = new Style({
         <el-collapse-item title="&nbsp&nbsp&nbsp&nbsp坐标转换" name="2">
             <div id="collapse-item-coor">
                 <div class="box-in-collapse container-input-coor">
-                    <span>输入坐标</span>
+                    <span>输入坐标或者点击地图拾取坐标</span>
                     <el-input v-model="coordinateInput" :rows="2" type="textarea" />
                     <span>选择坐标类型</span>
                     <el-checkbox-group v-model="coordinateType" @change="statusChange">
@@ -242,6 +245,11 @@ const styleLocateBD09 = new Style({
                         <el-checkbox label="GCJ02"></el-checkbox>
                         <el-checkbox label="BD09"></el-checkbox>
                     </el-checkbox-group>
+                    <el-button @click="focusMapWithInputCoor">
+                        聚焦<el-icon>
+                            <Aim />
+                        </el-icon>
+                    </el-button>
                 </div>
                 <div class="box-in-collapse">
                     <el-button type="primary" @click="transLonLat">
@@ -250,11 +258,7 @@ const styleLocateBD09 = new Style({
                         </el-icon>
                     </el-button>
                     <br>
-                    <el-button type="primary" @click="transLonLat">
-                        转换并聚焦<el-icon>
-                            <Aim />
-                        </el-icon>
-                    </el-button>
+                    
                 </div>
                 <div class="box-in-collapse container-output-coor">
                     <span>输出坐标</span>
@@ -291,11 +295,11 @@ const styleLocateBD09 = new Style({
 }
 
 .container-output-coor {
-    background-color: #d0e9a8;
+    background-color: rgb(251 251 251);
 }
 
 .container-input-coor {
-    background-color: #aed3ff;
+    background-color: rgb(251 251 251);
 }
 
 .collapse-layer {
@@ -319,6 +323,10 @@ const styleLocateBD09 = new Style({
 
 .el-button {
     margin-top: 10px;
+}
+.el-textarea {
+    display: block;
+    width: 250px;
 }
 /* 鼠标位置坐标展示 */
 :deep .custom-mouse-position {
