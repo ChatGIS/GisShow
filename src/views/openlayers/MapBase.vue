@@ -4,7 +4,7 @@ import Map from 'ol/Map'
 import { Tile as TileLayer } from 'ol/layer'
 import { XYZ } from 'ol/source'
 import View from 'ol/View'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 
@@ -13,6 +13,7 @@ const mapObj = {
     center: [117.024, 36.676],
     zoom: 15
 }
+let zoom = ref(0)
 
 onMounted(() => {
     const map = new Map({
@@ -26,6 +27,10 @@ onMounted(() => {
     })
     // 添加鼠标位置
     map.addControl(controlMousePosition)
+    // 获取地图层级
+    map.on('moveend', () => {
+        zoom.value = Math.round(map.getView().getZoom() as number)
+    })
 })
 
 // 高德瓦片
@@ -45,6 +50,7 @@ const controlMousePosition = new MousePosition({
 </script>
 
 <template>
+    <div id="zoom-level-now">当前级别：{{zoom}}</div>
     <div id="map" class="map"></div>
 </template>
 
@@ -59,5 +65,12 @@ const controlMousePosition = new MousePosition({
     position: absolute;
     bottom: 20px;
     right: 20px;
+}
+
+#zoom-level-now {
+    position: absolute;
+    bottom: 20px;
+    right: 200px;
+    z-index: 1;
 }
 </style>

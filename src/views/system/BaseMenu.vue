@@ -40,7 +40,7 @@ const allMenu = [{
     desc: '切换底图瓦片颜色，快速呈现深蓝色、灰黑色等地图'
 }, {
     title: '在线地图',
-    imgSrc: getAssetsFile('map2.png'),
+    imgSrc: getAssetsFile('menu_map_online.gif'),
     showRoute: '/map-online',
     desc: '常用在线地图'
 }, {
