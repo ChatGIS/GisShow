@@ -12,6 +12,7 @@
   "dependencies": {
     "@arcgis/core": "^4.24.7",
     "@element-plus/icons-vue": "^2.0.10",
+    "axios": "^1.2.1",
     "cesium": "^1.98.1",
     "element-plus": "^2.2.12",
     "file-saver": "^2.0.5",
