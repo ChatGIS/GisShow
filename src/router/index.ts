@@ -42,6 +42,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/hello-canvas',
         component: () => import('@/views/openlayers/HelloCanvas.vue')
+    },{
+        path: '/geo-code',
+        component: () => import('@/views/openlayers/GeoCode.vue')
     }
 ]
 

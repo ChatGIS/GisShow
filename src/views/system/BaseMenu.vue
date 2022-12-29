@@ -29,6 +29,11 @@ const allMenu = [{
     showRoute: '/measure-tool',
     desc: '长度测量、面积测量'
 }, {
+    title: '地理编码',
+    imgSrc: getAssetsFile('menu_geo_code.gif'),
+    showRoute: '/geo-code',
+    desc: '地理编码、逆地理编码'
+}, {
     title: '地图卷帘',
     imgSrc: getAssetsFile('map_swipe.gif'),
     showRoute: '/map-swipe',
