@@ -45,6 +45,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/geo-code',
         component: () => import('@/views/openlayers/GeoCode.vue')
+    },{
+        path: '/employee-show',
+        component: () => import('@/views/openlayers/EmployeeShow.vue')
     }
 ]
 
