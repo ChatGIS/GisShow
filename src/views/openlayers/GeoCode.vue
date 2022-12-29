@@ -18,6 +18,8 @@ import Feature from 'ol/Feature'
 import { Point } from 'ol/geom'
 import { Icon, Text, Style, Fill } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
+import gisJson from '@/assets/gis_employee.json'
+import saveAs from 'file-saver'
 
 // 定义map
 const mapObj = {
@@ -130,6 +132,24 @@ const reGeocode = () => {
         ElMessage('请输入经纬度！')
     }
 }
+// 批量编码
+const temp = async() => {
+    const json = gisJson.RECORDS
+    for(let i = 0; i < json.length; i++) {
+        console.log(json[i].address)
+        if(!json[i].address) continue
+        const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
+        let res = await axios.get(url)
+        if(res.status === 200){
+            const ll = res.data.geocodes[0].location
+            lonlat.value = ll
+            console.log(ll)
+            json[i].geometry = ll
+        }
+    }
+    var file = new File([JSON.stringify(json)], 'GeoJsonDraw.geojson', {type: 'text/plain;charset=utf-8'})
+    saveAs(file)
+}
 </script>
 
 <template>
@@ -141,6 +161,7 @@ const reGeocode = () => {
         <el-button type="info" @click="clear">清空</el-button>
         <el-button type="primary" @click="geocode">地理编码</el-button>
         <el-button type="primary" @click="reGeocode">逆地理编码</el-button>
+        <!-- <el-button type="primary" @click="temp">临时</el-button> -->
     </el-card>
 </template>
 
