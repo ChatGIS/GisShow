@@ -169,19 +169,23 @@ const createLabelStyleWithYearLevel = (feature: any) => {
 const createLabelStyleWithDistance = (feature: any) => {
     let colorFill = '#2ca4a4'
     let radiusCircle = 7
-    if(feature.get('yearLevel') === 1) {
+    const distancekilometer = feature.get('distance')/1000
+    if(distancekilometer > 50 * 1000) {
         colorFill = '#0f1423'
         radiusCircle = 10
-    } else if (feature.get('yearLevel') === 2) {
+    } else if (distancekilometer <= 50 && distancekilometer > 30) {
         colorFill = '#15559a'
         radiusCircle = 9
-    } else if (feature.get('yearLevel') === 3) {
+    } else if (distancekilometer <= 30 && distancekilometer > 20) {
         colorFill = '#5698c3'
         radiusCircle = 8
-    } else if (feature.get('yearLevel') === 4) {
+    } else if (distancekilometer <= 20 && distancekilometer > 10) {
         colorFill = '#fa7e23'
         radiusCircle = 7
-    } else if (feature.get('yearLevel') === 5) {
+    } else if (distancekilometer <= 10 && distancekilometer > 5) {
+        colorFill = '#fa7e23'
+        radiusCircle = 7
+    }else if (distancekilometer <= 5) {
         colorFill = '#de2a18'
         radiusCircle = 6
     }
@@ -223,7 +227,7 @@ const initEmployeeData = () => {
     for (let i = 0; i < gisJson.length; i++) {
         let yearIn = ''
         let yearLevel = 0
-        const lonlat = gisJson[i].geometry as unknown as string
+        const lonlat = gisJson[i].lonlat as unknown as string
         const onboardingTime = gisJson[i].onboarding_time
         // 计算入职年限
         if(onboardingTime) {
@@ -256,7 +260,9 @@ const initEmployeeData = () => {
             onboarding_time: gisJson[i].onboarding_time,
             yearIn: yearIn,
             yearLevel: yearLevel,
-            lonlat: gisJson[i].geometry
+            lonlat: gisJson[i].lonlat,
+            distance: gisJson[i].distance,
+            duration: gisJson[i].duration
         })
         if(isShowWithYearLevel.value){
             feature.setStyle(createLabelStyleWithYearLevel(feature))
@@ -327,6 +333,8 @@ function clickMap(e: any) {
             feature.lonlat = features[i].get('lonlat')
             feature.yearIn = features[i].get('yearIn')
             feature.yearLevel = features[i].get('yearLevel')
+            feature.distance = features[i].get('distance')
+            feature.duration = features[i].get('duration')
             featurePanes.push(feature)
         }
         popup.setPosition(coordinate)
@@ -365,7 +373,9 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
                     <el-descriptions-item label="入职年限:">{{ item.yearIn }}</el-descriptions-item>
                     <el-descriptions-item label="部门:" span="2">{{ item.department }}</el-descriptions-item>
                     <el-descriptions-item label="地址:" span="2">{{ item.address }}</el-descriptions-item>
-                    <el-descriptions-item label="空间位置:">{{ item.lonlat }}</el-descriptions-item>
+                    <el-descriptions-item label="骑行距离:">{{ item.distance/1000 }}公里</el-descriptions-item>
+                    <el-descriptions-item label="骑行时间:">{{ (item.duration/60).toFixed(2) }}分钟</el-descriptions-item>
+                    <el-descriptions-item label="空间位置:" :span="2">{{ item.lonlat }}</el-descriptions-item>
                 </el-descriptions>
             </el-tab-pane>
         </el-tabs>
