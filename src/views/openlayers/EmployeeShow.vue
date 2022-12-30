@@ -4,26 +4,28 @@ import Map from 'ol/Map'
 import { Tile as TileLayer } from 'ol/layer'
 import { XYZ } from 'ol/source'
 import View from 'ol/View'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Coordinate } from 'ol/coordinate'
 import { Point } from 'ol/geom'
-import { Icon, Text, Style, Fill } from 'ol/style'
+import { Icon, Text, Style, Fill, Circle, Stroke } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
 import gisJson from '@/assets/gis_employees.json'
 import Feature from 'ol/Feature'
 import Overlay from 'ol/Overlay'
+import { TabsPaneContext } from 'element-plus'
 
 // 定义map
 const mapObj = {
-    center: [117.060907,36.665866],
+    center: [117.060907, 36.665866],
     zoom: 12
 }
 let zoom = ref(0)
 let map = new Map({})
+let popup = new Overlay({})
 onMounted(() => {
     map = new Map({
         layers: [gaodeTileLayer, locateLayer],
@@ -42,8 +44,10 @@ onMounted(() => {
     })
     // 加载员工要素
     initEmployeeData()
+    // 初始化弹框要素
+    initPopup()
     // 点击拾取
-    map.on('click', function (e) {
+    map.on('singleclick', function (e) {
         clickMap(e)
     })
 })
@@ -72,11 +76,11 @@ const locateLayer = new VectorLayer({
 
 
 // 关闭popup
-// closer.onclick = function () {
-//     popup.setPosition(undefined)
-//     closer.blur()
-//     return false
-// }
+const closePopup = () => {
+    popup.setPosition(undefined)
+    // closer.blur()
+    return false
+}
 
 
 // 定位点样式
@@ -115,15 +119,134 @@ const createLabelStyle = (feature: any) => {
         })
     })
 }
+// 根据年限动态创建样式
+const createLabelStyleWithYearLevel = (feature: any) => {
+    let colorFill = '#2ca4a4'
+    let radiusCircle = 7
+    if(feature.get('yearLevel') === 1) {
+        colorFill = '#0f1423'
+        radiusCircle = 10
+    } else if (feature.get('yearLevel') === 2) {
+        colorFill = '#15559a'
+        radiusCircle = 9
+    } else if (feature.get('yearLevel') === 3) {
+        colorFill = '#5698c3'
+        radiusCircle = 8
+    } else if (feature.get('yearLevel') === 4) {
+        colorFill = '#fa7e23'
+        radiusCircle = 7
+    } else if (feature.get('yearLevel') === 5) {
+        colorFill = '#de2a18'
+        radiusCircle = 6
+    }
+    return new Style({
+        image: new Circle({
+            radius: radiusCircle,
+            fill: new Fill({
+                color: colorFill,
+            })
+        }),
+        fill: new Fill({
+            color: 'black',
+        }),
+        stroke: new Stroke({
+            color: 'white',
+            width: 2,
+        }),
+        text: new Text({
+            text: isShowName.value ? feature.get('name') : '',
+            font: '15px sans-serif',
+            offsetX: -3,
+            offsetY: -32,
+            fill: new Fill({
+                color: 'black'
+            })
+        })
+    })
+}
+
+// 根据距离动态创建样式
+const createLabelStyleWithDistance = (feature: any) => {
+    let colorFill = '#2ca4a4'
+    let radiusCircle = 7
+    if(feature.get('yearLevel') === 1) {
+        colorFill = '#0f1423'
+        radiusCircle = 10
+    } else if (feature.get('yearLevel') === 2) {
+        colorFill = '#15559a'
+        radiusCircle = 9
+    } else if (feature.get('yearLevel') === 3) {
+        colorFill = '#5698c3'
+        radiusCircle = 8
+    } else if (feature.get('yearLevel') === 4) {
+        colorFill = '#fa7e23'
+        radiusCircle = 7
+    } else if (feature.get('yearLevel') === 5) {
+        colorFill = '#de2a18'
+        radiusCircle = 6
+    }
+    return new Style({
+        image: new Circle({
+            radius: radiusCircle,
+            fill: new Fill({
+                color: colorFill,
+            })
+        }),
+        fill: new Fill({
+            color: 'black',
+        }),
+        stroke: new Stroke({
+            color: 'white',
+            width: 2,
+        }),
+        text: new Text({
+            text: isShowName.value ? feature.get('name') : '',
+            font: '15px sans-serif',
+            offsetX: -3,
+            offsetY: -32,
+            fill: new Fill({
+                color: 'black'
+            })
+        })
+    })
+}
 // 是否展示名称
 const isShowName = ref(false)
+// 是否以工作年限展示
+const isShowWithYearLevel = ref(false)
+// 是否以通勤距离展示
+const isShowWithDistance = ref(false)
 
 // 加载员工要素
 const initEmployeeData = () => {
     locateSource.clear()
-    for(let i = 0; i < gisJson.length; i++) {
+    for (let i = 0; i < gisJson.length; i++) {
+        let yearIn = ''
+        let yearLevel = 0
         const lonlat = gisJson[i].geometry as unknown as string
-        if(!lonlat) continue
+        const onboardingTime = gisJson[i].onboarding_time
+        // 计算入职年限
+        if(onboardingTime) {
+            var new_date = new Date()
+            var old_date = new Date(onboardingTime) //设置过去的一个时间点，"yyyy-MM-dd HH:mm:ss"格式化日期
+            var difftime = Number(new_date) - Number(old_date) //计算时间差
+            var year = Math.floor(difftime/(1000 * 60 * 60 * 24 * 365))
+            var month = Math.floor((difftime%(1000 * 60 * 60 * 24 * 365))/(1000 * 60 * 60 * 24 * 31))
+            yearIn = `${year}年${month}月`
+            if(year >= 10) {
+                yearLevel = 1
+            } else if (year < 10 && year >= 6) {
+                yearLevel = 2
+            } else if (year < 6 && year >= 3) {
+                yearLevel = 3
+            } else if (year < 3 && year >= 1) {
+                yearLevel = 4
+            } else {
+                yearLevel = 5
+            }
+        }
+        
+        if (!lonlat) continue
         const feature = new Feature({
             geometry: new Point(lonlat.split(',').map(Number) as Coordinate),
             id: gisJson[i].id,
@@ -131,9 +254,17 @@ const initEmployeeData = () => {
             department: gisJson[i].department,
             address: gisJson[i].address,
             onboarding_time: gisJson[i].onboarding_time,
+            yearIn: yearIn,
+            yearLevel: yearLevel,
             lonlat: gisJson[i].geometry
         })
-        feature.setStyle(createLabelStyle(feature))
+        if(isShowWithYearLevel.value){
+            feature.setStyle(createLabelStyleWithYearLevel(feature))
+        } else if(isShowWithDistance.value) {
+            feature.setStyle(createLabelStyleWithDistance(feature))
+        } else {
+            feature.setStyle(createLabelStyle(feature))
+        }
         locateSource.addFeature(feature)
     }
 }
@@ -141,84 +272,109 @@ const initEmployeeData = () => {
 const toggleShowName = () => {
     initEmployeeData()
 }
-// 监听鼠标单击事件，点击feature后弹出popup
-function clickMap(e: any) {debugger
+// 展示形式切换
+const toggleShowWithYearLevel = () => {
+    if(isShowWithYearLevel.value) {
+        isShowWithDistance.value = false
+    }
+    initEmployeeData()
+}
+
+const toggleShowWithDistance = () => {
+    if(isShowWithDistance.value) {
+        isShowWithYearLevel.value = false
+    }
+    initEmployeeData()
+}
+
+const initPopup = () => {
     // 获取popup的dom对象
     var container = document.getElementById('popup')
     var content = document.getElementById('popup-content') as HTMLElement
     var closer = document.getElementById('popup-closer') as HTMLElement
 
     // 创建popup
-    var popup = new Overlay({
+    popup = new Overlay({
         element: container as HTMLElement,
         autoPan: true,
         positioning: 'bottom-center',
-        stopEvent: false,
+        stopEvent: true,
         // autoPanAnimation: {
         //     duration: 250
         // }
     })
     map.addOverlay(popup)
 
+}
+// 监听鼠标单击事件，点击feature后弹出popup
+function clickMap(e: any) {
     var coordinate = e.coordinate
-    var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, locateLayer) {
-        return feature
-    })
-    if (feature) {
-        // 清空html
-        content.innerHTML = ''
-
-        // 城市名称
-        var cityName = document.createElement('h2')
-        cityName.innerText = feature.get('id')
-        content.appendChild(cityName)
-
-        // 省份编码
-        var provinceCode = document.createElement('p')
-        provinceCode.innerText = '省份编码：' + feature.get('name')
-        content.appendChild(provinceCode)
-
-        // 拼音
-        var pinyin = document.createElement('p')
-        pinyin.innerText = '拼音：' + feature.get('department')
-        content.appendChild(pinyin)
-
-        // 归属
-        var attribution = document.createElement('p')
-        attribution.innerText = '归属：' + feature.get('address')
-        content.appendChild(attribution)
-
-        // 城市编码
-        var cityCode = document.createElement('p')
-        cityCode.innerText = '城市编码：' + feature.get('onboarding_time')
-        content.appendChild(cityCode)
-
-        // 纬度
-        var latitude = document.createElement('p')
-        latitude.innerText = '纬度：' + feature.get('lonlat')
-        content.appendChild(latitude)
-
-        // 弹出popup
+    // var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, locateLayer) {
+    //     return feature
+    // })
+    const features = map.getFeaturesAtPixel(e.pixel)
+    console.log(features)
+    if (features.length > 0) {
+        activeName.value = features[0].get('name')
+        featurePanes.length = 0
+        for (let i = 0; i < features.length; i++) {
+            const feature: any = {}
+            feature.id = features[i].get('id')
+            feature.name = features[i].get('name')
+            feature.department = features[i].get('department')
+            feature.onboarding_time = features[i].get('onboarding_time')
+            feature.address = features[i].get('address')
+            feature.lonlat = features[i].get('lonlat')
+            feature.yearIn = features[i].get('yearIn')
+            feature.yearLevel = features[i].get('yearLevel')
+            featurePanes.push(feature)
+        }
         popup.setPosition(coordinate)
     }
+}
+
+const activeName = ref('first')
+const featurePanes: any[] = reactive([])
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+    console.log(tab, event)
 }
 </script>
 
 <template>
-    <div id="zoom-level-now">当前级别：{{zoom}}</div>
+    <div id="zoom-level-now">当前级别：{{ zoom }}</div>
     <div id="map" class="map"></div>
     <el-card id="geocode-card">
         <span>展示名称</span>
-        <el-switch v-model="isShowName" @change="toggleShowName"/>
-        <!-- <el-button type="info">清空</el-button>
-        <el-button type="primary">地理编码</el-button>
-        <el-button type="primary">逆地理编码</el-button> -->
-        <!-- <el-button type="primary" @click="temp">临时</el-button> -->
+        <el-switch v-model="isShowName" @change="toggleShowName" />
+        <br/>
+        <span>工作年限</span>
+        <el-switch v-model="isShowWithYearLevel" @change="toggleShowWithYearLevel" />
+        <br/>
+        <span>通勤距离</span>
+        <el-switch v-model="isShowWithDistance" @change="toggleShowWithDistance" />
     </el-card>
     <div id="popup" class="ol-popup">
-        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-        <div id="popup-content"></div>
+        <a id="popup-closer" class="ol-popup-closer" @click="closePopup"></a>
+        <!-- <div id="popup-content"></div> -->
+        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+            <el-tab-pane :label="item.name" :name="item.name" v-for="item in featurePanes" :key="item.id">
+                <el-descriptions :column="2">
+                    <el-descriptions-item label="编号:">{{ item.id }}</el-descriptions-item>
+                    <el-descriptions-item label="姓名:">{{ item.name }}</el-descriptions-item>
+                    <el-descriptions-item label="入职日期:">{{ item.onboarding_time }}</el-descriptions-item>
+                    <el-descriptions-item label="入职年限:">{{ item.yearIn }}</el-descriptions-item>
+                    <el-descriptions-item label="部门:" span="2">{{ item.department }}</el-descriptions-item>
+                    <el-descriptions-item label="地址:" span="2">{{ item.address }}</el-descriptions-item>
+                    <el-descriptions-item label="空间位置:">{{ item.lonlat }}</el-descriptions-item>
+                </el-descriptions>
+            </el-tab-pane>
+        </el-tabs>
     </div>
+    <!-- <el-card id="popup-card">
+        
+    
+    </el-card> -->
+
 </template>
 
 <style scoped>
@@ -246,6 +402,7 @@ function clickMap(e: any) {debugger
     top: 10px;
     left: 40px;
 }
+
 .el-input {
     margin-bottom: 10px;
 }
@@ -253,17 +410,19 @@ function clickMap(e: any) {debugger
 .ol-popup {
     position: absolute;
     background-color: white;
-    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
     filter: drop-shadow(0 1px 4px #FFC125);
     padding: 15px;
     border-radius: 10px;
     border: 1px solid #cccccc;
     bottom: 12px;
     left: -50px;
-    min-width: 200px;
+    min-width: 360px;
+    max-width: 400px;
 }
 
-.ol-popup:after, .ol-popup:before {
+.ol-popup:after,
+.ol-popup:before {
     top: 100%;
     border: solid transparent;
     content: " ";
