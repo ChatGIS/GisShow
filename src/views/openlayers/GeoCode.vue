@@ -106,7 +106,46 @@ const geocode = () => {
         }).catch(err => {
             console.log(err)
         })
-        console.log(address.value)
+    } else {
+        ElMessage('请输入地址！')
+    }
+}
+// 地理编码百度
+const geocodeBaidu = () => {
+    if(address.value) {
+        const url = '/baiduapi/geocoding/v3/?address='+address.value+'&output=json&ak='+keyJson.keyBaidu
+        axios.get(url).then(res => {
+            if(res.status === 200){
+                lonlat.value = res.data.result.location.lng + ',' + res.data.result.location.lat
+                const feature = new Feature(new Point(lonlat.value.split(',').map(Number) as Coordinate))
+                feature.setStyle(styleLocate)
+                locateSource.clear()
+                locateSource.addFeature(feature)
+                map.getView().setCenter(lonlat.value.split(',').map(Number) as Coordinate)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    } else {
+        ElMessage('请输入地址！')
+    }
+}
+// 地理编码天地图
+const geocodeTianditu = () => {
+    if(address.value) {
+        const url = 'http://api.tianditu.gov.cn/geocoder?ds={"keyWord":"'+ address.value +'"}&tk=' + keyJson.keyTianditu
+        axios.get(url).then(res => {
+            if(res.status === 200){
+                lonlat.value = res.data.location.lon + ',' + res.data.location.lat
+                const feature = new Feature(new Point(lonlat.value.split(',').map(Number) as Coordinate))
+                feature.setStyle(styleLocate)
+                locateSource.clear()
+                locateSource.addFeature(feature)
+                map.getView().setCenter(lonlat.value.split(',').map(Number) as Coordinate)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
     } else {
         ElMessage('请输入地址！')
     }
@@ -127,7 +166,6 @@ const reGeocode = () => {
         }).catch(err => {
             console.log(err)
         })
-        console.log(address.value)
     } else {
         ElMessage('请输入经纬度！')
     }
@@ -136,7 +174,6 @@ const reGeocode = () => {
 const temp = async() => {
     const json: any[] = gisJson.RECORDS
     for(let i = 0; i < json.length; i++) {
-        console.log(json[i].address)
         if(!json[i].address) continue
         const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
         let res = await axios.get(url)
@@ -168,7 +205,9 @@ const temp = async() => {
         <el-input v-model="address" placeholder="地址" />
         <el-input v-model="lonlat" placeholder="坐标" />
         <el-button type="info" @click="clear">清空</el-button>
-        <el-button type="primary" @click="geocode">地理编码</el-button>
+        <el-button type="primary" @click="geocode">地理编码(高德)</el-button>
+        <el-button type="primary" @click="geocodeBaidu">地理编码(百度)</el-button>
+        <el-button type="primary" @click="geocodeTianditu">地理编码(天地图)</el-button>
         <el-button type="primary" @click="reGeocode">逆地理编码</el-button>
         <el-button type="primary" @click="temp">临时</el-button>
     </el-card>

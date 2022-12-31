@@ -33,6 +33,11 @@ export default defineConfig({
                 target: 'http://webst01.is.autonavi.com/', // 对应自己的接口
                 changeOrigin: true, // 是否允许跨域,在本地会创建一个虚拟服务端，然后发送请求的数据，
                 rewrite: (path) => path.replace(/^\/gaodetile/, '')
+            },
+            '/baiduapi': { // 请求路径关键字
+                target: 'https://api.map.baidu.com/', // 对应自己的接口
+                changeOrigin: true, // 是否允许跨域,在本地会创建一个虚拟服务端，然后发送请求的数据，
+                rewrite: (path) => path.replace(/^\/baiduapi/, '')
             }
         }
     }
