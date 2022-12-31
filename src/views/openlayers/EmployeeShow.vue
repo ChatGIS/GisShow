@@ -73,8 +73,6 @@ const locateLayer = new VectorLayer({
     source: locateSource,
 })
 
-
-
 // 关闭popup
 const closePopup = () => {
     popup.setPosition(undefined)
@@ -84,9 +82,9 @@ const closePopup = () => {
 
 
 // 定位点样式
-const styleLocate = new Style({
+const styleBuild = new Style({
     image: new Icon({
-        src: getAssetsFile('locate-red.png'),
+        src: getAssetsFile('building.png'),
         size: [64, 64],
         offset: [-17, -5]
     }),
@@ -100,6 +98,18 @@ const styleLocate = new Style({
         })
     })
 })
+
+// 办公楼图层
+const buildSource = new VectorSource({})
+const buildLayer = new VectorLayer({
+    source: buildSource,
+})
+const featureBuild = new Feature({
+    geometry: new Point([117.060907, 36.665866]),
+})
+featureBuild.setStyle(styleBuild)
+buildSource.addFeature(featureBuild)
+
 // 动态创建样式
 const createLabelStyle = (feature: any) => {
     return new Style({
@@ -167,27 +177,28 @@ const createLabelStyleWithYearLevel = (feature: any) => {
 
 // 根据距离动态创建样式
 const createLabelStyleWithDistance = (feature: any) => {
-    let colorFill = '#2ca4a4'
-    let radiusCircle = 7
-    const distancekilometer = feature.get('distance')/1000
-    if(distancekilometer > 50 * 1000) {
-        colorFill = '#0f1423'
-        radiusCircle = 10
-    } else if (distancekilometer <= 50 && distancekilometer > 30) {
-        colorFill = '#15559a'
-        radiusCircle = 9
-    } else if (distancekilometer <= 30 && distancekilometer > 20) {
-        colorFill = '#5698c3'
-        radiusCircle = 8
-    } else if (distancekilometer <= 20 && distancekilometer > 10) {
-        colorFill = '#fa7e23'
+    let colorFill = '#a01b0a'
+    let radiusCircle = 8
+    // const distancekilometer = feature.get('distance')/1000
+    const timeMin = feature.get('duration')/60
+    if(timeMin > 60) {
+        colorFill = '#a01b0a'
+        radiusCircle = 7.5
+    } else if (timeMin <= 60 && timeMin > 40) {
+        colorFill = '#b7584c'
+        radiusCircle = 7.5
+    } else if (timeMin <= 40 && timeMin > 30) {
+        colorFill = '#c69b02'
         radiusCircle = 7
-    } else if (distancekilometer <= 10 && distancekilometer > 5) {
-        colorFill = '#fa7e23'
+    } else if (timeMin <= 30 && timeMin > 20) {
+        colorFill = '#e8c64f'
         radiusCircle = 7
-    }else if (distancekilometer <= 5) {
-        colorFill = '#de2a18'
-        radiusCircle = 6
+    } else if (timeMin <= 20 && timeMin > 10) {
+        colorFill = '#459c50'
+        radiusCircle = 6.5
+    }else if (timeMin <= 10) {
+        colorFill = '#017410'
+        radiusCircle = 6.5
     }
     return new Style({
         image: new Circle({
@@ -289,6 +300,9 @@ const toggleShowWithYearLevel = () => {
 const toggleShowWithDistance = () => {
     if(isShowWithDistance.value) {
         isShowWithYearLevel.value = false
+        map.addLayer(buildLayer)
+    } else {
+        map.removeLayer(buildLayer)
     }
     initEmployeeData()
 }
