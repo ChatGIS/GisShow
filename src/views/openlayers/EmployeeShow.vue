@@ -121,7 +121,7 @@ const createLabelStyle = (feature: any) => {
         text: new Text({
             text: isShowName.value ? feature.get('name') : '',
             font: '15px sans-serif',
-            offsetX: -3,
+            offsetX: 0,
             offsetY: -32,
             fill: new Fill({
                 color: 'black'
@@ -166,8 +166,8 @@ const createLabelStyleWithYearLevel = (feature: any) => {
         text: new Text({
             text: isShowName.value ? feature.get('name') : '',
             font: '15px sans-serif',
-            offsetX: -3,
-            offsetY: -32,
+            offsetX: 0,
+            offsetY: 18,
             fill: new Fill({
                 color: 'black'
             })
@@ -217,8 +217,8 @@ const createLabelStyleWithDistance = (feature: any) => {
         text: new Text({
             text: isShowName.value ? feature.get('name') : '',
             font: '15px sans-serif',
-            offsetX: -3,
-            offsetY: -32,
+            offsetX: 0,
+            offsetY: 18,
             fill: new Fill({
                 color: 'black'
             })
