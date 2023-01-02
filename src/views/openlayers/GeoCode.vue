@@ -20,6 +20,7 @@ import { Icon, Text, Style, Fill } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
 import gisJson from '@/assets/gis_employee.json'
 import saveAs from 'file-saver'
+import transCoor from '@/utils/trans-coor'
 
 // 定义map
 const mapObj = {
@@ -117,11 +118,13 @@ const geocodeBaidu = () => {
         axios.get(url).then(res => {
             if(res.status === 200){
                 lonlat.value = res.data.result.location.lng + ',' + res.data.result.location.lat
-                const feature = new Feature(new Point(lonlat.value.split(',').map(Number) as Coordinate))
+                // 坐标转换在高德地图显示
+                const lonlatGd = transCoor([res.data.result.location.lng, res.data.result.location.lat], 3, 2)
+                const feature = new Feature(new Point(lonlatGd as Coordinate))
                 feature.setStyle(styleLocate)
                 locateSource.clear()
                 locateSource.addFeature(feature)
-                map.getView().setCenter(lonlat.value.split(',').map(Number) as Coordinate)
+                map.getView().setCenter(lonlatGd as Coordinate)
             }
         }).catch(err => {
             console.log(err)
@@ -137,11 +140,13 @@ const geocodeTianditu = () => {
         axios.get(url).then(res => {
             if(res.status === 200){
                 lonlat.value = res.data.location.lon + ',' + res.data.location.lat
-                const feature = new Feature(new Point(lonlat.value.split(',').map(Number) as Coordinate))
+                // 坐标转换在高德地图显示
+                const lonlatGd = transCoor([res.data.location.lon, res.data.location.lat], 3, 2)
+                const feature = new Feature(new Point(lonlatGd as Coordinate))
                 feature.setStyle(styleLocate)
                 locateSource.clear()
                 locateSource.addFeature(feature)
-                map.getView().setCenter(lonlat.value.split(',').map(Number) as Coordinate)
+                map.getView().setCenter(lonlatGd as Coordinate)
             }
         }).catch(err => {
             console.log(err)
@@ -175,10 +180,14 @@ const temp = async() => {
     const json: any[] = gisJson.RECORDS
     for(let i = 0; i < json.length; i++) {
         if(!json[i].address) continue
-        const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
+        const url = '/baiduapi/geocoding/v3/?address=' + json[i].address + '&output=json&ak='+keyJson.keyBaidu
+        // const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
         let res = await axios.get(url)
         if(res.status === 200){
-            const ll = res.data.geocodes[0].location
+            // 坐标转换在高德地图显示
+            let ll2 = transCoor([res.data.result.location.lng, res.data.result.location.lat], 3, 2)
+            // const ll = res.data.geocodes[0].location
+            const ll = ll2[0].toFixed(6).toString() + ','+ ll2[1].toFixed(6).toString()
             lonlat.value = ll
             console.log(ll)
             json[i].lonlat = ll
