@@ -18,7 +18,7 @@ import Feature from 'ol/Feature'
 import { Point } from 'ol/geom'
 import { Icon, Text, Style, Fill } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
-import gisJson from '@/assets/gis_employee.json'
+import gisJson from '@/assets/gis_employee_in.json'
 import saveAs from 'file-saver'
 import transCoor from '@/utils/trans-coor'
 
@@ -176,23 +176,35 @@ const reGeocode = () => {
     }
 }
 // 批量编码
-const temp = async() => {
+const batchGeocode = async() => {
     const json: any[] = gisJson.RECORDS
     for(let i = 0; i < json.length; i++) {
+        const typeGeocode = json[i].geocode_type
+        console.log(json[i].id)
+        // 去除脏数据
         if(!json[i].address) continue
-        const url = '/baiduapi/geocoding/v3/?address=' + json[i].address + '&output=json&ak='+keyJson.keyBaidu
-        // const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
-        let res = await axios.get(url)
-        if(res.status === 200){
-            // 坐标转换在高德地图显示
-            let ll2 = transCoor([res.data.result.location.lng, res.data.result.location.lat], 3, 2)
-            // const ll = res.data.geocodes[0].location
-            const ll = ll2[0].toFixed(6).toString() + ','+ ll2[1].toFixed(6).toString()
-            lonlat.value = ll
-            console.log(ll)
-            json[i].lonlat = ll
-        }
         if(json[i].id === 98) continue
+        // 同一地址不同平台api返回数据不一致，以正确的为准
+        if(typeGeocode === 3) {
+            const url = '/baiduapi/geocoding/v3/?address=' + json[i].address + '&output=json&ak='+keyJson.keyBaidu
+            let res = await axios.get(url)
+            if(res.status === 200){
+                // 坐标转换在高德地图显示
+                let ll2 = transCoor([res.data.result.location.lng, res.data.result.location.lat], 3, 2)
+                const ll = ll2[0].toFixed(6).toString() + ','+ ll2[1].toFixed(6).toString()
+                lonlat.value = ll
+                json[i].lonlat = ll
+            }
+        } else if (typeGeocode === 2) {
+            const url = 'https://restapi.amap.com/v3/geocode/geo?address=' + json[i].address + '&key=' + keyJson.keyGaode
+            let res = await axios.get(url)
+            if(res.status === 200){
+                const ll = res.data.geocodes[0].location
+                lonlat.value = ll
+                json[i].lonlat = ll
+            }
+        }
+        // 高德骑行导航接口
         const url2 = `https://restapi.amap.com/v4/direction/bicycling?origin=${json[i].lonlat}&destination=117.060907,36.665866&key=${keyJson.keyGaode}`
         let res2 = await axios.get(url2)
         if(res2.status === 200){
@@ -202,7 +214,7 @@ const temp = async() => {
             json[i].duration = duration
         }
     }
-    var file = new File([JSON.stringify(json)], 'GeoCode.json', {type: 'text/plain;charset=utf-8'})
+    var file = new File([JSON.stringify(json)], 'gis_employee_out.json', {type: 'text/plain;charset=utf-8'})
     saveAs(file)
 }
 </script>
@@ -218,7 +230,7 @@ const temp = async() => {
         <el-button type="primary" @click="geocodeBaidu">地理编码(百度)</el-button>
         <el-button type="primary" @click="geocodeTianditu">地理编码(天地图)</el-button>
         <el-button type="primary" @click="reGeocode">逆地理编码</el-button>
-        <el-button type="primary" @click="temp">临时</el-button>
+        <el-button type="primary" @click="batchGeocode">批量编码</el-button>
     </el-card>
 </template>
 
