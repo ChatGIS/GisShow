@@ -13,7 +13,7 @@ import { Coordinate } from 'ol/coordinate'
 import { Point } from 'ol/geom'
 import { Icon, Text, Style, Fill, Circle, Stroke } from 'ol/style'
 import getAssetsFile from '@/utils/sys-use'
-import gisJson from '@/assets/gis_employees.json'
+import gisJson from '@/assets/gis_employee_out.json'
 import Feature from 'ol/Feature'
 import Overlay from 'ol/Overlay'
 import { TabsPaneContext } from 'element-plus'
@@ -119,7 +119,7 @@ const createLabelStyle = (feature: any) => {
             offset: [-17, -5]
         }),
         text: new Text({
-            text: isShowName.value ? feature.get('name') : '',
+            text: isShowName.value ? feature.get('name') : isShowAddress.value ? feature.get('address') : '' ,
             font: '15px sans-serif',
             offsetX: 0,
             offsetY: -32,
@@ -164,7 +164,7 @@ const createLabelStyleWithYearLevel = (feature: any) => {
             width: 2,
         }),
         text: new Text({
-            text: isShowName.value ? feature.get('name') : '',
+            text: isShowName.value ? feature.get('name') : isShowAddress.value ? feature.get('address') : '' ,
             font: '15px sans-serif',
             offsetX: 0,
             offsetY: 18,
@@ -215,7 +215,7 @@ const createLabelStyleWithDistance = (feature: any) => {
             width: 2,
         }),
         text: new Text({
-            text: isShowName.value ? feature.get('name') : '',
+            text: isShowName.value ? feature.get('name') : isShowAddress.value ? feature.get('address') : '' ,
             font: '15px sans-serif',
             offsetX: 0,
             offsetY: 18,
@@ -227,6 +227,8 @@ const createLabelStyleWithDistance = (feature: any) => {
 }
 // 是否展示名称
 const isShowName = ref(false)
+// 是否展示地址
+const isShowAddress = ref(false)
 // 是否以工作年限展示
 const isShowWithYearLevel = ref(false)
 // 是否以通勤距离展示
@@ -287,12 +289,23 @@ const initEmployeeData = () => {
 }
 // 名称展示切换
 const toggleShowName = () => {
+    if(isShowName.value && isShowAddress.value) {
+        isShowAddress.value = false
+    }
+    initEmployeeData()
+}
+// 地址展示切换
+const toggleShowAddress = () => {
+    if(isShowName.value && isShowAddress.value) {
+        isShowName.value = false
+    }
     initEmployeeData()
 }
 // 展示形式切换
 const toggleShowWithYearLevel = () => {
     if(isShowWithYearLevel.value) {
         isShowWithDistance.value = false
+        map.removeLayer(buildLayer)
     }
     initEmployeeData()
 }
@@ -368,6 +381,9 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
     <el-card id="geocode-card">
         <span>展示名称</span>
         <el-switch v-model="isShowName" @change="toggleShowName" />
+        <br/>
+        <span>展示地址</span>
+        <el-switch v-model="isShowAddress" @change="toggleShowAddress" />
         <br/>
         <span>工作年限</span>
         <el-switch v-model="isShowWithYearLevel" @change="toggleShowWithYearLevel" />

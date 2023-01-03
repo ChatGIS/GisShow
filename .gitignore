@@ -6123,6 +6123,5 @@ public/assets/esri/widgets/support/t9n/uriUtils_zh-HK.json
 public/assets/esri/widgets/support/t9n/uriUtils_zh-TW.json
 public/assets/esri/widgets/support/t9n/uriUtils.json
 src/assets/private/private.json
-src/assets/gis_employees.json
-src/assets/gis_employee.json
-src/assets/gis_employees1.json
+src/assets/gis_employee_in.json
+src/assets/gis_employee_out.json
