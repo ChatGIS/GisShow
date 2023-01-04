@@ -148,6 +148,9 @@ const createLabelStyleWithYearLevel = (feature: any) => {
     } else if (feature.get('yearLevel') === 5) {
         colorFill = '#de2a18'
         radiusCircle = 6
+    } else if (feature.get('yearLevel') === 6) {
+        colorFill = '#08f417'
+        radiusCircle = 7
     }
     return new Style({
         image: new Circle({
@@ -242,6 +245,7 @@ const initEmployeeData = () => {
         let yearLevel = 0
         const lonlat = gisJson[i].lonlat as unknown as string
         const onboardingTime = gisJson[i].onboarding_time
+        const isResign = gisJson[i].resign_time? true : false
         // 计算入职年限
         if(onboardingTime) {
             var new_date = new Date()
@@ -262,6 +266,9 @@ const initEmployeeData = () => {
                 yearLevel = 5
             }
         }
+        if(isResign) {
+            yearLevel = 6
+        }
         
         if (!lonlat) continue
         const feature = new Feature({
@@ -275,7 +282,8 @@ const initEmployeeData = () => {
             yearLevel: yearLevel,
             lonlat: gisJson[i].lonlat,
             distance: gisJson[i].distance,
-            duration: gisJson[i].duration
+            duration: gisJson[i].duration,
+            resign_time: gisJson[i].resign_time
         })
         if(isShowWithYearLevel.value){
             feature.setStyle(createLabelStyleWithYearLevel(feature))
@@ -342,9 +350,6 @@ const initPopup = () => {
 // 监听鼠标单击事件，点击feature后弹出popup
 function clickMap(e: any) {
     var coordinate = e.coordinate
-    // var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, locateLayer) {
-    //     return feature
-    // })
     const features = map.getFeaturesAtPixel(e.pixel)
     console.log(features)
     if (features.length > 0) {
@@ -356,6 +361,7 @@ function clickMap(e: any) {
             feature.name = features[i].get('name')
             feature.department = features[i].get('department')
             feature.onboarding_time = features[i].get('onboarding_time')
+            feature.resign_time = features[i].get('resign_time')
             feature.address = features[i].get('address')
             feature.lonlat = features[i].get('lonlat')
             feature.yearIn = features[i].get('yearIn')
@@ -410,11 +416,36 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
             </el-tab-pane>
         </el-tabs>
     </div>
-    <!-- <el-card id="popup-card">
-        
-    
-    </el-card> -->
-
+    <el-card id="legend-year" v-show="isShowWithYearLevel">
+        <el-row>
+            <el-col :span="6"><div style="width: 20px; height: 20px; border-radius: 20px; background-color: #0f1423"/></el-col>
+            <el-col :span="18"><span>>10年,终身挖矿</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 18px; height: 18px; border-radius: 18px; background-color: #15559a"/></el-col>
+            <el-col :span="18"><span>6~10年,老韭菜</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 16px; height: 16px; border-radius: 16px; background-color: #5698c3"/></el-col>
+            <el-col :span="18"><span>3~6年,骑驴找驴</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #fa7e23"/></el-col>
+            <el-col :span="18"><span>1~3年,骑驴找马</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 12px; height: 12px; border-radius: 12px; background-color: #de2a18"/></el-col>
+            <el-col :span="18"><span>1年内,极不稳定</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #2ca4a4"/></el-col>
+            <el-col :span="18"><span>生辰不明</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #08f417"/></el-col>
+            <el-col :span="18"><span>已出坑</span></el-col>
+        </el-row>
+    </el-card>
 </template>
 
 <style scoped>
@@ -496,5 +527,19 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 
 .ol-popup-closer:after {
     content: "✖";
+}
+.el-switch {
+    margin-left: 10px;
+}
+#legend-year {
+    width: 200px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1;
+}
+.el-col {
+    display: flex;
+    align-items: center;
 }
 </style>

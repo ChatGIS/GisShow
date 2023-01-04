@@ -232,6 +232,7 @@ const batchGeocode = async() => {
         <el-button type="primary" @click="reGeocode">逆地理编码</el-button>
         <el-button type="primary" @click="batchGeocode">批量编码</el-button>
     </el-card>
+    
 </template>
 
 <style scoped>
