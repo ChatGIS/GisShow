@@ -416,7 +416,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
             </el-tab-pane>
         </el-tabs>
     </div>
-    <el-card id="legend-year" v-show="isShowWithYearLevel">
+    <el-card id="legend-year" class="legend" v-show="isShowWithYearLevel">
         <el-row>
             <el-col :span="6"><div style="width: 20px; height: 20px; border-radius: 20px; background-color: #0f1423"/></el-col>
             <el-col :span="18"><span>>10年,终身挖矿</span></el-col>
@@ -444,6 +444,32 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
         <el-row>
             <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #08f417"/></el-col>
             <el-col :span="18"><span>已出坑</span></el-col>
+        </el-row>
+    </el-card>
+    <el-card id="legend-distance" class="legend" v-show="isShowWithDistance">
+        <el-row>
+            <el-col :span="6"><div style="width: 15px; height: 15px; border-radius: 15px; background-color: #a01b0a"/></el-col>
+            <el-col :span="18"><span>>60分钟,老北京</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 15px; height: 15px; border-radius: 15px; background-color: #b7584c"/></el-col>
+            <el-col :span="18"><span>40~60,边缘人士</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #c69b02"/></el-col>
+            <el-col :span="18"><span>30~40,公电两难</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #e8c64f"/></el-col>
+            <el-col :span="18"><span>20~30,电车党</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 13px; height: 13px; border-radius: 13px; background-color: #459c50"/></el-col>
+            <el-col :span="18"><span>10~20,天选电车</span></el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6"><div style="width: 14px; height: 14px; border-radius: 14px; background-color: #017410"/></el-col>
+            <el-col :span="18"><span>10分内,天选打工</span></el-col>
         </el-row>
     </el-card>
 </template>
@@ -531,7 +557,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 .el-switch {
     margin-left: 10px;
 }
-#legend-year {
+.legend {
     width: 200px;
     position: absolute;
     bottom: 20px;
