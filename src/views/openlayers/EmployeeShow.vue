@@ -16,10 +16,9 @@ import getAssetsFile from '@/utils/sys-use'
 import gisJson from '@/assets/gis_employee_out.json'
 import Feature from 'ol/Feature'
 import Overlay from 'ol/Overlay'
-import { TabsPaneContext } from 'element-plus'
 
 // 定义map
-const mapObj = {
+const mapParams = {
     center: [117.060907, 36.665866],
     zoom: 12
 }
@@ -31,8 +30,8 @@ onMounted(() => {
         layers: [gaodeTileLayer, locateLayer],
         target: 'map',
         view: new View({
-            center: mapObj.center,
-            zoom: mapObj.zoom,
+            center: mapParams.center,
+            zoom: mapParams.zoom,
             projection: 'EPSG:4326',
         })
     })
@@ -51,14 +50,28 @@ onMounted(() => {
         clickMap(e)
     })
 })
-
+/* 
+    地图图层
+*/
 // 高德瓦片
 const gaodeTileLayer = new TileLayer({
     source: new XYZ({
         url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
     })
 })
-
+// 定位图层
+const locateSource = new VectorSource({})
+const locateLayer = new VectorLayer({
+    source: locateSource,
+})
+// 办公楼图层
+const buildSource = new VectorSource({})
+const buildLayer = new VectorLayer({
+    source: buildSource,
+})
+/* 
+    控件
+*/
 // 鼠标拾取位置坐标控件
 const controlMousePosition = new MousePosition({
     coordinateFormat: createStringXY(6),
@@ -67,20 +80,16 @@ const controlMousePosition = new MousePosition({
     target: document.getElementById('mouse-position') as HTMLElement
 })
 
-// 定位图层
-const locateSource = new VectorSource({})
-const locateLayer = new VectorLayer({
-    source: locateSource,
-})
-
-// 关闭popup
+// 关闭弹框
 const closePopup = () => {
     popup.setPosition(undefined)
     // closer.blur()
     return false
 }
 
-
+/* 
+    样式
+*/
 // 定位点样式
 const styleBuild = new Style({
     image: new Icon({
@@ -98,17 +107,6 @@ const styleBuild = new Style({
         })
     })
 })
-
-// 办公楼图层
-const buildSource = new VectorSource({})
-const buildLayer = new VectorLayer({
-    source: buildSource,
-})
-const featureBuild = new Feature({
-    geometry: new Point([117.060907, 36.665866]),
-})
-featureBuild.setStyle(styleBuild)
-buildSource.addFeature(featureBuild)
 
 // 动态创建样式
 const createLabelStyle = (feature: any) => {
@@ -228,14 +226,12 @@ const createLabelStyleWithDistance = (feature: any) => {
         })
     })
 }
-// 是否展示名称
-const isShowName = ref(false)
-// 是否展示地址
-const isShowAddress = ref(false)
-// 是否以工作年限展示
-const isShowWithYearLevel = ref(false)
-// 是否以通勤距离展示
-const isShowWithDistance = ref(false)
+
+const featureBuild = new Feature({
+    geometry: new Point(mapParams.center),
+})
+featureBuild.setStyle(styleBuild)
+buildSource.addFeature(featureBuild)
 
 // 加载员工要素
 const initEmployeeData = () => {
@@ -295,44 +291,9 @@ const initEmployeeData = () => {
         locateSource.addFeature(feature)
     }
 }
-// 名称展示切换
-const toggleShowName = () => {
-    if(isShowName.value && isShowAddress.value) {
-        isShowAddress.value = false
-    }
-    initEmployeeData()
-}
-// 地址展示切换
-const toggleShowAddress = () => {
-    if(isShowName.value && isShowAddress.value) {
-        isShowName.value = false
-    }
-    initEmployeeData()
-}
-// 展示形式切换
-const toggleShowWithYearLevel = () => {
-    if(isShowWithYearLevel.value) {
-        isShowWithDistance.value = false
-        map.removeLayer(buildLayer)
-    }
-    initEmployeeData()
-}
-
-const toggleShowWithDistance = () => {
-    if(isShowWithDistance.value) {
-        isShowWithYearLevel.value = false
-        map.addLayer(buildLayer)
-    } else {
-        map.removeLayer(buildLayer)
-    }
-    initEmployeeData()
-}
-
 const initPopup = () => {
     // 获取popup的dom对象
     var container = document.getElementById('popup')
-    var content = document.getElementById('popup-content') as HTMLElement
-    var closer = document.getElementById('popup-closer') as HTMLElement
 
     // 创建popup
     popup = new Overlay({
@@ -374,10 +335,50 @@ function clickMap(e: any) {
     }
 }
 
+// 是否展示名称
+const isShowName = ref(false)
+// 是否展示地址
+const isShowAddress = ref(false)
+// 是否以工作年限展示
+const isShowWithYearLevel = ref(false)
+// 是否以通勤距离展示
+const isShowWithDistance = ref(false)
+// tab触发默认
 const activeName = ref('first')
+// tab要素内容
 const featurePanes: any[] = reactive([])
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab, event)
+
+// 名称展示切换
+const toggleShowName = () => {
+    if(isShowName.value && isShowAddress.value) {
+        isShowAddress.value = false
+    }
+    initEmployeeData()
+}
+// 地址展示切换
+const toggleShowAddress = () => {
+    if(isShowName.value && isShowAddress.value) {
+        isShowName.value = false
+    }
+    initEmployeeData()
+}
+// 展示形式切换
+const toggleShowWithYearLevel = () => {
+    if(isShowWithYearLevel.value) {
+        isShowWithDistance.value = false
+        map.removeLayer(buildLayer)
+    }
+    initEmployeeData()
+}
+
+const toggleShowWithDistance = () => {
+    if(isShowWithDistance.value) {
+        isShowWithYearLevel.value = false
+        map.addLayer(buildLayer)
+    } else {
+        map.removeLayer(buildLayer)
+    }
+    initEmployeeData()
 }
 </script>
 
@@ -399,8 +400,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
     </el-card>
     <div id="popup" class="ol-popup">
         <a id="popup-closer" class="ol-popup-closer" @click="closePopup"></a>
-        <!-- <div id="popup-content"></div> -->
-        <el-tabs v-model="activeName" type="card" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" class="demo-tabs">
             <el-tab-pane :label="item.name" :name="item.name" v-for="item in featurePanes" :key="item.id">
                 <el-descriptions :column="2">
                     <el-descriptions-item label="编号:">{{ item.id }}</el-descriptions-item>
