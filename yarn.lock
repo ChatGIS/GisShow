@@ -1787,6 +1787,11 @@
   "resolved" "https://registry.npmjs.org/ktx-parse/-/ktx-parse-0.4.5.tgz"
   "version" "0.4.5"
 
+"leaflet@^1.9.3":
+  "integrity" "sha512-iB2cR9vAkDOu5l3HAay2obcUHZ7xwUBBjph8+PGtmW/2lYhbLizWtG7nTeYht36WfOslixQF9D/uSIzhZgGMfQ=="
+  "resolved" "https://registry.npmmirror.com/leaflet/-/leaflet-1.9.3.tgz"
+  "version" "1.9.3"
+
 "lerc@^2.0.0":
   "integrity" "sha512-7qo1Mq8ZNmaR4USHHm615nEW2lPeeWJ3bTyoqFbd35DLx0LUH7C6ptt5FDCTAlbIzs3+WKrk5SkJvw8AFDE2hg=="
   "resolved" "https://registry.npmjs.org/lerc/-/lerc-2.0.0.tgz"
