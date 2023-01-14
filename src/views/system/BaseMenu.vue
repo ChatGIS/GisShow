@@ -64,6 +64,11 @@ const allMenu = [{
     showRoute: '/hello-cesium',
     desc: 'Cesium基础功能'
 }, {
+    title: 'HelloLeaflet',
+    imgSrc: getAssetsFile('map1.png'),
+    showRoute: '/hello-leaflet',
+    desc: '基于Leaflet的地图呈现'
+}, {
     title: 'HelloCanvas',
     imgSrc: getAssetsFile('hello_canvas.png'),
     showRoute: '/hello-canvas',

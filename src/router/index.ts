@@ -48,6 +48,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/employee-show',
         component: () => import('@/views/openlayers/EmployeeShow.vue')
+    },{
+        path: '/hello-leaflet',
+        component: () => import('@/views/leaflet/HelloLeaflet.vue')
     }
 ]
 
