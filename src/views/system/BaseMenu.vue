@@ -69,10 +69,10 @@ const allMenu = [{
     showRoute: '/hello-leaflet',
     desc: '基于Leaflet的地图呈现'
 }, {
-    title: '迁徙图',
+    title: '飞机航线',
     imgSrc: getAssetsFile('map1.png'),
-    showRoute: '/leaflet-migration',
-    desc: '基于leaflet-echarts迁徙图'
+    showRoute: '/antv-l7-flyline',
+    desc: 'antV-L7飞机航线图'
 }, {
     title: 'HelloCanvas',
     imgSrc: getAssetsFile('hello_canvas.png'),

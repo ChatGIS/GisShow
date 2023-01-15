@@ -10,6 +10,7 @@
     "postinstall": "npm run copy"
   },
   "dependencies": {
+    "@antv/l7": "^2.13.2",
     "@arcgis/core": "^4.24.7",
     "@element-plus/icons-vue": "^2.0.10",
     "axios": "^1.2.1",

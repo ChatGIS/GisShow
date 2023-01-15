@@ -52,8 +52,8 @@ const routes:Array<RouteRecordRaw> = [
         path: '/hello-leaflet',
         component: () => import('@/views/leaflet/HelloLeaflet.vue')
     },{
-        path: '/leaflet-migration',
-        component: () => import('@/views/leaflet/MigrationEcharts.vue')
+        path: '/antv-l7-flyline',
+        component: () => import('@/views/antvl7/FlyLine.vue')
     }
 ]
 

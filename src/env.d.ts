@@ -9,3 +9,4 @@ declare module '*.vue' {
 
 // ts中引入js需要主动声明
 declare module 'leaflet'
+declare module '@antv/l7'
