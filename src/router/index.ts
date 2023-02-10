@@ -54,6 +54,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/antv-l7-flyline',
         component: () => import('@/views/antvl7/FlyLine.vue')
+    },{
+        path: '/multi-screen-linkage',
+        component: () => import('@/views/openlayers/MultiScreenLinkage.vue')
     }
 ]
 
