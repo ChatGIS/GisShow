@@ -34,6 +34,11 @@ const allMenu = [{
     showRoute: '/geo-code',
     desc: '地理编码、逆地理编码'
 }, {
+    title: '要素样式',
+    imgSrc: getAssetsFile('menu_geo_code.gif'),
+    showRoute: '/feature-style',
+    desc: '点线面基础样式'
+}, {
     title: '地图卷帘',
     imgSrc: getAssetsFile('map_swipe.gif'),
     showRoute: '/map-swipe',

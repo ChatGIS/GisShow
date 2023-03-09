@@ -57,6 +57,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/multi-screen-linkage',
         component: () => import('@/views/openlayers/MultiScreenLinkage.vue')
+    },{
+        path: '/feature-style',
+        component: () => import('@/views/openlayers/FeatureStyle.vue')
     }
 ]
 
