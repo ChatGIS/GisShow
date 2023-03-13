@@ -10,6 +10,7 @@ import { Type } from 'ol/geom/Geometry'
 import { onMounted, ref } from 'vue'
 import { saveAs } from 'file-saver'
 
+const decimalCoor = ref(6)
 let map = new Map({})
 const gaodeTileLayer = new TileLayer({
     source: new XYZ({
@@ -110,10 +111,10 @@ const snapSwitch = () => {
 function openDrawe() {
     isShowDrawer.value = true
     const featuresDraw = sourceDraw.getFeatures()
-    const geoJsonDraw = new GeoJSON().writeFeatures(featuresDraw)
-    const wktDraw = new WKT().writeFeatures(featuresDraw)
-    const esriJsonDraw = new EsriJSON().writeFeatures(featuresDraw)
-    const kmlDraw = new KML().writeFeatures(featuresDraw)
+    const geoJsonDraw = new GeoJSON().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
+    const wktDraw = new WKT().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
+    const esriJsonDraw = new EsriJSON().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
+    const kmlDraw = new KML().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
     geojsonDrawTextarea.value = geoJsonDraw
     wktDrawTextarea.value = wktDraw
     esrijsonDrawTextarea.value = esriJsonDraw
@@ -139,6 +140,8 @@ function downloadFile() {
         <el-switch v-model="isSnap" @change="snapSwitch" /><span>捕捉功能</span>
         <el-button :type="isModify ? '' : 'primary'" @click="addInteractionModify">修改</el-button>
         <el-button type="primary" @click="clearDrawLayer">清空图层</el-button>
+        <span>经纬度小数位：</span>
+        <el-input-number v-model="decimalCoor" :min="0" :max="14" />
         <el-button type="primary" style="margin-left: 16px" @click="openDrawe">打开数据列表</el-button>
     </el-card>
     <el-drawer v-model="isShowDrawer" :direction="directionDrawer">
