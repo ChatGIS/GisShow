@@ -39,6 +39,11 @@ const allMenu = [{
     showRoute: '/feature-style',
     desc: '点线面基础样式'
 }, {
+    title: '水波样式',
+    imgSrc: getAssetsFile('menu_geo_code.gif'),
+    showRoute: '/style-ripple',
+    desc: '水波告警样式'
+}, {
     title: '地图卷帘',
     imgSrc: getAssetsFile('map_swipe.gif'),
     showRoute: '/map-swipe',

@@ -60,6 +60,9 @@ const routes:Array<RouteRecordRaw> = [
     },{
         path: '/feature-style',
         component: () => import('@/views/openlayers/FeatureStyle.vue')
+    },{
+        path: '/style-ripple',
+        component: () => import('@/views/openlayers/StyleRipple.vue')
     }
 ]
 
