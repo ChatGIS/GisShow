@@ -1,12 +1,16 @@
 <script setup lang='ts'>
 import 'ol/ol.css'
 import Map from 'ol/Map'
-import { Tile as TileLayer } from 'ol/layer'
-import { XYZ } from 'ol/source'
+import { Tile as TileLayer, Vector } from 'ol/layer'
+import { Vector as VectorSource, XYZ } from 'ol/source'
 import View from 'ol/View'
 import { onMounted, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
+import Img from '@/assets/image/device_common.svg'
+import { Feature } from 'ol'
+import { Point } from 'ol/geom'
+import { Icon, Style,Circle as CircleStyle, Fill, Text } from 'ol/style'
 
 // 定义map
 const mapObj = {
@@ -14,9 +18,9 @@ const mapObj = {
     zoom: 15
 }
 let zoom = ref(0)
-
+let map = new Map({})
 onMounted(() => {
-    const map = new Map({
+    map = new Map({
         layers: [gaodeTileLayer],
         target: 'map',
         view: new View({
@@ -31,6 +35,7 @@ onMounted(() => {
     map.on('moveend', () => {
         zoom.value = Math.round(map.getView().getZoom() as number)
     })
+    addFeature()
 })
 
 // 高德瓦片
@@ -47,6 +52,43 @@ const controlMousePosition = new MousePosition({
     className: 'custom-mouse-position',
     target: document.getElementById('mouse-position') as HTMLElement
 })
+
+const addFeature = () => {
+    const feature = new Feature(new Point(mapObj.center))
+    const feature2 = new Feature(new Point(mapObj.center))
+    feature.setStyle(new Style({
+        image: new Icon({
+            src: Img,
+            // offset: [0.5, 16],
+            // size: 20,
+            anchor: [0.5, 0.9],
+        // anchorOrigin: "bottom-left"
+        }),
+    }))
+    feature2.setStyle(new Style({
+        image: new CircleStyle({
+            radius: 1,
+            fill: new Fill({
+                color: 'red',
+            }),
+        }),
+        text: new Text({
+            font: '12px Microsoft YaHei',
+            fill: new Fill({
+                color: '#ffffff',
+            }),
+            text: '大明湖站',
+            // offsetX: 0,
+            offsetY: 15,
+        }),
+    }))
+    const layer = new Vector({
+        source: new VectorSource({
+            features: [feature, feature2]
+        })
+    })
+    map.addLayer(layer)
+}
 </script>
 
 <template>
