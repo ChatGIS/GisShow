@@ -17,6 +17,6 @@
       "@/*":["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/utils/gcj-trans.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/utils/gcj-trans.js", "src/utils/style-setting.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

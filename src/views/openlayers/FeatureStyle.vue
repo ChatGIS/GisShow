@@ -11,11 +11,12 @@ import Img from '@/assets/image/device_common.svg'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import { Icon, Style,Circle as CircleStyle, Fill, Text, RegularShape } from 'ol/style'
+import StyleSetting from '@/utils/style-setting'
 
 // 定义map
 const mapObj = {
     center: [117.024, 36.676],
-    zoom: 15
+    zoom: 13
 }
 let zoom = ref(0)
 let map = new Map({})
@@ -28,7 +29,7 @@ let checkedPointArrowhead = ref(false)
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerStyle],
+        layers: [gaodeTileLayer, layerStyle, layerPoint],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -36,6 +37,8 @@ onMounted(() => {
             projection: 'EPSG:4326',
         })
     })
+    // 初始化图层数据
+    initLayerData()
     // 添加鼠标位置
     map.addControl(controlMousePosition)
     // 获取地图层级
@@ -56,6 +59,22 @@ const sourceStyle = new VectorSource({})
 const layerStyle = new Vector({
     source: sourceStyle
 })
+const sourcePoint = new VectorSource({})
+const layerPoint = new Vector({
+    source: sourcePoint
+})
+// 初始化图层数据
+const initLayerData = () => {
+    const count = 10
+    for(let i = 0; i < 10; i++) {
+        const operator1 = Math.random() > 0.5 ? '+' : '-'
+        const operator2 = Math.random() > 0.5 ? '+' : '-'
+        const lon = eval('mapObj.center[0]' + operator1 + '0.1 * Math.random() * Math.random()')
+        const lat = eval('mapObj.center[1]' + operator2 + '0.05 * Math.random() * Math.random()')
+        const feature = new Feature(new Point([lon, lat]))
+        sourcePoint.addFeature(feature)
+    }
+}
 // 样式要素
 const featureCircle = new Feature(new Point([mapObj.center[0] + 0.01, mapObj.center[1]  + 0.01]))
 const featureTriangular = new Feature(new Point([mapObj.center[0] + 0.008, mapObj.center[1] + 0.01]))
@@ -109,19 +128,20 @@ const addFeature = () => {
 }
 // 圆形
 const toggleShowCircle = () => {
-    if(checkedPointCircle.value) {
-        featureCircle.setStyle(new Style({
-            image: new CircleStyle({
-                radius: 20,
-                fill: new Fill({
-                    color: 'red'
-                })
-            })
-        }))
-        sourceStyle.addFeature(featureCircle)
-    } else {
-        sourceStyle.removeFeature(featureCircle)
+    const settings = {
+        showStyle: 1,
+        displayType: 'POINT',
+        shapeCode: 1,
+        shapeSize: 10,
+        opacity: 80,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
     }
+    if(!checkedPointCircle.value) {
+        settings.showStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
 }
 // 三角形
 const toggleShowTriangular = () => {
