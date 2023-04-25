@@ -563,9 +563,9 @@
   "version" "2.0.2"
 
 "@mapbox/mapbox-gl-style-spec@^13.23.1":
-  "integrity" "sha512-Ya1WiNz1qYau7xPYPQUbionrw9pjgZAIebGQdDXgwJuSAWeVCr02P7rqbYFHbXqX5TeAaq4qVpcaJb9oZtgaVQ=="
-  "resolved" "https://registry.npmjs.org/@mapbox/mapbox-gl-style-spec/-/mapbox-gl-style-spec-13.26.0.tgz"
-  "version" "13.26.0"
+  "integrity" "sha512-B8xM7Fp1nh5kejfIl4SWeY0gtIeewbuRencqO3cJDrCHZpaPg7uY+V8abuR+esMeuOjRl5cLhVTP40v+1ywxbg=="
+  "resolved" "https://registry.npmmirror.com/@mapbox/mapbox-gl-style-spec/-/mapbox-gl-style-spec-13.28.0.tgz"
+  "version" "13.28.0"
   dependencies:
     "@mapbox/jsonlint-lines-primitives" "~2.0.2"
     "@mapbox/point-geometry" "^0.1.0"
@@ -642,9 +642,9 @@
     "fastq" "^1.6.0"
 
 "@petamoriken/float16@^3.4.7":
-  "integrity" "sha512-3MUulwMtsdCA9lw8a/Kc0XDBJJVCkYTQ5aGd+///TbfkOMXoOGAzzoiYKwPEsLYZv7He7fKJ/mCacqKOO7REyg=="
-  "resolved" "https://registry.npmjs.org/@petamoriken/float16/-/float16-3.6.6.tgz"
-  "version" "3.6.6"
+  "integrity" "sha512-AhVAm6SQ+zgxIiOzwVdUcDmKlu/qU39FiYD2UD6kQQaVenrn0dGZewIghWAENGQsvC+1avLCuT+T2/3Gsp/W3w=="
+  "resolved" "https://registry.npmmirror.com/@petamoriken/float16/-/float16-3.8.0.tgz"
+  "version" "3.8.0"
 
 "@popperjs/core@~2.11.5", "@popperjs/core@2.11.5":
   "integrity" "sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw=="
@@ -1975,16 +1975,16 @@
   "resolved" "https://registry.npmmirror.com/geojson-vt/-/geojson-vt-3.2.1.tgz"
   "version" "3.2.1"
 
-"geotiff@2.0.4":
-  "integrity" "sha512-aG8h9bJccGusioPsEWsEqx8qdXpZN71A20WCvRKGxcnHSOWLKmC5ZmsAmodfxb9TRQvs+89KikGuPzxchhA+Uw=="
-  "resolved" "https://registry.npmjs.org/geotiff/-/geotiff-2.0.4.tgz"
-  "version" "2.0.4"
+"geotiff@^2.0.7":
+  "integrity" "sha512-FKvFTNowMU5K6lHYY2f83d4lS2rsCNdpUC28AX61x9ZzzqPNaWFElWv93xj0eJFaNyOYA63ic5OzJ88dHpoA5Q=="
+  "resolved" "https://registry.npmmirror.com/geotiff/-/geotiff-2.0.7.tgz"
+  "version" "2.0.7"
   dependencies:
     "@petamoriken/float16" "^3.4.7"
     "lerc" "^3.0.0"
-    "lru-cache" "^6.0.0"
     "pako" "^2.0.4"
     "parse-headers" "^2.0.2"
+    "quick-lru" "^6.1.1"
     "web-worker" "^1.2.0"
     "xml-utils" "^1.0.2"
 
@@ -2241,7 +2241,7 @@
 
 "json-stringify-pretty-compact@^2.0.0":
   "integrity" "sha512-WRitRfs6BGq4q8gTgOy4ek7iPFXjbra0H3PmDLKm2xnZ+Gh1HUhiKGgCZkSPNULlP7mvfu6FV/mOLhCarspADQ=="
-  "resolved" "https://registry.npmjs.org/json-stringify-pretty-compact/-/json-stringify-pretty-compact-2.0.0.tgz"
+  "resolved" "https://registry.npmmirror.com/json-stringify-pretty-compact/-/json-stringify-pretty-compact-2.0.0.tgz"
   "version" "2.0.0"
 
 "json5@^2.2.1":
@@ -2313,7 +2313,7 @@
 
 "lerc@^3.0.0":
   "integrity" "sha512-Rm4J/WaHhRa93nCN2mwWDZFoRVF18G1f47C+kvQWyHGEZxFpTUi73p7lMVSAndyxGt6lJ2/CFbOcf9ra5p8aww=="
-  "resolved" "https://registry.npmjs.org/lerc/-/lerc-3.0.0.tgz"
+  "resolved" "https://registry.npmmirror.com/lerc/-/lerc-3.0.0.tgz"
   "version" "3.0.0"
 
 "levn@^0.4.1":
@@ -2422,9 +2422,9 @@
     "vt-pbf" "^3.1.1"
 
 "mapbox-to-css-font@^2.4.1":
-  "integrity" "sha512-QQ/iKiM43DM9+aujTL45Iz5o7gDeSFmy4LPl3HZmNcwCE++NxGazf+yFpY+wCb+YS23sDa1ghpo3zrNFOcHlow=="
-  "resolved" "https://registry.npmjs.org/mapbox-to-css-font/-/mapbox-to-css-font-2.4.1.tgz"
-  "version" "2.4.1"
+  "integrity" "sha512-f+NBjJJY4T3dHtlEz1wCG7YFlkODEjFIYlxDdLIDMNpkSksqTt+l/d4rjuwItxuzkuMFvPyrjzV2lxRM4ePcIA=="
+  "resolved" "https://registry.npmmirror.com/mapbox-to-css-font/-/mapbox-to-css-font-2.4.2.tgz"
+  "version" "2.4.2"
 
 "memoize-one@^6.0.0":
   "integrity" "sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw=="
@@ -2579,22 +2579,22 @@
   dependencies:
     "boolbase" "^1.0.0"
 
-"ol-mapbox-style@9.1.0":
-  "integrity" "sha512-R/XE6FdviaXNdnSw6ItHSEreMtQU68cwQCGv4Kl8yG0V1dZhnI5JWr8IOphJwffPVxfWTCnJb5aALGSB89MvhA=="
-  "resolved" "https://registry.npmjs.org/ol-mapbox-style/-/ol-mapbox-style-9.1.0.tgz"
-  "version" "9.1.0"
+"ol-mapbox-style@^9.2.0":
+  "integrity" "sha512-YX3u8FBJHsRHaoGxmd724Mp5WPTuV7wLQW6zZhcihMuInsSdCX1EiZfU+8IAL7jG0pbgl5YgC0aWE/MXJcUXxg=="
+  "resolved" "https://registry.npmmirror.com/ol-mapbox-style/-/ol-mapbox-style-9.7.0.tgz"
+  "version" "9.7.0"
   dependencies:
     "@mapbox/mapbox-gl-style-spec" "^13.23.1"
     "mapbox-to-css-font" "^2.4.1"
 
-"ol@^7.1.0":
-  "integrity" "sha512-mAeV5Ca4mFhYaJoGWNZnIMN5VNnFTf63FgZjBiYu/DjQDGKNsD5QyvvqVziioVdOOgl6b8rPB/ypj2XNBinPwA=="
-  "resolved" "https://registry.npmjs.org/ol/-/ol-7.1.0.tgz"
-  "version" "7.1.0"
+"ol@^7.3.0":
+  "integrity" "sha512-08vJE4xITKPazQ9qJjeqYjRngnM9s+1eSv219Pdlrjj3LpLqjEH386ncq+76Dw1oGPGR8eLVEePk7FEd9XqqMw=="
+  "resolved" "https://registry.npmmirror.com/ol/-/ol-7.3.0.tgz"
+  "version" "7.3.0"
   dependencies:
     "earcut" "^2.2.3"
-    "geotiff" "2.0.4"
-    "ol-mapbox-style" "9.1.0"
+    "geotiff" "^2.0.7"
+    "ol-mapbox-style" "^9.2.0"
     "pbf" "3.2.1"
     "rbush" "^3.0.1"
 
@@ -2652,7 +2652,7 @@
 
 "parse-headers@^2.0.2":
   "integrity" "sha512-ft3iAoLOB/MlwbNXgzy43SWGP6sQki2jQvAyBg/zDFAgr9bfNWZIUj42Kw2eJIl8kEi4PbgE6U1Zau/HwI75HA=="
-  "resolved" "https://registry.npmjs.org/parse-headers/-/parse-headers-2.0.5.tgz"
+  "resolved" "https://registry.npmmirror.com/parse-headers/-/parse-headers-2.0.5.tgz"
   "version" "2.0.5"
 
 "parseurl@~1.3.3":
@@ -2795,6 +2795,11 @@
   "integrity" "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="
   "resolved" "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   "version" "1.2.3"
+
+"quick-lru@^6.1.1":
+  "integrity" "sha512-S27GBT+F0NTRiehtbrgaSE1idUAJ5bX8dPAQTdylEyNlrdcH5X4Lz7Edz3DYzecbsCluD5zO8ZNEe04z3D3u6Q=="
+  "resolved" "https://registry.npmmirror.com/quick-lru/-/quick-lru-6.1.1.tgz"
+  "version" "6.1.1"
 
 "quickselect@^2.0.0":
   "integrity" "sha512-RKJ22hX8mHe3Y6wH/N3wCM6BWtjaxIyyUIkpHOvfFnxdI4yD4tBXEBKSbriGujF6jnSVkJrffuo6vxACiSSxIw=="
@@ -2984,17 +2989,17 @@
 
 "sort-asc@^0.1.0":
   "integrity" "sha512-jBgdDd+rQ+HkZF2/OHCmace5dvpos/aWQpcxuyRs9QUbPRnkEJmYVo81PIGpjIdpOcsnJ4rGjStfDHsbn+UVyw=="
-  "resolved" "https://registry.npmjs.org/sort-asc/-/sort-asc-0.1.0.tgz"
+  "resolved" "https://registry.npmmirror.com/sort-asc/-/sort-asc-0.1.0.tgz"
   "version" "0.1.0"
 
 "sort-desc@^0.1.1":
   "integrity" "sha512-jfZacW5SKOP97BF5rX5kQfJmRVZP5/adDUTY8fCSPvNcXDVpUEe2pr/iKGlcyZzchRJZrswnp68fgk3qBXgkJw=="
-  "resolved" "https://registry.npmjs.org/sort-desc/-/sort-desc-0.1.1.tgz"
+  "resolved" "https://registry.npmmirror.com/sort-desc/-/sort-desc-0.1.1.tgz"
   "version" "0.1.1"
 
 "sort-object@^0.3.2":
   "integrity" "sha512-aAQiEdqFTTdsvUFxXm3umdo04J7MRljoVGbBlkH7BgNsMvVNAJyGj7C/wV1A8wHWAJj/YikeZbfuCKqhggNWGA=="
-  "resolved" "https://registry.npmjs.org/sort-object/-/sort-object-0.3.2.tgz"
+  "resolved" "https://registry.npmmirror.com/sort-object/-/sort-object-0.3.2.tgz"
   "version" "0.3.2"
   dependencies:
     "sort-asc" "^0.1.0"
@@ -3329,7 +3334,7 @@
 
 "web-worker@^1.2.0":
   "integrity" "sha512-PgF341avzqyx60neE9DD+XS26MMNMoUQRz9NOZwW32nPQrF6p77f1htcnjBSEV8BGMKZ16choqUG4hyI0Hx7mA=="
-  "resolved" "https://registry.npmjs.org/web-worker/-/web-worker-1.2.0.tgz"
+  "resolved" "https://registry.npmmirror.com/web-worker/-/web-worker-1.2.0.tgz"
   "version" "1.2.0"
 
 "webpack-sources@^3.2.3":
@@ -3365,9 +3370,9 @@
   "version" "4.0.0"
 
 "xml-utils@^1.0.2":
-  "integrity" "sha512-i4PIrX33Wd66dvwo4syicwlwmnr6wuvvn4f2ku9hA67C2Uk62Xubczuhct+Evnd12/DV71qKNeDdJwES8HX1RA=="
-  "resolved" "https://registry.npmjs.org/xml-utils/-/xml-utils-1.3.0.tgz"
-  "version" "1.3.0"
+  "integrity" "sha512-bWB489+RQQclC7A9OW8e5BzbT8Tu//jtAOvkYwewFr+Q9T9KDGvfzC1lp0pYPEQPEoPQLDkmxkepSC/2gIAZGw=="
+  "resolved" "https://registry.npmmirror.com/xml-utils/-/xml-utils-1.7.0.tgz"
+  "version" "1.7.0"
 
 "xss@^1.0.11":
   "integrity" "sha512-clu7dxTm1e8Mo5fz3n/oW3UCXBfV89xZ72jM8yzo1vR/pIS0w3sgB3XV2H8Vm6zfGnHL0FzvLJPJEBhd86/z4Q=="
