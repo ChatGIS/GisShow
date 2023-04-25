@@ -9,9 +9,11 @@ import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import Img from '@/assets/image/device_common.svg'
 import { Feature } from 'ol'
-import { Point } from 'ol/geom'
+import { LineString, Point } from 'ol/geom'
 import { Icon, Style,Circle as CircleStyle, Fill, Text, RegularShape } from 'ol/style'
 import StyleSetting from '@/utils/style-setting'
+import IconFlag from '@/assets/image/flag.png'
+import IconLocation from '@/assets/image/location.png'
 
 // 定义map
 const mapObj = {
@@ -26,10 +28,14 @@ let checkedPointTriangular = ref(false)
 let checkedPointSquare = ref(false)
 let checkedPointPentagram = ref(false)
 let checkedPointArrowhead = ref(false)
+let checkedPointIconFlag = ref(false)
+let checkedPointIconLocation = ref(false)
+let checkedLine = ref(false)
+
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerStyle, layerPoint],
+        layers: [gaodeTileLayer, layerStyle, layerPoint, layerLine],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -63,9 +69,14 @@ const sourcePoint = new VectorSource({})
 const layerPoint = new Vector({
     source: sourcePoint
 })
+const sourceLine = new VectorSource({})
+const layerLine = new Vector({
+    source: sourceLine
+})
 // 初始化图层数据
 const initLayerData = () => {
     const count = 10
+    const lineData = []
     for(let i = 0; i < 10; i++) {
         const operator1 = Math.random() > 0.5 ? '+' : '-'
         const operator2 = Math.random() > 0.5 ? '+' : '-'
@@ -73,13 +84,12 @@ const initLayerData = () => {
         const lat = eval('mapObj.center[1]' + operator2 + '0.05 * Math.random() * Math.random()')
         const feature = new Feature(new Point([lon, lat]))
         sourcePoint.addFeature(feature)
+
+        lineData.push([lon, lat])
     }
+    sourceLine.addFeature(new Feature(new LineString(lineData)))
 }
 // 样式要素
-const featureCircle = new Feature(new Point([mapObj.center[0] + 0.01, mapObj.center[1]  + 0.01]))
-const featureTriangular = new Feature(new Point([mapObj.center[0] + 0.008, mapObj.center[1] + 0.01]))
-const featureSquare = new Feature(new Point([mapObj.center[0] + 0.006, mapObj.center[1] + 0.01]))
-const featurePentagram = new Feature(new Point([mapObj.center[0] + 0.004, mapObj.center[1] + 0.01]))
 const featureArrowhead = new Feature(new Point([mapObj.center[0] + 0.002, mapObj.center[1] + 0.01]))
 
 // 鼠标拾取位置坐标控件
@@ -129,75 +139,70 @@ const addFeature = () => {
 // 圆形
 const toggleShowCircle = () => {
     const settings = {
-        showStyle: 1,
+        isShowStyle: 1,
         displayType: 'POINT',
         shapeCode: 1,
         shapeSize: 10,
-        opacity: 80,
+        opacity: 50,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }
     if(!checkedPointCircle.value) {
-        settings.showStyle = 0
+        settings.isShowStyle = 0
     }
     StyleSetting.setLayerStyle(layerPoint, settings)
 }
 // 三角形
 const toggleShowTriangular = () => {
-    if(checkedPointTriangular.value) {
-        featureTriangular.setStyle(new Style({
-            image: new RegularShape({
-                points: 3,
-                radius: 20,
-                fill: new Fill({
-                    color: 'red'
-                }),
-                angle: 0
-            })
-        }))
-        sourceStyle.addFeature(featureTriangular)
-    } else {
-        sourceStyle.removeFeature(featureTriangular)
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'POINT',
+        shapeCode: 2,
+        shapeSize: 20,
+        opacity: 60,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
     }
+    if(!checkedPointTriangular.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
 }
 // 正方形
 const toggleShowSquare = () => {
-    if(checkedPointSquare.value) {
-        featureSquare.setStyle(new Style({
-            image: new RegularShape({
-                points: 4,
-                radius: 20,
-                fill: new Fill({
-                    color: 'red'
-                }),
-                angle: 0.79
-            })
-        }))
-        sourceStyle.addFeature(featureSquare)
-    } else {
-        sourceStyle.removeFeature(featureSquare)
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'POINT',
+        shapeCode: 3,
+        shapeSize: 30,
+        opacity: 70,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
     }
+    if(!checkedPointSquare.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
 }
 // 五角星
 const toggleShowPentagram = () => {
-    if(checkedPointPentagram.value) {
-        featurePentagram.setStyle(new Style({
-            image: new RegularShape({
-                points: 5,
-                // radius: 20,
-                fill: new Fill({
-                    color: 'red'
-                }),
-                radius1: 20,
-                radius2: 8,
-                angle: 0
-            })
-        }))
-        sourceStyle.addFeature(featurePentagram)
-    } else {
-        sourceStyle.removeFeature(featurePentagram)
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'POINT',
+        shapeCode: 4,
+        shapeSize: 40,
+        opacity: 80,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
     }
+    if(!checkedPointPentagram.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
 }
 // 箭头
 const toggleShowArrowhead = () => {
@@ -219,6 +224,72 @@ const toggleShowArrowhead = () => {
         sourceStyle.removeFeature(featureArrowhead)
     }
 }
+// 旗帜图标
+const toggleShowIconFlag = () => {
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'BITMAP',
+        shapeCode: 4,
+        shapeSize: 40,
+        opacity: 40,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
+        width: 30,
+        height: 30,
+        xOffset: 30,
+        yOffset: 30,
+        srcIcon: IconFlag
+    }
+    if(!checkedPointIconFlag.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
+}
+// 定位图标
+const toggleShowIconLocation = () => {
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'BITMAP',
+        shapeCode: 4,
+        shapeSize: 40,
+        opacity: 80,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
+        width: 20,
+        height: 20,
+        xOffset: 10,
+        yOffset: 10,
+        srcIcon: IconLocation
+    }
+    if(!checkedPointIconLocation.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
+}
+// 线样式
+const toggleShowLine = () => {
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'LINE',
+        shapeCode: 4,
+        shapeSize: 40,
+        opacity: 80,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
+        width: 20,
+        height: 20,
+        xOffset: 10,
+        yOffset: 10,
+        srcIcon: IconLocation
+    }
+    if(!checkedLine.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPoint, settings)
+}
 </script>
 
 <template>
@@ -235,12 +306,21 @@ const toggleShowArrowhead = () => {
                 <el-checkbox v-model="checkedPointPentagram" label="五角形" size="large" @change="toggleShowPentagram"/>
             </div>
             <div>
-                <el-checkbox v-model="checkedPointArrowhead" label="箭头" size="large" @change="toggleShowArrowhead"/>
-                <el-checkbox v-model="checkedPointPentagram" label="五角形" size="large" @change="toggleShowPentagram"/>
+                <!-- <el-checkbox v-model="checkedPointArrowhead" label="箭头" size="large" @change="toggleShowArrowhead"/> -->
+                <!-- <el-checkbox v-model="checkedPointPentagram" label="五角形" size="large" @change="toggleShowPentagram"/> -->
             </div>
         </div>
-        <div id="ssss" class="style-container">线样式</div>
-        <div id="ssss" class="style-container">面样式</div>
+        <div id="ssss" class="style-container">
+            <h5>图标</h5>
+            <div>
+                <el-checkbox v-model="checkedPointIconFlag" label="旗帜" size="large" @change="toggleShowIconFlag"/>
+                <el-checkbox v-model="checkedPointIconLocation" label="定位" size="large" @change="toggleShowIconLocation"/>
+            </div>
+        </div>
+        <div id="ssss" class="style-container">
+            <h5>线样式</h5>
+            <el-checkbox v-model="checkedLine" label="线" size="large" @change="toggleShowLine"/>
+        </div>
       </el-aside>
       <el-main>
         <div id="zoom-level-now">当前级别：{{zoom}}</div>
