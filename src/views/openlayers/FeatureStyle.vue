@@ -9,7 +9,7 @@ import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import Img from '@/assets/image/device_common.svg'
 import { Feature } from 'ol'
-import { LineString, Point } from 'ol/geom'
+import { LineString, Point, Polygon } from 'ol/geom'
 import { Icon, Style,Circle as CircleStyle, Fill, Text, RegularShape } from 'ol/style'
 import StyleSetting from '@/utils/style-setting'
 import IconFlag from '@/assets/image/flag.png'
@@ -31,11 +31,12 @@ let checkedPointArrowhead = ref(false)
 let checkedPointIconFlag = ref(false)
 let checkedPointIconLocation = ref(false)
 let checkedLine = ref(false)
+let checkedPolygon = ref(false)
 
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerStyle, layerPoint, layerLine],
+        layers: [gaodeTileLayer, layerStyle, layerPolygon, layerLine, layerPoint],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -73,10 +74,16 @@ const sourceLine = new VectorSource({})
 const layerLine = new Vector({
     source: sourceLine
 })
+const sourcePolygon = new VectorSource({})
+const layerPolygon = new Vector({
+    source: sourcePolygon
+})
 // 初始化图层数据
 const initLayerData = () => {
     const count = 10
     const lineData = []
+    const polygonData = []
+    const polygonDataLine = []
     for(let i = 0; i < 10; i++) {
         const operator1 = Math.random() > 0.5 ? '+' : '-'
         const operator2 = Math.random() > 0.5 ? '+' : '-'
@@ -86,8 +93,15 @@ const initLayerData = () => {
         sourcePoint.addFeature(feature)
 
         lineData.push([lon, lat])
+        if(i < 3) {
+            polygonDataLine.push([lon, lat])
+        }
     }
+
     sourceLine.addFeature(new Feature(new LineString(lineData)))
+
+    polygonData.push(polygonDataLine)
+    sourcePolygon.addFeature(new Feature(new Polygon(polygonData)))
 }
 // 样式要素
 const featureArrowhead = new Feature(new Point([mapObj.center[0] + 0.002, mapObj.center[1] + 0.01]))
@@ -278,7 +292,7 @@ const toggleShowLine = () => {
         opacity: 80,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
-        strokeWidth: 2,
+        strokeWidth: 5,
         width: 20,
         height: 20,
         xOffset: 10,
@@ -288,7 +302,29 @@ const toggleShowLine = () => {
     if(!checkedLine.value) {
         settings.isShowStyle = 0
     }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    StyleSetting.setLayerStyle(layerLine, settings)
+}
+// 面样式
+const toggleShowPolygon = () => {
+    const settings = {
+        isShowStyle: 1,
+        displayType: 'POLYGON',
+        shapeCode: 4,
+        shapeSize: 40,
+        opacity: 80,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 5,
+        width: 20,
+        height: 20,
+        xOffset: 10,
+        yOffset: 10,
+        srcIcon: IconLocation
+    }
+    if(!checkedPolygon.value) {
+        settings.isShowStyle = 0
+    }
+    StyleSetting.setLayerStyle(layerPolygon, settings)
 }
 </script>
 
@@ -320,6 +356,10 @@ const toggleShowLine = () => {
         <div id="ssss" class="style-container">
             <h5>线样式</h5>
             <el-checkbox v-model="checkedLine" label="线" size="large" @change="toggleShowLine"/>
+        </div>
+        <div id="ssss" class="style-container">
+            <h5>面样式</h5>
+            <el-checkbox v-model="checkedPolygon" label="面" size="large" @change="toggleShowPolygon"/>
         </div>
       </el-aside>
       <el-main>
@@ -356,6 +396,6 @@ const toggleShowLine = () => {
     padding: 0;
 }
 .style-container {
-    height: 33.3%;
+    height: 25%;
 }
 </style>

@@ -30,8 +30,12 @@ const StyleSetting = {
     },
     /* 通用样式 */
     generalStyle(feature, settings) {
-        const style = new Style({})
+        let style = new Style({})
+        const styleWidthLine = [new Style({}), new Style({})]   // 宽线样式
         if(settings.isShowStyle == 1) {
+            if(settings.displayType == 'LINE') {
+                style = styleWidthLine
+            }
             this.generalOneStyle(feature, style, settings)
         }
         return style
@@ -45,6 +49,8 @@ const StyleSetting = {
             this.generalPointStyle(style, settings)
         } else if(displayType == 'LINE') {
             this.generalLineStyle(style, settings)
+        } else if(displayType == 'POLYGON') {
+            this.generalPolygonStyle(style, settings)
         }
     },
     /* 通用位图样式 */
@@ -63,18 +69,16 @@ const StyleSetting = {
     },
     /* 通用点样式 */
     generalPointStyle(style, settings) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const _that = this
         if (settings.shapeCode == '1') {
             //圆形
             const image = new CircleStyle({
                 radius: parseFloat(settings.shapeSize),
                 fill: new Fill({
-                    color: _that.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
                 }),
                 stroke: new Stroke({
                     width: settings.strokeWidth,
-                    color: _that.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
                 })
             })
             style.setImage(image)
@@ -82,11 +86,11 @@ const StyleSetting = {
             //正三角形
             const image = new RegularShape({
                 fill: new Fill({
-                    color: _that.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
                 }),
                 stroke: new Stroke({
                     width: settings.strokeWidth,
-                    color: _that.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
                 }),
                 points: 3,
                 radius: parseFloat(settings.shapeSize),
@@ -97,11 +101,11 @@ const StyleSetting = {
             // 正方形
             const image = new RegularShape({
                 fill: new Fill({
-                    color: _that.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
                 }),
                 stroke: new Stroke({
                     width: settings.strokeWidth,
-                    color: _that.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
                 }),
                 points: 4,
                 radius: parseFloat(settings.shapeSize),
@@ -112,11 +116,11 @@ const StyleSetting = {
             // 五角星
             const image = new RegularShape({
                 fill: new Fill({
-                    color: _that.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
                 }),
                 stroke: new Stroke({
                     width: settings.strokeWidth,
-                    color: _that.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
                 }),
                 points: 5,
                 radius: parseFloat(settings.shapeSize),
@@ -126,8 +130,29 @@ const StyleSetting = {
         } 
     },
     /* 通用线样式 */
-    generalLineStyle(style, settings) {
-        style, settings
+    generalLineStyle(styles, settings) {
+        const strokeBottom = new Stroke({
+            color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100),
+            width: settings.width,
+        })
+        const strokeTop = new Stroke({
+            color: this.colorHexToRgba(settings.fillColor, settings.opacity/100),
+            width: settings.width - settings.strokeWidth * 2,
+        })
+        styles[0].setStroke(strokeBottom)
+        styles[1].setStroke(strokeTop)
+    },
+    /* 通用面样式 */
+    generalPolygonStyle(style, settings) {
+        const fill = new Fill({
+            color: this.colorHexToRgba(settings.fillColor, settings.opacity/100),
+        })
+        const stroke = new Stroke({
+            color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100),
+            width: settings.strokeWidth,
+        })
+        style.setFill(fill)
+        style.setStroke(stroke)
     },
     /* 十六进制颜色值转rgb */
     colorHexToRgb(colorHex) {
