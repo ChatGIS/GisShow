@@ -78,6 +78,11 @@ const sourcePolygon = new VectorSource({})
 const layerPolygon = new Vector({
     source: sourcePolygon
 })
+// 默认样式
+// layestyleShow = StyleSetting.getDefaultShowStyle
+StyleSetting.setLayerStyle(layerPoint)
+// StyleSetting.setLayerStyle(layerLine)
+// StyleSetting.setLayerStyle(layerPolygon)
 // 初始化图层数据
 const initLayerData = () => {
     const count = 10
@@ -308,6 +313,7 @@ const toggleShowLine = () => {
 const toggleShowPolygon = () => {
     const settings = {
         isShowStyle: 1,
+        useType: 1,
         displayType: 'POLYGON',
         shapeCode: 4,
         shapeSize: 40,
@@ -321,10 +327,19 @@ const toggleShowPolygon = () => {
         yOffset: 10,
         srcIcon: IconLocation
     }
+    const settingLabel = {
+        columnName: 'name',
+        fontType: 'sans-serif',
+        fontSize: 20,
+        textColor: '#FFFFFF',
+        textOpacity: 80,
+        textOffsetX: 20,
+        textOffsetY: 20,
+    }
     if(!checkedPolygon.value) {
         settings.isShowStyle = 0
     }
-    StyleSetting.setLayerStyle(layerPolygon, settings)
+    StyleSetting.setLayerStyle(layerPolygon, settings, settingLabel)
 }
 </script>
 

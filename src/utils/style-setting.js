@@ -1,4 +1,4 @@
-import { Style, Icon, Circle as CircleStyle, Fill, RegularShape, Stroke } from 'ol/style'
+import { Style, Icon, Circle as CircleStyle, Fill, RegularShape, Stroke, Text } from 'ol/style'
 
 const StyleSetting = {
     /* 设置图层样式 
@@ -19,14 +19,80 @@ const StyleSetting = {
         srcIcon: IconFlag  // 位图路径
        }
     */
-    setLayerStyle(layer, settings) {
+    setLayerStyle(layer, settings, settingLabel) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _that = this
+        if(settings == null && settingLabel == null) {
+            const styleDefault = function(feature) {
+                const style = _that.getDefaultStyle(feature)
+                return style
+            }
+            layer.setStyle(styleDefault)
+            return
+        }
+        
         const styleFunc = function(feature){
             const style = _that.generalStyle(feature, settings)
             return style
         }
+        if (settings.useType == 1) {
+            layer.styleShow = styleFunc
+        } else if (settings.useType == 2) {
+            layer.styleSelect = styleFunc
+        } else if (settings.useType == 3) {
+            layer.styleRelate = styleFunc
+        } 
         layer.setStyle(styleFunc)
+    },
+    /* 设置标签 */
+    setLayerLabel(layer, settings) {
+        return
+    },
+    /* 通用标签 */
+    generalLabel(feature, settings) {
+        let style = new Style({})
+        const labelText = feature.get(settings.columnName) || 'test label'
+        const text = new Text({
+            text: labelText,
+            font: settings.fontSize + 'px ' + settings.fontType,
+            offsetX: settings.textOffsetX,
+            offsetY: settings.textOffsetY,
+            fill: new Fill({
+                color: this.colorHexToRgba(settings.textColor, settings.textOpacity/100),
+            }),
+            // stroke: new Stroke({
+            //     color: colorRgba,
+            //     width: 1,
+            // }),
+        })
+        // style.setText(text)
+        return style
+    },
+    /* 默认样式 */
+    getDefaultShowStyle(feature) {
+        return new Style({
+            fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.1)'
+            }),
+            stroke: new Stroke({
+                color: 'red'
+            }),
+            image: new CircleStyle({
+                radius: 10,
+                fill: new Fill({
+                    color: 'rgba(255, 255, 0, 0.8)'
+                })
+            }),
+            text: new Text({
+                text: 'ceshi',
+                font: '12px normal',
+                fill: new Fill({
+                    color: '#9932CC'
+                }),
+                offsetX: 5,
+                offsetY: 5
+            })
+        })
     },
     /* 通用样式 */
     generalStyle(feature, settings) {
@@ -39,7 +105,7 @@ const StyleSetting = {
             this.generalOneStyle(feature, style, settings)
         }
         return style
-    },
+    }, 
     /* 设置通用单一样式 */
     generalOneStyle(feature, style, settings) {
         const displayType = settings.displayType
@@ -81,6 +147,7 @@ const StyleSetting = {
                     color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
                 })
             })
+            
             style.setImage(image)
         } else if (settings.shapeCode == '2') {
             //正三角形
