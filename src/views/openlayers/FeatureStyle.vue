@@ -24,6 +24,7 @@ let zoom = ref(0)
 let map = new Map({})
 
 let checkedPointCircle = ref(false)
+let checkedPointOnly = ref(false)
 let checkedPointTriangular = ref(false)
 let checkedPointSquare = ref(false)
 let checkedPointPentagram = ref(false)
@@ -78,9 +79,18 @@ const sourcePolygon = new VectorSource({})
 const layerPolygon = new Vector({
     source: sourcePolygon
 })
+
+const layerObjPoint = {
+    layer: layerPoint,
+    settingLabel: {},
+    settingStyle: {
+        useType: 1,
+        show: {},
+    },
+}
 // 默认样式
 // layestyleShow = StyleSetting.getDefaultShowStyle
-StyleSetting.setLayerStyle(layerPoint)
+// StyleSetting.setLayerStyle(layerPoint)
 // StyleSetting.setLayerStyle(layerLine)
 // StyleSetting.setLayerStyle(layerPolygon)
 // 初始化图层数据
@@ -95,6 +105,7 @@ const initLayerData = () => {
         const lon = eval('mapObj.center[0]' + operator1 + '0.1 * Math.random() * Math.random()')
         const lat = eval('mapObj.center[1]' + operator2 + '0.05 * Math.random() * Math.random()')
         const feature = new Feature(new Point([lon, lat]))
+        feature.set('name', '生成点' + i)
         sourcePoint.addFeature(feature)
 
         lineData.push([lon, lat])
@@ -155,10 +166,12 @@ const addFeature = () => {
     })
     map.addLayer(layer)
 }
-// 圆形
-const toggleShowCircle = () => {
-    const settings = {
-        isShowStyle: 1,
+// 唯一值分类
+const toggleShowOnly = () => {
+    // 模拟数据
+    const data = [{
+        useType: 1,
+        styleType: 2,
         displayType: 'POINT',
         shapeCode: 1,
         shapeSize: 10,
@@ -166,11 +179,111 @@ const toggleShowCircle = () => {
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
+    }]
+    const settingLabel = {
+        columnName: 'name',
+        fontType: 'sans-serif',
+        fontSize: 20,
+        textColor: '#000000',
+        textOpacity: 100,
+        textOffsetX: 20,
+        textOffsetY: 20,
     }
-    if(!checkedPointCircle.value) {
-        settings.isShowStyle = 0
+    // 模拟处理后台数据
+    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
+    for(let i = 0; i < data.length; i++) {
+        const useType = data[i].useType
+        const styleType = data[i].styleType
+        if(useType == 1) {
+            layerObjPoint.settingStyle.useType = 1
+            if(styleType == 2) {
+                const show = {
+                    styleType: 2,
+                    only: [{
+                        displayType: 'POINT',
+                        shapeCode: 1,
+                        shapeSize: 10,
+                        opacity: 50,
+                        fillColor: '#FF0000',
+                        strokeColor: '#00FF00',
+                        strokeWidth: 2,
+                        filterColumn: 'name',
+                        filterValue: '生成点1'
+                    }, {
+                        displayType: 'POINT',
+                        shapeCode: 2,
+                        shapeSize: 10,
+                        opacity: 50,
+                        fillColor: '#FF0000',
+                        strokeColor: '#00FF00',
+                        strokeWidth: 2,
+                        filterColumn: 'name',
+                        filterValue: '生成点2'
+                    }]
+                }
+                // 单一值
+                layerObjPoint.settingStyle.show = show
+            }
+        }
     }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerObjPoint.settingLabel = settingLabel
+
+    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
+    StyleSetting.setLayerStyle(layerObjPoint)
+}
+// 圆形
+const toggleShowCircle = () => {
+    // 模拟数据
+    const data = [{
+        useType: 1,
+        styleType: 1,
+        displayType: 'POINT',
+        shapeCode: 1,
+        shapeSize: 10,
+        opacity: 50,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
+    }]
+    const settingLabel = {
+        columnName: 'name',
+        fontType: 'sans-serif',
+        fontSize: 20,
+        textColor: '#000000',
+        textOpacity: 100,
+        textOffsetX: 20,
+        textOffsetY: 20,
+    }
+    // 模拟处理后台数据
+    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
+    for(let i = 0; i < data.length; i++) {
+        const useType = data[i].useType
+        const styleType = data[i].styleType
+        if(useType == 1) {
+            layerObjPoint.settingStyle.useType = 1
+            if(styleType == 1) {
+                const show = {
+                    styleType: 1,
+                    one: {
+                        displayType: 'POINT',
+                        shapeCode: 1,
+                        shapeSize: 10,
+                        opacity: 50,
+                        fillColor: '#FF0000',
+                        strokeColor: '#00FF00',
+                        strokeWidth: 2,
+                    }
+                }
+                show.styleType = 1
+                // 单一值
+                layerObjPoint.settingStyle.show = show
+            }
+        }
+    }
+    layerObjPoint.settingLabel = settingLabel
+
+    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
+    StyleSetting.setLayerStyle(layerObjPoint)
 }
 // 三角形
 const toggleShowTriangular = () => {
@@ -348,6 +461,7 @@ const toggleShowPolygon = () => {
       <el-aside width="300px">
         <div id="ssss" class="style-container">
             <h5>点样式</h5>
+            <el-checkbox v-model="checkedPointOnly" label="唯一值" size="large" @change="toggleShowOnly"/>
             <div>
                 <el-checkbox v-model="checkedPointCircle" label="圆形" size="large" @change="toggleShowCircle"/>
                 <el-checkbox v-model="checkedPointTriangular" label="三角形" size="large" @change="toggleShowTriangular"/>

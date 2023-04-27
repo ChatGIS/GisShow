@@ -19,39 +19,19 @@ const StyleSetting = {
         srcIcon: IconFlag  // 位图路径
        }
     */
-    setLayerStyle(layer, settings, settingLabel) {
+    setLayerStyle(layerObj) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _that = this
-        if(settings == null && settingLabel == null) {
-            const styleDefault = function(feature) {
-                const style = _that.getDefaultStyle(feature)
-                return style
-            }
-            layer.setStyle(styleDefault)
-            return
-        }
         
         const styleFunc = function(feature){
-            const style = _that.generalStyle(feature, settings)
+            const style = _that.generalStyle(feature, layerObj)
             return style
         }
-        if (settings.useType == 1) {
-            layer.styleShow = styleFunc
-        } else if (settings.useType == 2) {
-            layer.styleSelect = styleFunc
-        } else if (settings.useType == 3) {
-            layer.styleRelate = styleFunc
-        } 
-        layer.setStyle(styleFunc)
-    },
-    /* 设置标签 */
-    setLayerLabel(layer, settings) {
-        return
+        layerObj.layer.setStyle(styleFunc)
     },
     /* 通用标签 */
     generalLabel(feature, settings) {
-        let style = new Style({})
-        const labelText = feature.get(settings.columnName) || 'test label'
+        const labelText = feature.get(settings.columnName) || ''
         const text = new Text({
             text: labelText,
             font: settings.fontSize + 'px ' + settings.fontType,
@@ -60,13 +40,8 @@ const StyleSetting = {
             fill: new Fill({
                 color: this.colorHexToRgba(settings.textColor, settings.textOpacity/100),
             }),
-            // stroke: new Stroke({
-            //     color: colorRgba,
-            //     width: 1,
-            // }),
         })
-        // style.setText(text)
-        return style
+        return text
     },
     /* 默认样式 */
     getDefaultShowStyle(feature) {
@@ -95,28 +70,43 @@ const StyleSetting = {
         })
     },
     /* 通用样式 */
-    generalStyle(feature, settings) {
+    generalStyle(feature, layerObj) {
         let style = new Style({})
         const styleWidthLine = [new Style({}), new Style({})]   // 宽线样式
-        if(settings.isShowStyle == 1) {
-            if(settings.displayType == 'LINE') {
-                style = styleWidthLine
-            }
-            this.generalOneStyle(feature, style, settings)
+        // if(settings.isShowStyle == 1) {
+        // if(settings.displayType == 'LINE') {
+        //     style = styleWidthLine
+        // }
+        if(layerObj.settingStyle.useType == 1) {
+            if(layerObj.settingStyle.show.styleType == 1) {
+                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, layerObj.settingLabel)
+            } else if(layerObj.settingStyle.show.styleType == 2) {
+                const settingArray = layerObj.settingStyle.show.only
+                if(settingArray.length > 0) {
+                    for(let i = 0; i < settingArray.length; i++) {
+                        const filterColumnName = settingArray[0].filterColumn
+                        if(feature.get(filterColumnName) == settingArray[i].filterValue) {
+                            this.generalOneStyle(feature, style, settingArray[i], layerObj.settingLabel)
+                        }
+                    }
+                }
+            } 
+            
         }
+        // }
         return style
     }, 
     /* 设置通用单一样式 */
-    generalOneStyle(feature, style, settings) {
-        const displayType = settings.displayType
+    generalOneStyle(feature, style, settingsStyle, settingsLabel) {
+        const displayType = settingsStyle.displayType
         if(displayType == 'BITMAP') {
-            this.generalBitmapStyle(style, settings)
+            this.generalBitmapStyle(style, settingsStyle)
         } else if(displayType == 'POINT') {
-            this.generalPointStyle(style, settings)
+            this.generalPointStyle(feature, style, settingsStyle, settingsLabel)
         } else if(displayType == 'LINE') {
-            this.generalLineStyle(style, settings)
+            this.generalLineStyle(style, settingsStyle)
         } else if(displayType == 'POLYGON') {
-            this.generalPolygonStyle(style, settings)
+            this.generalPolygonStyle(style, settingsStyle)
         }
     },
     /* 通用位图样式 */
@@ -134,67 +124,75 @@ const StyleSetting = {
         style.setImage(image) 
     },
     /* 通用点样式 */
-    generalPointStyle(style, settings) {
-        if (settings.shapeCode == '1') {
+    generalPointStyle(feature, style, settingsStyle, settingsLabel) {
+        if (settingsStyle.shapeCode == '1') {
             //圆形
             const image = new CircleStyle({
-                radius: parseFloat(settings.shapeSize),
+                radius: parseFloat(settingsStyle.shapeSize),
                 fill: new Fill({
-                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settings.strokeWidth,
-                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    width: settingsStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
                 })
             })
-            
+            if(settingsLabel.columnName) {
+                const text = this.generalLabel(feature, settingsLabel)
+                style.setText(text)
+            }
             style.setImage(image)
-        } else if (settings.shapeCode == '2') {
+        } else if (settingsStyle.shapeCode == '2') {
             //正三角形
             const image = new RegularShape({
                 fill: new Fill({
-                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
+                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settings.strokeWidth,
-                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+                    width: settingsStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
                 }),
                 points: 3,
-                radius: parseFloat(settings.shapeSize),
+                radius: parseFloat(settingsStyle.shapeSize),
                 angle: 0
             })
             style.setImage(image)
-        } else if (settings.shapeCode == '3') {
-            // 正方形
-            const image = new RegularShape({
-                fill: new Fill({
-                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
-                }),
-                stroke: new Stroke({
-                    width: settings.strokeWidth,
-                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
-                }),
-                points: 4,
-                radius: parseFloat(settings.shapeSize),
-                angle: 0.79
-            })
-            style.setImage(image)
-        } else if (settings.shapeCode == '4') {
-            // 五角星
-            const image = new RegularShape({
-                fill: new Fill({
-                    color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
-                }),
-                stroke: new Stroke({
-                    width: settings.strokeWidth,
-                    color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
-                }),
-                points: 5,
-                radius: parseFloat(settings.shapeSize),
-                radius2: 0.4 * parseFloat(settings.shapeSize),
-            })
-            style.setImage(image)
+            if(settingsLabel.columnName) {
+                const text = this.generalLabel(feature, settingsLabel)
+                style.setText(text)
+            }
         } 
+        // else if (settings.shapeCode == '3') {
+        //     // 正方形
+        //     const image = new RegularShape({
+        //         fill: new Fill({
+        //             color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
+        //         }),
+        //         stroke: new Stroke({
+        //             width: settings.strokeWidth,
+        //             color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+        //         }),
+        //         points: 4,
+        //         radius: parseFloat(settings.shapeSize),
+        //         angle: 0.79
+        //     })
+        //     style.setImage(image)
+        // } else if (settings.shapeCode == '4') {
+        //     // 五角星
+        //     const image = new RegularShape({
+        //         fill: new Fill({
+        //             color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
+        //         }),
+        //         stroke: new Stroke({
+        //             width: settings.strokeWidth,
+        //             color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
+        //         }),
+        //         points: 5,
+        //         radius: parseFloat(settings.shapeSize),
+        //         radius2: 0.4 * parseFloat(settings.shapeSize),
+        //     })
+        //     style.setImage(image)
+        // } 
     },
     /* 通用线样式 */
     generalLineStyle(styles, settings) {
