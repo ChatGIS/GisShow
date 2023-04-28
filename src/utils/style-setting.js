@@ -24,14 +24,14 @@ const StyleSetting = {
         const _that = this
         
         const styleFunc = function(feature){
-            const style = _that.generalStyle(feature, layerObj)
+            const style = _that.generalStyle(feature, layerObj, 1)
             return style
         }
         layerObj.layer.setStyle(styleFunc)
     },
     /* 通用标签 */
     generalLabel(feature, settings) {
-        const labelText = feature.get(settings.columnName) || ''
+        const labelText = feature.get(settings.columnName) + '' || ''
         const text = new Text({
             text: labelText,
             font: settings.fontSize + 'px ' + settings.fontType,
@@ -70,17 +70,18 @@ const StyleSetting = {
         })
     },
     /* 通用样式 */
-    generalStyle(feature, layerObj) {
+    generalStyle(feature, layerObj, useType) {
         let style = new Style({})
         const styleWidthLine = [new Style({}), new Style({})]   // 宽线样式
         // if(settings.isShowStyle == 1) {
         // if(settings.displayType == 'LINE') {
         //     style = styleWidthLine
         // }
-        if(layerObj.settingStyle.useType == 1) {
-            if(layerObj.settingStyle.show.styleType == 1) {
+        if(useType == 1) {
+            const styleType = layerObj.settingStyle.show.styleType
+            if(styleType == 1) {
                 this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, layerObj.settingLabel)
-            } else if(layerObj.settingStyle.show.styleType == 2) {
+            } else if(styleType == 2) {
                 const settingArray = layerObj.settingStyle.show.only
                 if(settingArray.length > 0) {
                     for(let i = 0; i < settingArray.length; i++) {
@@ -90,7 +91,20 @@ const StyleSetting = {
                         }
                     }
                 }
-            } 
+            } else if(styleType == 3) {
+                const settingArray = layerObj.settingStyle.show.range
+                if(settingArray.length > 0) {
+                    for(let i = 0; i < settingArray.length; i++) {
+                        const filterColumnName = settingArray[0].filterColumn
+                        const valueFea = feature.get(filterColumnName)
+                        const min = settingArray[i].filterMin
+                        const max = settingArray[i].filterMax
+                        if(valueFea > min && valueFea <= max) {
+                            this.generalOneStyle(feature, style, settingArray[i], layerObj.settingLabel)
+                        }
+                    }
+                }
+            }
             
         }
         // }
@@ -161,38 +175,45 @@ const StyleSetting = {
                 const text = this.generalLabel(feature, settingsLabel)
                 style.setText(text)
             }
+        }  else if (settingsStyle.shapeCode == '3') {
+            // 正方形
+            const image = new RegularShape({
+                fill: new Fill({
+                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                }),
+                stroke: new Stroke({
+                    width: settingsStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                }),
+                points: 4,
+                radius: parseFloat(settingsStyle.shapeSize),
+                angle: 0.79
+            })
+            style.setImage(image)
+            if(settingsLabel.columnName) {
+                const text = this.generalLabel(feature, settingsLabel)
+                style.setText(text)
+            }
+        } else if (settingsStyle.shapeCode == '4') {
+            // 五角星
+            const image = new RegularShape({
+                fill: new Fill({
+                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                }),
+                stroke: new Stroke({
+                    width: settingsStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                }),
+                points: 5,
+                radius: parseFloat(settingsStyle.shapeSize),
+                radius2: 0.4 * parseFloat(settingsStyle.shapeSize),
+            })
+            style.setImage(image)
+            if(settingsLabel.columnName) {
+                const text = this.generalLabel(feature, settingsLabel)
+                style.setText(text)
+            }
         } 
-        // else if (settings.shapeCode == '3') {
-        //     // 正方形
-        //     const image = new RegularShape({
-        //         fill: new Fill({
-        //             color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
-        //         }),
-        //         stroke: new Stroke({
-        //             width: settings.strokeWidth,
-        //             color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
-        //         }),
-        //         points: 4,
-        //         radius: parseFloat(settings.shapeSize),
-        //         angle: 0.79
-        //     })
-        //     style.setImage(image)
-        // } else if (settings.shapeCode == '4') {
-        //     // 五角星
-        //     const image = new RegularShape({
-        //         fill: new Fill({
-        //             color: this.colorHexToRgba(settings.fillColor, settings.opacity/100)
-        //         }),
-        //         stroke: new Stroke({
-        //             width: settings.strokeWidth,
-        //             color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100)
-        //         }),
-        //         points: 5,
-        //         radius: parseFloat(settings.shapeSize),
-        //         radius2: 0.4 * parseFloat(settings.shapeSize),
-        //     })
-        //     style.setImage(image)
-        // } 
     },
     /* 通用线样式 */
     generalLineStyle(styles, settings) {

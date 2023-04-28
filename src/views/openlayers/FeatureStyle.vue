@@ -24,7 +24,8 @@ let zoom = ref(0)
 let map = new Map({})
 
 let checkedPointCircle = ref(false)
-let checkedPointOnly = ref(false)
+let checkedClassOnly = ref(false)
+let checkedClassRange = ref(false)
 let checkedPointTriangular = ref(false)
 let checkedPointSquare = ref(false)
 let checkedPointPentagram = ref(false)
@@ -84,7 +85,6 @@ const layerObjPoint = {
     layer: layerPoint,
     settingLabel: {},
     settingStyle: {
-        useType: 1,
         show: {},
     },
 }
@@ -105,7 +105,7 @@ const initLayerData = () => {
         const lon = eval('mapObj.center[0]' + operator1 + '0.1 * Math.random() * Math.random()')
         const lat = eval('mapObj.center[1]' + operator2 + '0.05 * Math.random() * Math.random()')
         const feature = new Feature(new Point([lon, lat]))
-        feature.set('name', '生成点' + i)
+        feature.set('name', i)
         sourcePoint.addFeature(feature)
 
         lineData.push([lon, lat])
@@ -195,7 +195,6 @@ const toggleShowOnly = () => {
         const useType = data[i].useType
         const styleType = data[i].styleType
         if(useType == 1) {
-            layerObjPoint.settingStyle.useType = 1
             if(styleType == 2) {
                 const show = {
                     styleType: 2,
@@ -208,7 +207,7 @@ const toggleShowOnly = () => {
                         strokeColor: '#00FF00',
                         strokeWidth: 2,
                         filterColumn: 'name',
-                        filterValue: '生成点1'
+                        filterValue: '1'
                     }, {
                         displayType: 'POINT',
                         shapeCode: 2,
@@ -218,7 +217,75 @@ const toggleShowOnly = () => {
                         strokeColor: '#00FF00',
                         strokeWidth: 2,
                         filterColumn: 'name',
-                        filterValue: '生成点2'
+                        filterValue: '2'
+                    }]
+                }
+                // 单一值
+                layerObjPoint.settingStyle.show = show
+            }
+        }
+    }
+    layerObjPoint.settingLabel = settingLabel
+
+    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
+    StyleSetting.setLayerStyle(layerObjPoint)
+}
+// 范围分类
+const toggleShowRange = () => {
+    // 模拟数据
+    const data = [{
+        useType: 1,
+        styleType: 2,
+        displayType: 'POINT',
+        shapeCode: 1,
+        shapeSize: 10,
+        opacity: 50,
+        fillColor: '#FF0000',
+        strokeColor: '#00FF00',
+        strokeWidth: 2,
+    }]
+    const settingLabel = {
+        columnName: 'name',
+        fontType: 'sans-serif',
+        fontSize: 20,
+        textColor: '#000000',
+        textOpacity: 100,
+        textOffsetX: 20,
+        textOffsetY: 20,
+    }
+    // 模拟处理后台数据
+    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
+    for(let i = 0; i < data.length; i++) {
+        const useType = data[i].useType
+        const styleType = data[i].styleType
+        if(useType == 1) {
+            if(styleType == 2) {
+                const show = {
+                    styleType: 3,
+                    range: [{
+                        displayType: 'POINT',
+                        shapeCode: 3,
+                        shapeSize: 10,
+                        opacity: 50,
+                        fillColor: '#FF0000',
+                        strokeColor: '#00FF00',
+                        strokeWidth: 2,
+                        filterColumn: 'name',
+                        filterValue: '1',
+                        filterMin: 0,
+                        filterMax: 5,
+                    }, {
+                        displayType: 'POINT',
+                        shapeCode: 4,
+                        shapeSize: 10,
+                        opacity: 50,
+                        fillColor: '#FF0000',
+                        strokeColor: '#00FF00',
+                        strokeWidth: 2,
+                        filterColumn: 'name',
+                        filterValue: '2',
+                        filterMin: 5,
+                        filterMax: 10,
                     }]
                 }
                 // 单一值
@@ -260,7 +327,6 @@ const toggleShowCircle = () => {
         const useType = data[i].useType
         const styleType = data[i].styleType
         if(useType == 1) {
-            layerObjPoint.settingStyle.useType = 1
             if(styleType == 1) {
                 const show = {
                     styleType: 1,
@@ -461,7 +527,6 @@ const toggleShowPolygon = () => {
       <el-aside width="300px">
         <div id="ssss" class="style-container">
             <h5>点样式</h5>
-            <el-checkbox v-model="checkedPointOnly" label="唯一值" size="large" @change="toggleShowOnly"/>
             <div>
                 <el-checkbox v-model="checkedPointCircle" label="圆形" size="large" @change="toggleShowCircle"/>
                 <el-checkbox v-model="checkedPointTriangular" label="三角形" size="large" @change="toggleShowTriangular"/>
@@ -489,6 +554,11 @@ const toggleShowPolygon = () => {
         <div id="ssss" class="style-container">
             <h5>面样式</h5>
             <el-checkbox v-model="checkedPolygon" label="面" size="large" @change="toggleShowPolygon"/>
+        </div>
+        <div id="ssss" class="style-container">
+            <h5>分类展示</h5>
+            <el-checkbox v-model="checkedClassOnly" label="唯一值" size="large" @change="toggleShowOnly"/>
+            <el-checkbox v-model="checkedClassRange" label="范围值" size="large" @change="toggleShowRange"/>
         </div>
       </el-aside>
       <el-main>
@@ -525,6 +595,6 @@ const toggleShowPolygon = () => {
     padding: 0;
 }
 .style-container {
-    height: 25%;
+    height: 16%;
 }
 </style>
