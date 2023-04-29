@@ -24,25 +24,12 @@ const StyleSetting = {
         const _that = this
         
         const styleFunc = function(feature){
-            const style = _that.generalStyle(feature, layerObj, 1)
+            const style = _that.generateStyle(feature, layerObj, 1)
             return style
         }
         layerObj.layer.setStyle(styleFunc)
     },
-    /* 通用标签 */
-    generalLabel(feature, settings) {
-        const labelText = feature.get(settings.columnName) + '' || ''
-        const text = new Text({
-            text: labelText,
-            font: settings.fontSize + 'px ' + settings.fontType,
-            offsetX: settings.textOffsetX,
-            offsetY: settings.textOffsetY,
-            fill: new Fill({
-                color: this.colorHexToRgba(settings.textColor, settings.textOpacity/100),
-            }),
-        })
-        return text
-    },
+    
     /* 默认样式 */
     getDefaultShowStyle(feature) {
         return new Style({
@@ -69,8 +56,9 @@ const StyleSetting = {
             })
         })
     },
-    /* 通用样式 */
-    generalStyle(feature, layerObj, useType) {
+    /* 生成样式 */
+    generateStyle(feature, layerObj, useType) {
+        const settingLabel = layerObj.settingLabel
         let style = new Style({})
         const styleWidthLine = [new Style({}), new Style({})]   // 宽线样式
         // if(settings.isShowStyle == 1) {
@@ -80,37 +68,37 @@ const StyleSetting = {
         if(useType == 1) {
             const styleType = layerObj.settingStyle.show.styleType
             if(styleType == 1) {
-                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, layerObj.settingLabel)
+                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, )
             } else if(styleType == 2) {
                 const settingArray = layerObj.settingStyle.show.only
                 if(settingArray.length > 0) {
-                    for(let i = 0; i < settingArray.length; i++) {
-                        const filterColumnName = settingArray[0].filterColumn
-                        if(feature.get(filterColumnName) == settingArray[i].filterValue) {
-                            this.generalOneStyle(feature, style, settingArray[i], layerObj.settingLabel)
-                        }
-                    }
+                    this.generalOnlyStyle(feature, style, settingArray, settingLabel)
                 }
             } else if(styleType == 3) {
                 const settingArray = layerObj.settingStyle.show.range
                 if(settingArray.length > 0) {
-                    for(let i = 0; i < settingArray.length; i++) {
-                        const filterColumnName = settingArray[0].filterColumn
-                        const valueFea = feature.get(filterColumnName)
-                        const min = settingArray[i].filterMin
-                        const max = settingArray[i].filterMax
-                        if(valueFea > min && valueFea <= max) {
-                            this.generalOneStyle(feature, style, settingArray[i], layerObj.settingLabel)
-                        }
-                    }
+                    this.generalRangeStyle(feature, style, settingArray, settingLabel)
                 }
             }
-            
         }
         // }
         return style
     }, 
-    /* 设置通用单一样式 */
+    /* 通用标签 */
+    generalLabel(feature, settings) {
+        const labelText = feature.get(settings.columnName) + '' || ''
+        const text = new Text({
+            text: labelText,
+            font: settings.fontSize + 'px ' + settings.fontType,
+            offsetX: settings.textOffsetX,
+            offsetY: settings.textOffsetY,
+            fill: new Fill({
+                color: this.colorHexToRgba(settings.textColor, settings.textOpacity/100),
+            }),
+        })
+        return text
+    },
+    /* 通用单一样式 */
     generalOneStyle(feature, style, settingsStyle, settingsLabel) {
         const displayType = settingsStyle.displayType
         if(displayType == 'BITMAP') {
@@ -121,6 +109,27 @@ const StyleSetting = {
             this.generalLineStyle(style, settingsStyle)
         } else if(displayType == 'POLYGON') {
             this.generalPolygonStyle(style, settingsStyle)
+        }
+    },
+    /* 通用唯一值分类样式 */
+    generalOnlyStyle(feature, style, settingArray, settingLabel) {
+        for(let i = 0; i < settingArray.length; i++) {
+            const filterColumnName = settingArray[0].filterColumn
+            if(feature.get(filterColumnName) == settingArray[i].filterValue) {
+                this.generalOneStyle(feature, style, settingArray[i], settingLabel)
+            }
+        }
+    },
+    /* 通用范围值分类样式 */
+    generalRangeStyle(feature, style, settingArray, settingsLabel) {
+        for(let i = 0; i < settingArray.length; i++) {
+            const filterColumnName = settingArray[0].filterColumn
+            const valueFea = feature.get(filterColumnName)
+            const min = settingArray[i].filterMin
+            const max = settingArray[i].filterMax
+            if(valueFea > min && valueFea <= max) {
+                this.generalOneStyle(feature, style, settingArray[i], settingsLabel)
+            }
         }
     },
     /* 通用位图样式 */
