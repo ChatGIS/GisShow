@@ -29,16 +29,17 @@ let checkedClassRange = ref(false)
 let checkedPointTriangular = ref(false)
 let checkedPointSquare = ref(false)
 let checkedPointPentagram = ref(false)
-let checkedPointArrowhead = ref(false)
 let checkedPointIconFlag = ref(false)
 let checkedPointIconLocation = ref(false)
 let checkedLine = ref(false)
 let checkedPolygon = ref(false)
+let checkedLineClassOnly = ref(false)
+let checkedLineClassRange = ref(false)
 
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerStyle, layerPolygon, layerLine, layerPoint],
+        layers: [gaodeTileLayer, layerPolygon, layerLine, layerPoint, layerMultiLine],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -54,7 +55,6 @@ onMounted(() => {
     map.on('moveend', () => {
         zoom.value = Math.round(map.getView().getZoom() as number)
     })
-    // addFeature()
 })
 
 // 高德瓦片
@@ -64,14 +64,10 @@ const gaodeTileLayer = new TileLayer({
     })
 })
 // 要素图层
-const sourceStyle = new VectorSource({})
-const layerStyle = new Vector({
-    source: sourceStyle
-})
 const sourcePoint = new VectorSource({})
 const layerPoint = new Vector({
     source: sourcePoint
-})
+})  
 const sourceLine = new VectorSource({})
 const layerLine = new Vector({
     source: sourceLine
@@ -80,26 +76,95 @@ const sourcePolygon = new VectorSource({})
 const layerPolygon = new Vector({
     source: sourcePolygon
 })
-
+const sourceMultiLine = new VectorSource({})
+const layerMultiLine = new Vector({
+    source: sourceMultiLine
+})
+// 图层对象
 const layerObjPoint = {
     layer: layerPoint,
+    GeometryType: 'POINT',
     settingLabel: {},
     settingStyle: {
         show: {},
     },
 }
-// 默认样式
-// layestyleShow = StyleSetting.getDefaultShowStyle
-// StyleSetting.setLayerStyle(layerPoint)
-// StyleSetting.setLayerStyle(layerLine)
-// StyleSetting.setLayerStyle(layerPolygon)
+const layerMultiLineObj = {
+    layer: layerMultiLine,
+    GeometryType: 'LINE',
+    settingLabel: {},
+    settingStyle: {
+        show: {
+            styleType: 2,
+            one: {
+                displayType: 'LINESTYLE',
+                opacity: 50,
+                fillColor: '#00000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+            },
+            only: [{
+                displayType: 'LINESTYLE',
+                opacity: 80,
+                fillColor: '#FF0000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+                filterColumn: 'type',
+                filterValue: '0'
+            },{
+                displayType: 'LINESTYLE',
+                opacity: 80,
+                fillColor: '#FFFF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+                filterColumn: 'type',
+                filterValue: '1'
+            }],
+            range: [{
+                displayType: 'LINESTYLE',
+                opacity: 80,
+                fillColor: '#FF0000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+                filterColumn: 'name',
+                filterMin: 0,
+                filterMax: 3,
+            },{
+                displayType: 'LINESTYLE',
+                opacity: 80,
+                fillColor: '#FFFF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+                filterColumn: 'type',
+                filterValue: '1',
+                filterMin: 3,
+                filterMax: 6,
+            },{
+                displayType: 'LINESTYLE',
+                opacity: 80,
+                fillColor: '#00FF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                width: 20,
+                filterColumn: 'type',
+                filterMin: 6,
+                filterMax: 8,
+            }]
+        }
+    }
+}
 // 初始化图层数据
 const initLayerData = () => {
-    const count = 10
+    const count = 20
     const lineData = []
     const polygonData = []
     const polygonDataLine = []
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < count; i++) {
         const operator1 = Math.random() > 0.5 ? '+' : '-'
         const operator2 = Math.random() > 0.5 ? '+' : '-'
         const lon = eval('mapObj.center[0]' + operator1 + '0.1 * Math.random() * Math.random()')
@@ -113,14 +178,20 @@ const initLayerData = () => {
             polygonDataLine.push([lon, lat])
         }
     }
-
     sourceLine.addFeature(new Feature(new LineString(lineData)))
 
     polygonData.push(polygonDataLine)
     sourcePolygon.addFeature(new Feature(new Polygon(polygonData)))
+
+    // 多线数据
+    for(let i = 1; i < lineData.length; i++) {
+        const aLine = [lineData[i], lineData[i - 1]]
+        const aLineFeature = new Feature(new LineString(aLine))
+        aLineFeature.set('type', i % 3)
+        aLineFeature.set('name', i)
+        sourceMultiLine.addFeature(aLineFeature)
+    }
 }
-// 样式要素
-const featureArrowhead = new Feature(new Point([mapObj.center[0] + 0.002, mapObj.center[1] + 0.01]))
 
 // 鼠标拾取位置坐标控件
 const controlMousePosition = new MousePosition({
@@ -130,42 +201,17 @@ const controlMousePosition = new MousePosition({
     target: document.getElementById('mouse-position') as HTMLElement
 })
 
-const addFeature = () => {
-    const feature = new Feature(new Point(mapObj.center))
-    const feature2 = new Feature(new Point(mapObj.center))
-    feature.setStyle(new Style({
-        image: new Icon({
-            src: Img,
-            // offset: [0.5, 16],
-            // size: 20,
-            anchor: [0.5, 0.9],
-        // anchorOrigin: "bottom-left"
-        }),
-    }))
-    feature2.setStyle(new Style({
-        image: new CircleStyle({
-            radius: 1,
-            fill: new Fill({
-                color: 'red',
-            }),
-        }),
-        text: new Text({
-            font: '12px Microsoft YaHei',
-            fill: new Fill({
-                color: '#ffffff',
-            }),
-            text: '大明湖站',
-            // offsetX: 0,
-            offsetY: 15,
-        }),
-    }))
-    const layer = new Vector({
-        source: new VectorSource({
-            features: [feature, feature2]
-        })
-    })
-    map.addLayer(layer)
+// 标签设置项
+const settingLabel = {
+    columnName: 'name',
+    fontType: 'sans-serif',
+    fontSize: 20,
+    textColor: '#000000',
+    textOpacity: 80,
+    textOffsetX: 20,
+    textOffsetY: 20,
 }
+
 // 唯一值分类
 const toggleShowOnly = () => {
     // 模拟数据
@@ -180,15 +226,6 @@ const toggleShowOnly = () => {
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }]
-    const settingLabel = {
-        columnName: 'name',
-        fontType: 'sans-serif',
-        fontSize: 20,
-        textColor: '#000000',
-        textOpacity: 100,
-        textOffsetX: 20,
-        textOffsetY: 20,
-    }
     // 模拟处理后台数据
     // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
     for(let i = 0; i < data.length; i++) {
@@ -244,15 +281,6 @@ const toggleShowRange = () => {
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }]
-    const settingLabel = {
-        columnName: 'name',
-        fontType: 'sans-serif',
-        fontSize: 20,
-        textColor: '#000000',
-        textOpacity: 100,
-        textOffsetX: 20,
-        textOffsetY: 20,
-    }
     // 模拟处理后台数据
     // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
     for(let i = 0; i < data.length; i++) {
@@ -312,15 +340,6 @@ const toggleShowCircle = () => {
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }]
-    const settingLabel = {
-        columnName: 'name',
-        fontType: 'sans-serif',
-        fontSize: 20,
-        textColor: '#000000',
-        textOpacity: 100,
-        textOffsetX: 20,
-        textOffsetY: 20,
-    }
     // 模拟处理后台数据
     // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
     for(let i = 0; i < data.length; i++) {
@@ -402,26 +421,7 @@ const toggleShowPentagram = () => {
     }
     StyleSetting.setLayerStyle(layerPoint, settings)
 }
-// 箭头
-const toggleShowArrowhead = () => {
-    if(checkedPointArrowhead.value) {
-        featureArrowhead.setStyle(new Style({
-            image: new RegularShape({
-                points: 2,
-                // radius: 20,
-                fill: new Fill({
-                    color: 'red'
-                }),
-                radius1: 20,
-                radius2: 8,
-                angle: 0
-            })
-        }))
-        sourceStyle.addFeature(featureArrowhead)
-    } else {
-        sourceStyle.removeFeature(featureArrowhead)
-    }
-}
+
 // 旗帜图标
 const toggleShowIconFlag = () => {
     const settings = {
@@ -470,7 +470,7 @@ const toggleShowIconLocation = () => {
 const toggleShowLine = () => {
     const settings = {
         isShowStyle: 1,
-        displayType: 'LINE',
+        displayType: 'LINESTYLE',
         shapeCode: 4,
         shapeSize: 40,
         opacity: 80,
@@ -506,19 +506,22 @@ const toggleShowPolygon = () => {
         yOffset: 10,
         srcIcon: IconLocation
     }
-    const settingLabel = {
-        columnName: 'name',
-        fontType: 'sans-serif',
-        fontSize: 20,
-        textColor: '#FFFFFF',
-        textOpacity: 80,
-        textOffsetX: 20,
-        textOffsetY: 20,
-    }
     if(!checkedPolygon.value) {
         settings.isShowStyle = 0
     }
     StyleSetting.setLayerStyle(layerPolygon, settings, settingLabel)
+}
+// 线唯一值
+const toggleLineOnly = () => {
+    layerMultiLineObj.settingLabel = settingLabel
+    layerMultiLineObj.settingStyle.show.styleType = 2
+    StyleSetting.setLayerStyle(layerMultiLineObj)
+}
+// 线范围值
+const toggleLineRange = () => {
+    layerMultiLineObj.settingLabel = settingLabel
+    layerMultiLineObj.settingStyle.show.styleType = 3 
+    StyleSetting.setLayerStyle(layerMultiLineObj)
 }
 </script>
 
@@ -557,8 +560,10 @@ const toggleShowPolygon = () => {
         </div>
         <div id="ssss" class="style-container">
             <h5>分类展示</h5>
-            <el-checkbox v-model="checkedClassOnly" label="唯一值" size="large" @change="toggleShowOnly"/>
-            <el-checkbox v-model="checkedClassRange" label="范围值" size="large" @change="toggleShowRange"/>
+            <el-checkbox v-model="checkedClassOnly" label="点（唯一值）" size="large" @change="toggleShowOnly"/>
+            <el-checkbox v-model="checkedClassRange" label="点（范围值）" size="large" @change="toggleShowRange"/>
+            <el-checkbox v-model="checkedLineClassOnly" label="线（唯一值）" size="large" @change="toggleLineOnly"/>
+            <el-checkbox v-model="checkedLineClassRange" label="线（范围值）" size="large" @change="toggleLineRange"/>
         </div>
       </el-aside>
       <el-main>

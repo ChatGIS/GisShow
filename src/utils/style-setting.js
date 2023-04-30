@@ -59,29 +59,35 @@ const StyleSetting = {
     /* 生成样式 */
     generateStyle(feature, layerObj, useType) {
         const settingLabel = layerObj.settingLabel
+        const geometryType = layerObj.GeometryType
         let style = new Style({})
         const styleWidthLine = [new Style({}), new Style({})]   // 宽线样式
-        // if(settings.isShowStyle == 1) {
-        // if(settings.displayType == 'LINE') {
-        //     style = styleWidthLine
-        // }
+        if(geometryType == 'LINE') {
+            style = styleWidthLine
+        }
         if(useType == 1) {
             const styleType = layerObj.settingStyle.show.styleType
+            const styleShowOne = layerObj.settingStyle.show.one
             if(styleType == 1) {
-                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, )
+                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one)
             } else if(styleType == 2) {
                 const settingArray = layerObj.settingStyle.show.only
                 if(settingArray.length > 0) {
-                    this.generalOnlyStyle(feature, style, settingArray, settingLabel)
+                    const isMatch = this.generalOnlyStyle(feature, style, settingArray, settingLabel)
+                    if(isMatch == 0) {
+                        this.generalOneStyle(feature, style, styleShowOne, settingLabel)
+                    }
                 }
             } else if(styleType == 3) {
                 const settingArray = layerObj.settingStyle.show.range
                 if(settingArray.length > 0) {
-                    this.generalRangeStyle(feature, style, settingArray, settingLabel)
+                    const isMatch  = this.generalRangeStyle(feature, style, settingArray, settingLabel)
+                    if(isMatch == 0) {
+                        this.generalOneStyle(feature, style, styleShowOne, settingLabel)
+                    }
                 }
             }
         }
-        // }
         return style
     }, 
     /* 通用标签 */
@@ -99,38 +105,44 @@ const StyleSetting = {
         return text
     },
     /* 通用单一样式 */
-    generalOneStyle(feature, style, settingsStyle, settingsLabel) {
-        const displayType = settingsStyle.displayType
+    generalOneStyle(feature, style, settingStyle, settingLabel) {
+        const displayType = settingStyle.displayType
         if(displayType == 'BITMAP') {
-            this.generalBitmapStyle(style, settingsStyle)
-        } else if(displayType == 'POINT') {
-            this.generalPointStyle(feature, style, settingsStyle, settingsLabel)
-        } else if(displayType == 'LINE') {
-            this.generalLineStyle(style, settingsStyle)
+            this.generalBitmapStyle(style, settingStyle)
+        } else if(displayType == 'POINTSTYLE') {
+            this.generalPointStyle(feature, style, settingStyle, settingLabel)
+        } else if(displayType == 'LINESTYLE') {
+            this.generalLineStyle(feature, style, settingStyle, settingLabel)
         } else if(displayType == 'POLYGON') {
-            this.generalPolygonStyle(style, settingsStyle)
+            this.generalPolygonStyle(style, settingStyle)
         }
     },
     /* 通用唯一值分类样式 */
     generalOnlyStyle(feature, style, settingArray, settingLabel) {
+        let isMatch = 0  // 是否在范围内
         for(let i = 0; i < settingArray.length; i++) {
             const filterColumnName = settingArray[0].filterColumn
             if(feature.get(filterColumnName) == settingArray[i].filterValue) {
                 this.generalOneStyle(feature, style, settingArray[i], settingLabel)
+                isMatch = 1
             }
         }
+        return isMatch
     },
     /* 通用范围值分类样式 */
-    generalRangeStyle(feature, style, settingArray, settingsLabel) {
+    generalRangeStyle(feature, style, settingArray, settingLabel) {
+        let isMatch = 0  // 是否在范围内
         for(let i = 0; i < settingArray.length; i++) {
             const filterColumnName = settingArray[0].filterColumn
             const valueFea = feature.get(filterColumnName)
             const min = settingArray[i].filterMin
             const max = settingArray[i].filterMax
             if(valueFea > min && valueFea <= max) {
-                this.generalOneStyle(feature, style, settingArray[i], settingsLabel)
+                this.generalOneStyle(feature, style, settingArray[i], settingLabel)
+                isMatch = 1
             }
         }
+        return isMatch
     },
     /* 通用位图样式 */
     generalBitmapStyle(style, settings) {
@@ -147,95 +159,99 @@ const StyleSetting = {
         style.setImage(image) 
     },
     /* 通用点样式 */
-    generalPointStyle(feature, style, settingsStyle, settingsLabel) {
-        if (settingsStyle.shapeCode == '1') {
+    generalPointStyle(feature, style, settingStyle, settingLabel) {
+        if (settingStyle.shapeCode == '1') {
             //圆形
             const image = new CircleStyle({
-                radius: parseFloat(settingsStyle.shapeSize),
+                radius: parseFloat(settingStyle.shapeSize),
                 fill: new Fill({
-                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                    color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settingsStyle.strokeWidth,
-                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                    width: settingStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100)
                 })
             })
-            if(settingsLabel.columnName) {
-                const text = this.generalLabel(feature, settingsLabel)
+            if(settingLabel.columnName) {
+                const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
             style.setImage(image)
-        } else if (settingsStyle.shapeCode == '2') {
+        } else if (settingStyle.shapeCode == '2') {
             //正三角形
             const image = new RegularShape({
                 fill: new Fill({
-                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                    color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settingsStyle.strokeWidth,
-                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                    width: settingStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100)
                 }),
                 points: 3,
-                radius: parseFloat(settingsStyle.shapeSize),
+                radius: parseFloat(settingStyle.shapeSize),
                 angle: 0
             })
             style.setImage(image)
-            if(settingsLabel.columnName) {
-                const text = this.generalLabel(feature, settingsLabel)
+            if(settingLabel.columnName) {
+                const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
-        }  else if (settingsStyle.shapeCode == '3') {
+        }  else if (settingStyle.shapeCode == '3') {
             // 正方形
             const image = new RegularShape({
                 fill: new Fill({
-                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                    color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settingsStyle.strokeWidth,
-                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                    width: settingStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100)
                 }),
                 points: 4,
-                radius: parseFloat(settingsStyle.shapeSize),
+                radius: parseFloat(settingStyle.shapeSize),
                 angle: 0.79
             })
             style.setImage(image)
-            if(settingsLabel.columnName) {
-                const text = this.generalLabel(feature, settingsLabel)
+            if(settingLabel.columnName) {
+                const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
-        } else if (settingsStyle.shapeCode == '4') {
+        } else if (settingStyle.shapeCode == '4') {
             // 五角星
             const image = new RegularShape({
                 fill: new Fill({
-                    color: this.colorHexToRgba(settingsStyle.fillColor, settingsStyle.opacity/100)
+                    color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100)
                 }),
                 stroke: new Stroke({
-                    width: settingsStyle.strokeWidth,
-                    color: this.colorHexToRgba(settingsStyle.strokeColor, settingsStyle.opacity/100)
+                    width: settingStyle.strokeWidth,
+                    color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100)
                 }),
                 points: 5,
-                radius: parseFloat(settingsStyle.shapeSize),
-                radius2: 0.4 * parseFloat(settingsStyle.shapeSize),
+                radius: parseFloat(settingStyle.shapeSize),
+                radius2: 0.4 * parseFloat(settingStyle.shapeSize),
             })
             style.setImage(image)
-            if(settingsLabel.columnName) {
-                const text = this.generalLabel(feature, settingsLabel)
+            if(settingLabel.columnName) {
+                const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
         } 
     },
     /* 通用线样式 */
-    generalLineStyle(styles, settings) {
+    generalLineStyle(feature, styles, settingStyle, settingLabel) {
         const strokeBottom = new Stroke({
-            color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100),
-            width: settings.width,
+            color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100),
+            width: settingStyle.width,
         })
         const strokeTop = new Stroke({
-            color: this.colorHexToRgba(settings.fillColor, settings.opacity/100),
-            width: settings.width - settings.strokeWidth * 2,
+            color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100),
+            width: settingStyle.width - settingStyle.strokeWidth * 2,
         })
         styles[0].setStroke(strokeBottom)
         styles[1].setStroke(strokeTop)
+        if(settingLabel.columnName) {
+            const text = this.generalLabel(feature, settingLabel)
+            styles[0].setText(text)
+        }
     },
     /* 通用面样式 */
     generalPolygonStyle(style, settings) {
