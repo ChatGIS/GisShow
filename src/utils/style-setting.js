@@ -2,22 +2,14 @@ import { Style, Icon, Circle as CircleStyle, Fill, RegularShape, Stroke, Text } 
 
 const StyleSetting = {
     /* 设置图层样式 
-     * layer: 图层
-     * setting对象,示例如下：
-     * const settings = {
-        displayType: 'POINT',  // 呈现样式，POINT:几何图形、BITMAP:位图、LINE:线
-        shapeCode: 4,  // 几何形状，1:圆、2:三角形、3:正方形、4:五角星
-        shapeSize: 40,  // 图形大小
-        opacity: 80,  // 透明度(0~100)
-        fillColor: '#FF0000',  // 填充色(16进制颜色值)
-        strokeColor: '#00FF00',  // 描边色(16进制颜色值)
-        strokeWidth: 2,  // 描边宽度
-        width: 30,  // 位图宽度
-        height: 30,  // 位图高度
-        xOffset: 30,  // 横向偏移
-        yOffset: 30,  // 纵向偏移
-        srcIcon: IconFlag  // 位图路径
-       }
+     * layerOjb: 图层对象，包括：GeometryType、settingLabel、settingStyle
+     * GeometryType： 图层要素类型，包括：POINT、LINE、POLYGON
+     * settingLabel: 标签设置属性，包括：columnName、fontType、fontSize、textColor、textOpacity、textOffsetX、textOffsetY
+     * settingStyle: 样式设置属性，包括：show、select、relate
+     * 其中，show、select、relate代表图层展示、选中、关联样式，内部属性一样
+     * 以show为例，包括：styleType、one、only、range
+     * styleType的值可以为1、2、3，分别对应one、only、range
+     * one为单一样式展示、only为唯一值样式展示、range为范围值样式展示
     */
     setLayerStyle(layerObj) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
