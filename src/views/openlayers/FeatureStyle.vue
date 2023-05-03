@@ -4,13 +4,11 @@ import Map from 'ol/Map'
 import { Tile as TileLayer, Vector } from 'ol/layer'
 import { Vector as VectorSource, XYZ } from 'ol/source'
 import View from 'ol/View'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
-import Img from '@/assets/image/device_common.svg'
 import { Feature } from 'ol'
 import { LineString, Point, Polygon } from 'ol/geom'
-import { Icon, Style,Circle as CircleStyle, Fill, Text, RegularShape } from 'ol/style'
 import StyleSetting from '@/utils/style-setting'
 import IconFlag from '@/assets/image/flag.png'
 import IconLocation from '@/assets/image/location.png'
@@ -86,12 +84,101 @@ const layerMultiPolygon = new Vector({
     source: sourceMultiPolygon
 })
 // 图层对象
-const layerObjPoint = {
+const layerPointObj = {
     layer: layerPoint,
     GeometryType: 'POINT',
     settingLabel: {},
     settingStyle: {
-        show: {},
+        show: {
+            styleType: 1,
+            one: {
+
+            },
+            only: [{
+                displayType: 'POINTSTYLE',
+                shapeCode: 1,
+                shapeSize: 10,
+                opacity: 50,
+                fillColor: '#FF0000',
+                strokeColor: '#00FF00',
+                strokeWidth: 2,
+                filterColumn: 'name',
+                filterValue: '1'
+            }, {
+                displayType: 'POINTSTYLE',
+                shapeCode: 2,
+                shapeSize: 10,
+                opacity: 50,
+                fillColor: '#FF0000',
+                strokeColor: '#00FF00',
+                strokeWidth: 2,
+                filterColumn: 'name',
+                filterValue: '2'
+            },{
+                displayType: 'POINTSTYLE',
+                shapeCode: 3,
+                shapeSize: 10,
+                opacity: 50,
+                fillColor: '#FF0000',
+                strokeColor: '#00FF00',
+                strokeWidth: 2,
+                filterColumn: 'name',
+                filterValue: '3'
+            },{
+                displayType: 'POINTSTYLE',
+                shapeCode: 4,
+                shapeSize: 10,
+                opacity: 50,
+                fillColor: '#FF0000',
+                strokeColor: '#00FF00',
+                strokeWidth: 2,
+                filterColumn: 'name',
+                filterValue: '4'
+            },{
+                displayType: 'BITMAPSTYLE',
+                opacity: 50,
+                width: 30,
+                height: 30,
+                xOffset: 30,
+                yOffset: 30,
+                srcIcon: IconFlag,
+                filterColumn: 'name',
+                filterValue: '5'
+            },{
+                displayType: 'BITMAPSTYLE',
+                opacity: 100,
+                width: 30,
+                height: 30,
+                xOffset: 0,
+                yOffset: 0,
+                srcIcon: IconLocation,
+                filterColumn: 'name',
+                filterValue: '6'
+            }],
+            range: [{
+                displayType: 'POINTSTYLE',
+                shapeCode: 1,
+                shapeSize: 10,
+                opacity: 50,
+                fillColor: '#FF0000',
+                strokeColor: '#00FF00',
+                strokeWidth: 2,
+                filterColumn: 'name',
+                filterMin: '0',
+                filterMax: '5'
+            },{
+                displayType: 'BITMAPSTYLE',
+                opacity: 100,
+                width: 30,
+                height: 30,
+                xOffset: 0,
+                yOffset: 0,
+                srcIcon: IconLocation,
+                filterColumn: 'name',
+                filterMin: '5',
+                filterMax: '10'
+            }]
+        },
     },
 }
 const layerMultiPolygonObj = {
@@ -104,7 +191,7 @@ const layerMultiPolygonObj = {
             one: {
                 displayType: 'POLYGONSTYLE',
                 opacity: 50,
-                fillColor: '#00000',
+                fillColor: '#000000',
                 strokeColor: '#000000',
                 strokeWidth: 5,
             },
@@ -114,16 +201,16 @@ const layerMultiPolygonObj = {
                 fillColor: '#FF0000',
                 strokeColor: '#000000',
                 strokeWidth: 5,
-                filterColumn: 'type',
-                filterValue: '0'
+                filterColumn: 'name',
+                filterValue: '1'
             },{
                 displayType: 'POLYGONSTYLE',
                 opacity: 80,
-                fillColor: '#FFFF00',
+                fillColor: '#00FF00',
                 strokeColor: '#000000',
                 strokeWidth: 5,
-                filterColumn: 'type',
-                filterValue: '1'
+                filterColumn: 'name',
+                filterValue: '4'
             }],
             range: [{
                 displayType: 'POLYGONSTYLE',
@@ -290,304 +377,121 @@ const settingLabel = {
     textOffsetY: 20,
 }
 
-// 唯一值分类
-const toggleShowOnly = () => {
-    // 模拟数据
-    const data = [{
-        useType: 1,
-        styleType: 2,
-        displayType: 'POINT',
-        shapeCode: 1,
-        shapeSize: 10,
-        opacity: 50,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 2,
-    }]
-    // 模拟处理后台数据
-    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
-    for(let i = 0; i < data.length; i++) {
-        const useType = data[i].useType
-        const styleType = data[i].styleType
-        if(useType == 1) {
-            if(styleType == 2) {
-                const show = {
-                    styleType: 2,
-                    only: [{
-                        displayType: 'POINT',
-                        shapeCode: 1,
-                        shapeSize: 10,
-                        opacity: 50,
-                        fillColor: '#FF0000',
-                        strokeColor: '#00FF00',
-                        strokeWidth: 2,
-                        filterColumn: 'name',
-                        filterValue: '1'
-                    }, {
-                        displayType: 'POINT',
-                        shapeCode: 2,
-                        shapeSize: 10,
-                        opacity: 50,
-                        fillColor: '#FF0000',
-                        strokeColor: '#00FF00',
-                        strokeWidth: 2,
-                        filterColumn: 'name',
-                        filterValue: '2'
-                    }]
-                }
-                // 单一值
-                layerObjPoint.settingStyle.show = show
-            }
-        }
-    }
-    layerObjPoint.settingLabel = settingLabel
 
-    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
-    StyleSetting.setLayerStyle(layerObjPoint)
-}
-// 范围分类
-const toggleShowRange = () => {
-    // 模拟数据
-    const data = [{
-        useType: 1,
-        styleType: 2,
-        displayType: 'POINT',
-        shapeCode: 1,
-        shapeSize: 10,
-        opacity: 50,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 2,
-    }]
-    // 模拟处理后台数据
-    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
-    for(let i = 0; i < data.length; i++) {
-        const useType = data[i].useType
-        const styleType = data[i].styleType
-        if(useType == 1) {
-            if(styleType == 2) {
-                const show = {
-                    styleType: 3,
-                    range: [{
-                        displayType: 'POINT',
-                        shapeCode: 3,
-                        shapeSize: 10,
-                        opacity: 50,
-                        fillColor: '#FF0000',
-                        strokeColor: '#00FF00',
-                        strokeWidth: 2,
-                        filterColumn: 'name',
-                        filterValue: '1',
-                        filterMin: 0,
-                        filterMax: 5,
-                    }, {
-                        displayType: 'POINT',
-                        shapeCode: 4,
-                        shapeSize: 10,
-                        opacity: 50,
-                        fillColor: '#FF0000',
-                        strokeColor: '#00FF00',
-                        strokeWidth: 2,
-                        filterColumn: 'name',
-                        filterValue: '2',
-                        filterMin: 5,
-                        filterMax: 10,
-                    }]
-                }
-                // 单一值
-                layerObjPoint.settingStyle.show = show
-            }
-        }
-    }
-    layerObjPoint.settingLabel = settingLabel
-
-    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
-    StyleSetting.setLayerStyle(layerObjPoint)
-}
 // 圆形
 const toggleShowCircle = () => {
-    // 模拟数据
-    const data = [{
-        useType: 1,
-        styleType: 1,
-        displayType: 'POINT',
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'POINTSTYLE',
+        opacity: 80,
         shapeCode: 1,
-        shapeSize: 10,
-        opacity: 50,
+        shapeSize: 30,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
-    }]
-    // 模拟处理后台数据
-    // 后台传递过来数据，将样式配置数据设置为图层对象的对应属性
-    for(let i = 0; i < data.length; i++) {
-        const useType = data[i].useType
-        const styleType = data[i].styleType
-        if(useType == 1) {
-            if(styleType == 1) {
-                const show = {
-                    styleType: 1,
-                    one: {
-                        displayType: 'POINT',
-                        shapeCode: 1,
-                        shapeSize: 10,
-                        opacity: 50,
-                        fillColor: '#FF0000',
-                        strokeColor: '#00FF00',
-                        strokeWidth: 2,
-                    }
-                }
-                show.styleType = 1
-                // 单一值
-                layerObjPoint.settingStyle.show = show
-            }
-        }
     }
-    layerObjPoint.settingLabel = settingLabel
-
-    // 通用函数根据图层对象的样式配置项和标签配置项生成样式，并给图层设置样式
-    StyleSetting.setLayerStyle(layerObjPoint)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 三角形
 const toggleShowTriangular = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'POINT',
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'POINTSTYLE',
+        opacity: 80,
         shapeCode: 2,
-        shapeSize: 20,
-        opacity: 60,
+        shapeSize: 30,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }
-    if(!checkedPointTriangular.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 正方形
 const toggleShowSquare = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'POINT',
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'POINTSTYLE',
+        opacity: 80,
         shapeCode: 3,
         shapeSize: 30,
-        opacity: 70,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }
-    if(!checkedPointSquare.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 五角星
 const toggleShowPentagram = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'POINT',
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'POINTSTYLE',
+        opacity: 80,
         shapeCode: 4,
         shapeSize: 40,
-        opacity: 80,
         fillColor: '#FF0000',
         strokeColor: '#00FF00',
         strokeWidth: 2,
     }
-    if(!checkedPointPentagram.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 
 // 旗帜图标
 const toggleShowIconFlag = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'BITMAP',
-        shapeCode: 4,
-        shapeSize: 40,
-        opacity: 40,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 2,
-        width: 30,
-        height: 30,
-        xOffset: 30,
-        yOffset: 30,
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'BITMAPSTYLE',
+        opacity: 80,
+        width: 20,
+        height: 20,
+        xOffset: 10,
+        yOffset: 10,
         srcIcon: IconFlag
     }
-    if(!checkedPointIconFlag.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 定位图标
-const toggleShowIconLocation = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'BITMAP',
-        shapeCode: 4,
-        shapeSize: 40,
+const toggleShowIconLocation = () => {    
+    layerPointObj.settingStyle.show.one = {
+        displayType: 'BITMAPSTYLE',
         opacity: 80,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 2,
         width: 20,
         height: 20,
         xOffset: 10,
         yOffset: 10,
         srcIcon: IconLocation
     }
-    if(!checkedPointIconLocation.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPoint, settings)
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 线样式
 const toggleShowLine = () => {
-    const settings = {
-        isShowStyle: 1,
-        displayType: 'LINESTYLE',
-        shapeCode: 4,
-        shapeSize: 40,
-        opacity: 80,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 5,
-        width: 20,
-        height: 20,
-        xOffset: 10,
-        yOffset: 10,
-        srcIcon: IconLocation
-    }
-    if(!checkedLine.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerLine, settings)
+    layerMultiLineObj.settingLabel = settingLabel
+    layerMultiLineObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerMultiLineObj)
 }
 // 面样式
 const toggleShowPolygon = () => {
-    const settings = {
-        isShowStyle: 1,
-        useType: 1,
-        displayType: 'POLYGON',
-        shapeCode: 4,
-        shapeSize: 40,
-        opacity: 80,
-        fillColor: '#FF0000',
-        strokeColor: '#00FF00',
-        strokeWidth: 5,
-        width: 20,
-        height: 20,
-        xOffset: 10,
-        yOffset: 10,
-        srcIcon: IconLocation
-    }
-    if(!checkedPolygon.value) {
-        settings.isShowStyle = 0
-    }
-    StyleSetting.setLayerStyle(layerPolygon, settings, settingLabel)
+    layerMultiPolygonObj.settingLabel = settingLabel
+    layerMultiPolygonObj.settingStyle.show.styleType = 1
+    StyleSetting.setLayerStyle(layerMultiPolygonObj)
+}
+// 点唯一值
+const togglePointOnly = () => {
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 2
+    StyleSetting.setLayerStyle(layerPointObj)
+}
+// 点范围
+const togglePointRange = () => {
+    layerPointObj.settingLabel = settingLabel
+    layerPointObj.settingStyle.show.styleType = 3
+    StyleSetting.setLayerStyle(layerPointObj)
 }
 // 线唯一值
 const toggleLineOnly = () => {
@@ -650,8 +554,8 @@ const togglePolygonRange = () => {
         </div>
         <div id="ssss" class="style-container">
             <h5>分类展示</h5>
-            <el-checkbox v-model="checkedClassOnly" label="点（唯一值）" size="large" @change="toggleShowOnly"/>
-            <el-checkbox v-model="checkedClassRange" label="点（范围值）" size="large" @change="toggleShowRange"/>
+            <el-checkbox v-model="checkedClassOnly" label="点（唯一值）" size="large" @change="togglePointOnly"/>
+            <el-checkbox v-model="checkedClassRange" label="点（范围值）" size="large" @change="togglePointRange"/>
             <el-checkbox v-model="checkedLineClassOnly" label="线（唯一值）" size="large" @change="toggleLineOnly"/>
             <el-checkbox v-model="checkedLineClassRange" label="线（范围值）" size="large" @change="toggleLineRange"/>
             <el-checkbox v-model="checkedPolygonClassOnly" label="面（唯一值）" size="large" @change="togglePolygonOnly"/>

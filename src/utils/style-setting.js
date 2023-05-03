@@ -69,7 +69,7 @@ const StyleSetting = {
             const styleType = layerObj.settingStyle.show.styleType
             const styleShowOne = layerObj.settingStyle.show.one
             if(styleType == 1) {
-                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one)
+                this.generalOneStyle(feature, style, layerObj.settingStyle.show.one, settingLabel)
             } else if(styleType == 2) {
                 const settingArray = layerObj.settingStyle.show.only
                 if(settingArray.length > 0) {
@@ -108,13 +108,13 @@ const StyleSetting = {
     generalOneStyle(feature, style, settingStyle, settingLabel) {
         const displayType = settingStyle.displayType
         if(displayType == 'BITMAPSTYLE') {
-            this.generalBitmapStyle(style, settingStyle)
+            this.generalBitmapStyle(feature, style, settingStyle, settingLabel)
         } else if(displayType == 'POINTSTYLE') {
             this.generalPointStyle(feature, style, settingStyle, settingLabel)
         } else if(displayType == 'LINESTYLE') {
             this.generalLineStyle(feature, style, settingStyle, settingLabel)
         } else if(displayType == 'POLYGONSTYLE') {
-            this.generalPolygonStyle(feature,style, settingStyle, settingLabel)
+            this.generalPolygonStyle(feature, style, settingStyle, settingLabel)
         }
     },
     /* 通用唯一值分类样式 */
@@ -145,18 +145,22 @@ const StyleSetting = {
         return isMatch
     },
     /* 通用位图样式 */
-    generalBitmapStyle(style, settings) {
+    generalBitmapStyle(feature, style, settingStyle, settingLabel) {
         const image = new Icon({
             crossOrigin: 'anonymous',
-            anchor: [-1.0 * parseFloat(settings.xOffset), -1.0 * parseFloat(settings.yOffset)],
+            anchor: [-1.0 * parseFloat(settingStyle.xOffset), -1.0 * parseFloat(settingStyle.yOffset)],
             anchorXUnits: 'pixels',
             anchorYUnits: 'pixels',
-            opacity: settings.opacity / 100,
-            width: settings.width,  // olV7.2.0开始支持icon的width和height
-            height: settings.height,
-            src: settings.srcIcon
+            opacity: settingStyle.opacity / 100,
+            width: settingStyle.width,  // olV7.2.0开始支持icon的width和height
+            height: settingStyle.height,
+            src: settingStyle.srcIcon
         })
-        style.setImage(image) 
+        style.setImage(image)
+        if(settingLabel && settingLabel.columnName) {
+            const text = this.generalLabel(feature, settingLabel)
+            style.setText(text)
+        }
     },
     /* 通用点样式 */
     generalPointStyle(feature, style, settingStyle, settingLabel) {
@@ -172,7 +176,7 @@ const StyleSetting = {
                     color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100)
                 })
             })
-            if(settingLabel.columnName) {
+            if(settingLabel && settingLabel.columnName) {
                 const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
@@ -192,7 +196,7 @@ const StyleSetting = {
                 angle: 0
             })
             style.setImage(image)
-            if(settingLabel.columnName) {
+            if(settingLabel && settingLabel.columnName) {
                 const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
@@ -211,7 +215,7 @@ const StyleSetting = {
                 angle: 0.79
             })
             style.setImage(image)
-            if(settingLabel.columnName) {
+            if(settingLabel && settingLabel.columnName) {
                 const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
@@ -230,7 +234,7 @@ const StyleSetting = {
                 radius2: 0.4 * parseFloat(settingStyle.shapeSize),
             })
             style.setImage(image)
-            if(settingLabel.columnName) {
+            if(settingLabel && settingLabel.columnName) {
                 const text = this.generalLabel(feature, settingLabel)
                 style.setText(text)
             }
@@ -248,7 +252,7 @@ const StyleSetting = {
         })
         styles[0].setStroke(strokeBottom)
         styles[1].setStroke(strokeTop)
-        if(settingLabel.columnName) {
+        if(settingLabel && settingLabel.columnName) {
             const text = this.generalLabel(feature, settingLabel)
             styles[0].setText(text)
         }
@@ -264,7 +268,7 @@ const StyleSetting = {
         })
         style.setFill(fill)
         style.setStroke(stroke)
-        if(settingLabel.columnName) {
+        if(settingLabel && settingLabel.columnName) {
             const text = this.generalLabel(feature, settingLabel)
             style.setText(text)
         }
