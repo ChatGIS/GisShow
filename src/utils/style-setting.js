@@ -107,14 +107,14 @@ const StyleSetting = {
     /* 通用单一样式 */
     generalOneStyle(feature, style, settingStyle, settingLabel) {
         const displayType = settingStyle.displayType
-        if(displayType == 'BITMAP') {
+        if(displayType == 'BITMAPSTYLE') {
             this.generalBitmapStyle(style, settingStyle)
         } else if(displayType == 'POINTSTYLE') {
             this.generalPointStyle(feature, style, settingStyle, settingLabel)
         } else if(displayType == 'LINESTYLE') {
             this.generalLineStyle(feature, style, settingStyle, settingLabel)
-        } else if(displayType == 'POLYGON') {
-            this.generalPolygonStyle(style, settingStyle)
+        } else if(displayType == 'POLYGONSTYLE') {
+            this.generalPolygonStyle(feature,style, settingStyle, settingLabel)
         }
     },
     /* 通用唯一值分类样式 */
@@ -254,16 +254,20 @@ const StyleSetting = {
         }
     },
     /* 通用面样式 */
-    generalPolygonStyle(style, settings) {
+    generalPolygonStyle(feature, style, settingStyle, settingLabel) {
         const fill = new Fill({
-            color: this.colorHexToRgba(settings.fillColor, settings.opacity/100),
+            color: this.colorHexToRgba(settingStyle.fillColor, settingStyle.opacity/100),
         })
         const stroke = new Stroke({
-            color: this.colorHexToRgba(settings.strokeColor, settings.opacity/100),
-            width: settings.strokeWidth,
+            color: this.colorHexToRgba(settingStyle.strokeColor, settingStyle.opacity/100),
+            width: settingStyle.strokeWidth,
         })
         style.setFill(fill)
         style.setStroke(stroke)
+        if(settingLabel.columnName) {
+            const text = this.generalLabel(feature, settingLabel)
+            style.setText(text)
+        }
     },
     /* 十六进制颜色值转rgb */
     colorHexToRgb(colorHex) {

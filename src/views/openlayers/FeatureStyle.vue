@@ -35,11 +35,12 @@ let checkedLine = ref(false)
 let checkedPolygon = ref(false)
 let checkedLineClassOnly = ref(false)
 let checkedLineClassRange = ref(false)
-
+let checkedPolygonClassOnly = ref(false)
+let checkedPolygonClassRange = ref(false)
 
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerPolygon, layerLine, layerPoint, layerMultiLine],
+        layers: [gaodeTileLayer, layerPolygon, layerLine, layerMultiPolygon, layerMultiLine, layerPoint],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -80,6 +81,10 @@ const sourceMultiLine = new VectorSource({})
 const layerMultiLine = new Vector({
     source: sourceMultiLine
 })
+const sourceMultiPolygon = new VectorSource({})
+const layerMultiPolygon = new Vector({
+    source: sourceMultiPolygon
+})
 // 图层对象
 const layerObjPoint = {
     layer: layerPoint,
@@ -88,6 +93,69 @@ const layerObjPoint = {
     settingStyle: {
         show: {},
     },
+}
+const layerMultiPolygonObj = {
+    layer: layerMultiPolygon,
+    GeometryType: 'POLYGON',
+    settingLabel: {},
+    settingStyle: {
+        show: {
+            styleType: 2,
+            one: {
+                displayType: 'POLYGONSTYLE',
+                opacity: 50,
+                fillColor: '#00000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+            },
+            only: [{
+                displayType: 'POLYGONSTYLE',
+                opacity: 80,
+                fillColor: '#FF0000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                filterColumn: 'type',
+                filterValue: '0'
+            },{
+                displayType: 'POLYGONSTYLE',
+                opacity: 80,
+                fillColor: '#FFFF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                filterColumn: 'type',
+                filterValue: '1'
+            }],
+            range: [{
+                displayType: 'POLYGONSTYLE',
+                opacity: 80,
+                fillColor: '#FF0000',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                filterColumn: 'name',
+                filterMin: 0,
+                filterMax: 3,
+            },{
+                displayType: 'POLYGONSTYLE',
+                opacity: 80,
+                fillColor: '#FFFF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                filterColumn: 'type',
+                filterValue: '1',
+                filterMin: 3,
+                filterMax: 6,
+            },{
+                displayType: 'POLYGONSTYLE',
+                opacity: 80,
+                fillColor: '#00FF00',
+                strokeColor: '#000000',
+                strokeWidth: 5,
+                filterColumn: 'type',
+                filterMin: 6,
+                filterMax: 8,
+            }]
+        }
+    }
 }
 const layerMultiLineObj = {
     layer: layerMultiLine,
@@ -160,8 +228,8 @@ const layerMultiLineObj = {
 }
 // 初始化图层数据
 const initLayerData = () => {
-    const count = 20
-    const lineData = []
+    const count = 10
+    const points = []
     const polygonData = []
     const polygonDataLine = []
     for(let i = 0; i < count; i++) {
@@ -173,23 +241,33 @@ const initLayerData = () => {
         feature.set('name', i)
         sourcePoint.addFeature(feature)
 
-        lineData.push([lon, lat])
+        points.push([lon, lat])
         if(i < 3) {
             polygonDataLine.push([lon, lat])
         }
     }
-    sourceLine.addFeature(new Feature(new LineString(lineData)))
+    sourceLine.addFeature(new Feature(new LineString(points)))
 
     polygonData.push(polygonDataLine)
     sourcePolygon.addFeature(new Feature(new Polygon(polygonData)))
 
     // 多线数据
-    for(let i = 1; i < lineData.length; i++) {
-        const aLine = [lineData[i], lineData[i - 1]]
+    for(let i = 1; i < points.length; i++) {
+        const aLine = [points[i], points[i - 1]]
         const aLineFeature = new Feature(new LineString(aLine))
         aLineFeature.set('type', i % 3)
         aLineFeature.set('name', i)
         sourceMultiLine.addFeature(aLineFeature)
+    }
+    // 多面数据
+    for(let i = 1; i < points.length; i = i + 3) {
+        const aPolygon = []
+        if(points[i + 2]) {
+            aPolygon.push([points[i], points[i + 1], points[i + 2], points[i]])
+        }
+        const aPolygonFeature = new Feature(new Polygon(aPolygon))
+        aPolygonFeature.set('name', i)
+        sourceMultiPolygon.addFeature(aPolygonFeature)
     }
 }
 
@@ -523,6 +601,18 @@ const toggleLineRange = () => {
     layerMultiLineObj.settingStyle.show.styleType = 3 
     StyleSetting.setLayerStyle(layerMultiLineObj)
 }
+// 面唯一值
+const togglePolygonOnly = () => {
+    layerMultiPolygonObj.settingLabel = settingLabel
+    layerMultiPolygonObj.settingStyle.show.styleType = 2
+    StyleSetting.setLayerStyle(layerMultiPolygonObj)
+}
+// 面范围值
+const togglePolygonRange = () => {
+    layerMultiLineObj.settingLabel = settingLabel
+    layerMultiPolygonObj.settingStyle.show.styleType = 3 
+    StyleSetting.setLayerStyle(layerMultiPolygonObj)
+}
 </script>
 
 <template>
@@ -564,6 +654,8 @@ const toggleLineRange = () => {
             <el-checkbox v-model="checkedClassRange" label="点（范围值）" size="large" @change="toggleShowRange"/>
             <el-checkbox v-model="checkedLineClassOnly" label="线（唯一值）" size="large" @change="toggleLineOnly"/>
             <el-checkbox v-model="checkedLineClassRange" label="线（范围值）" size="large" @change="toggleLineRange"/>
+            <el-checkbox v-model="checkedPolygonClassOnly" label="面（唯一值）" size="large" @change="togglePolygonOnly"/>
+            <el-checkbox v-model="checkedPolygonClassRange" label="面（范围值）" size="large" @change="togglePolygonRange"/>
         </div>
       </el-aside>
       <el-main>
