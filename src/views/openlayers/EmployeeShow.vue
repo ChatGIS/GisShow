@@ -239,7 +239,7 @@ const initEmployeeData = () => {
     for (let i = 0; i < gisJson.length; i++) {
         let yearIn = ''
         let yearLevel = 0
-        const lonlat = gisJson[i].lonlat as unknown as string
+        let lonlat = gisJson[i].lonlat as unknown as string
         const onboardingTime = gisJson[i].onboarding_time
         const isResign = gisJson[i].resign_time? true : false
         // 计算入职年限
@@ -265,8 +265,16 @@ const initEmployeeData = () => {
         if(isResign) {
             yearLevel = 6
         }
-        
-        if (!lonlat) continue
+        // 没有地址，在一定范围内随机生成坐标
+        if (!lonlat) {
+            const basicLon = 117.005046
+            const basicLat = 36.759642
+            const operator1 = Math.random() > 0.5 ? '+' : '-'
+            const operator2 = Math.random() > 0.5 ? '+' : '-'
+            const lon = eval(basicLon + operator1 + '0.1 * Math.random() * Math.random()')
+            const lat = eval(basicLat + operator2 + '0.01 * Math.random() * Math.random()')
+            lonlat = lon + ',' + lat
+        }
         const feature = new Feature({
             geometry: new Point(lonlat.split(',').map(Number) as Coordinate),
             id: gisJson[i].id,
