@@ -7,6 +7,8 @@ import View from 'ol/View'
 import { onMounted, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
+import trainRoadJson from '@/assets/data/trainRoad1.json'
+import saveAs from 'file-saver'
 
 // 定义map
 const mapObj = {
@@ -47,9 +49,34 @@ const controlMousePosition = new MousePosition({
     className: 'custom-mouse-position',
     target: document.getElementById('mouse-position') as HTMLElement
 })
+// 
+const beidou = () => {
+    const trainRoad: any[] = trainRoadJson
+    const points = []
+    for(let i = 0; i < trainRoad.length; i++) {
+        const lon1 = parseFloat(trainRoad[i].longitude)
+        const lat1 = parseFloat(trainRoad[i].latitude)
+        if(lon1 === 0 || lat1 === 0) {
+            continue
+        }
+        let lon = Math.floor(lon1 / 100) + (lon1 % 100) / 60
+        let lat = Math.floor(lat1 / 100) + (lat1 % 100) / 60
+        lon = parseFloat(lon.toFixed(7))
+        lat = parseFloat(lat.toFixed(7))
+        trainRoad[i].lon = lon
+        trainRoad[i].lat = lat
+        points.push([lon, lat])
+    }
+    var file1 = new File([JSON.stringify(trainRoad)], 'trainRoad.json', {type: 'text/plain;charset=utf-8'})
+    // saveAs(file1)
+    const lineJson = {'type':'FeatureCollection','features':[{'type':'Feature','geometry':{'type':'LineString','coordinates':points},'properties':null}]}
+    var file2 = new File([JSON.stringify(lineJson)], 'trainRoad.geojson', {type: 'text/plain;charset=utf-8'})
+    saveAs(file2)
+}
 </script>
 
 <template>
+    <el-button @click="beidou">北斗坐标转换并下载文件</el-button>
     <div id="zoom-level-now">当前级别：{{zoom}}</div>
     <div id="map" class="map"></div>
 </template>

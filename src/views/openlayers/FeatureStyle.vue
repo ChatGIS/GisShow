@@ -9,6 +9,7 @@ import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import { Feature } from 'ol'
 import { LineString, Point, Polygon } from 'ol/geom'
+import * as olProj from 'ol/proj'
 import StyleSetting from '@/utils/style-setting'
 import IconFlag from '@/assets/image/flag.png'
 import IconLocation from '@/assets/image/location.png'
@@ -392,6 +393,9 @@ const toggleShowCircle = () => {
     layerPointObj.settingLabel = settingLabel
     layerPointObj.settingStyle.show.styleType = 1
     StyleSetting.setLayerStyle(layerPointObj)
+
+    const aa = olProj.toLonLat([10818.9831, 2250.3989], 'EPSG:3857')
+    alert(aa)
 }
 // 三角形
 const toggleShowTriangular = () => {
