@@ -9,6 +9,7 @@ import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import trainRoadJson from '@/assets/data/trainRoad1.json'
 import saveAs from 'file-saver'
+import transCoor from '@/utils/trans-coor'
 
 // 定义map
 const mapObj = {
@@ -59,10 +60,19 @@ const beidou = () => {
         if(lon1 === 0 || lat1 === 0) {
             continue
         }
+        // 北斗转84
         let lon = Math.floor(lon1 / 100) + (lon1 % 100) / 60
         let lat = Math.floor(lat1 / 100) + (lat1 % 100) / 60
-        lon = parseFloat(lon.toFixed(7))
-        lat = parseFloat(lat.toFixed(7))
+        
+        // console.log(lon)
+        // console.log(lat)
+        // 84转gcj02
+        const a = transCoor([lon, lat], 1, 2)
+        lon = parseFloat(a[0].toFixed(7))
+        lat = parseFloat(a[1].toFixed(7))
+        // console.log(a)
+        // console.log(lon)
+        // console.log(lat)
         trainRoad[i].lon = lon
         trainRoad[i].lat = lat
         points.push([lon, lat])

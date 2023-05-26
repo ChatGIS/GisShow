@@ -153,6 +153,10 @@ const transLonLat = () => {
             coorWGS84 = transCoor(coordinateInput.value.split(',').map(Number), 2, 1)
             coorGCJ02 = coordinateInput.value.split(',').map(Number)
             coorBD09 = transCoor(coordinateInput.value.split(',').map(Number), 2, 3)
+        } else if (coordinateType.value[0] === 'BD09') {
+            coorWGS84 = [0, 0]
+            coorGCJ02 = transCoor(coordinateInput.value.split(',').map(Number), 3, 2)
+            coorBD09 = coordinateInput.value.split(',').map(Number)
         }
         const featureWGS84 = new Feature(new Point(coorWGS84 as Coordinate))
         const featureGCJ02 = new Feature(new Point(coorGCJ02 as Coordinate))
