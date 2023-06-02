@@ -13,6 +13,9 @@ import * as olProj from 'ol/proj'
 import StyleSetting from '@/utils/style-setting'
 import IconFlag from '@/assets/image/flag.png'
 import IconLocation from '@/assets/image/location.png'
+import RouteArrow from '@/assets/image/routearrow.png'
+import { Icon, Stroke, Style } from 'ol/style'
+import { features } from 'process'
 
 // 定义map
 const mapObj = {
@@ -479,6 +482,60 @@ const toggleShowLine = () => {
     layerMultiLineObj.settingStyle.show.styleType = 1
     StyleSetting.setLayerStyle(layerMultiLineObj)
 }
+// 导航线
+const toggleShowNavigationLine = () => {
+    console.log(sourceLine.getFeatures()[0])
+    layerLine.setStyle(feature => {
+        return getNavicationLineStyle(feature)
+    })
+}
+// 导航线样式
+const getNavicationLineStyle = (featureLineString: any) => {
+    var geometry = featureLineString.getGeometry()
+    var length = geometry.getLength() // 获取线段长度
+    var resolution = map.getView().getResolution() // 分辨率:一个像素代表的距离
+    var radio = (100 * resolution!) / length
+    var dradio = 10000 // 投影坐标系，如3857等，在EPSG:4326下可以设置dradio=10000
+    var color = 'rgba(69,156,80,1)'
+    var styles = [
+        new Style({
+            stroke: new Stroke({
+                color: color,
+                width: 10
+            })
+        })
+    ]
+    for (var i = 0; i <= 1; i += radio) {
+        var arrowLocation = geometry.getCoordinateAt(i)
+        geometry.forEachSegment(function (start: any, end: any) {
+            if (start[0] === end[0] || start[1] === end[1]) return
+            var dx1 = end[0] - arrowLocation[0]
+            var dy1 = end[1] - arrowLocation[1]
+            var dx2 = arrowLocation[0] - start[0]
+            var dy2 = arrowLocation[1] - start[1]
+            if (dx1 !== dx2 && dy1 !== dy2) {
+                if (Math.abs(dradio * dx1 * dy2 - dradio * dx2 * dy1) < 0.00000001) {
+                    var dx = end[0] - start[0]
+                    var dy = end[1] - start[1]
+                    var rotation = Math.atan2(dy, dx)
+                    styles.push(
+                        new Style({
+                            geometry: new Point(arrowLocation),
+                            image: new Icon({
+                                src: RouteArrow,
+                                anchor: [0.5, 0.5],
+                                rotateWithView: false,
+                                rotation: -rotation,
+                                scale: 0.65
+                            })
+                        })
+                    )
+                }
+            }
+        })
+    }
+    return styles
+}
 // 面样式
 const toggleShowPolygon = () => {
     layerMultiPolygonObj.settingLabel = settingLabel
@@ -551,6 +608,7 @@ const togglePolygonRange = () => {
         <div id="ssss" class="style-container">
             <h5>线样式</h5>
             <el-checkbox v-model="checkedLine" label="线" size="large" @change="toggleShowLine"/>
+            <el-checkbox v-model="checkedLine" label="导航线" size="large" @change="toggleShowNavigationLine"/>
         </div>
         <div id="ssss" class="style-container">
             <h5>面样式</h5>

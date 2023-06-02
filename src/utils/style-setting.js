@@ -140,9 +140,7 @@ const StyleSetting = {
     generalBitmapStyle(feature, style, settingStyle, settingLabel) {
         const image = new Icon({
             crossOrigin: 'anonymous',
-            anchor: [-1.0 * parseFloat(settingStyle.xOffset), -1.0 * parseFloat(settingStyle.yOffset)],
-            anchorXUnits: 'pixels',
-            anchorYUnits: 'pixels',
+            displacement: [parseFloat(settingStyle.xOffset), parseFloat(settingStyle.yOffset)],
             opacity: settingStyle.opacity / 100,
             width: settingStyle.width,  // olV7.2.0开始支持icon的width和height
             height: settingStyle.height,
