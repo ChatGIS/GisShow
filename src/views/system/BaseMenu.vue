@@ -59,6 +59,11 @@ const allMenu = [{
     showRoute: '/map-online',
     desc: '常用在线地图'
 }, {
+    title: '图片配准',
+    imgSrc: getAssetsFile('map1.png'),
+    showRoute: '/static-image',
+    desc: '图片配准'
+}, {
     title: '捕捉追踪',
     imgSrc: getAssetsFile('menu_draw_trace.gif'),
     showRoute: '/draw-trace',
