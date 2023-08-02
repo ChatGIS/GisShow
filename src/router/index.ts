@@ -150,6 +150,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'StaticImage1',
+        path: '/static-image1',
+        component: () => import('@/views/openlayers/StaticImage1.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 

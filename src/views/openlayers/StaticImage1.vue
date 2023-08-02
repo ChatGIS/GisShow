@@ -1,28 +1,53 @@
 <!--
  * @Author: Dreamice dreamice13@foxmail.com
+ * @Date: 2023-07-19 14:30:30
+ * @LastEditors: Dreamice dreamice13@foxmail.com
+ * @LastEditTime: 2023-08-02 16:09:50
+ * @FilePath: \GisShow\src\views\openlayers\StaticImage1.vue
+ * @Description: 
+-->
+<!--
+ * @Author: Dreamice dreamice13@foxmail.com
  * @Date: 2023-06-20 16:40:39
  * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2023-07-19 15:37:30
+ * @LastEditTime: 2023-08-01 16:58:32
  * @FilePath: \GisShow\src\views\openlayers\StaticImage1.vue
  * @Description: 
 -->
 <script setup lang='ts'>
 import 'ol/ol.css'
-import { Map, View } from 'ol'
-import { Tile as TileLayer } from 'ol/layer'
+import { Feature, Map, View } from 'ol'
+import { Tile as TileLayer, Vector } from 'ol/layer'
 import { XYZ } from 'ol/source'
 import { onMounted, ref } from 'vue'
 import ImageLayer from 'ol/layer/Image'
 import Static from 'ol/source/ImageStatic'
 import { Projection, addCoordinateTransforms, addProjection, get as getProjection, getTransform, transform } from 'ol/proj'
-import { rotate } from 'ol/coordinate'
+import { Coordinate, rotate } from 'ol/coordinate'
 import { getCenter } from 'ol/extent'
 import * as proj4 from 'proj4'
+import ImgSuidao2 from '@/assets/image/suidao2.jpg'
+import { getImageCenter, getImageHorizontalExtent, getImageRotateRadian } from '@/utils/image-georeference'
+import VectorSource from 'ol/source/Vector'
+import { Fill, Style, Text } from 'ol/style'
+import CircleStyle from 'ol/style/Circle'
+import { Point } from 'ol/geom'
 
 const map = ref()
 
 onMounted(() => {
-    const extent = [112.4501, 34.536965, 112.4771, 34.556965]
+    // 左上、右上、右下、左下
+    const four = [[108.07117747198237, 24.392007671359593], [108.07159380169678, 24.39470651497463], [108.07303816899555, 24.394523604074635], [108.07261826918632, 24.391825240375738]]
+    // const four = [[108.07117747198237, 24.392007671359593], [108.07159380169678, 24.39470651497463], [108.07303816899555, 24.394523604074635], [108.07261826918632, 24.391825240375738]]
+    const center = getImageCenter(four)
+    const extent = getImageHorizontalExtent(four)
+    const b = getImageRotateRadian(four[1], four[0])
+    console.log(b)
+    const fourA = [[extent[0], extent[3]], [extent[2], extent[3]], [extent[2], extent[1]], [extent[0], extent[1]]]
+    
+    
+    // const extent = [112.4501, 34.536965, 112.4771, 34.556965]
+    // const extent = [four[1][0], four[3][1], four[3][0], four[1][1]]
     const projection = new Projection({
         code: 'xkcd-image',
         units: 'pixels',
@@ -31,36 +56,107 @@ onMounted(() => {
     map.value = new Map({
         target: 'mapContainer',
         view: new View({
-            // center: [116.397057,39.917315],
-            center: [112.4771, 34.556965],
-            zoom: 16,
+            center: center,
+            zoom: 18,
             projection: 'EPSG:4326',
         }),
         layers: [
             new TileLayer({
                 source: new XYZ({
-                    url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+                    url: 'http://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=6&x={x}&y={y}&z={z}',
+                    maxZoom: 16,
                 })
             }),
             new ImageLayer({
                 source: new Static({
-                    url: 'https://img.zcool.cn/community/010bbc58229163a84a0e282b16c0c6.jpg?x-oss-process=image/format,webp',
-                    projection: rotateProjection(projection, Math.PI / 4, extent),
+                    url: ImgSuidao2,
+                    projection: rotateProjection(projection, b, extent),
                     imageExtent: extent,
-                })
+                }),
+                opacity: 0.6
             }),
             new ImageLayer({
                 source: new Static({
-                    url: 'https://img.zcool.cn/community/010bbc58229163a84a0e282b16c0c6.jpg?x-oss-process=image/format,webp',
+                    url: ImgSuidao2,
                     // projection: rotateProjection(projection, Math.PI / 2, extent),
                     imageExtent: extent,
-                })
+                }),
+                opacity: 0,
             })
         ]
     })
-    /* setTimeout(() => {
-        map.value.getView().fit([116.391172, 39.910187, 116.402834, 39.92365])
-    }, 5000) */
+    const sourceFour = new VectorSource({})
+    const layerFour = new Vector({
+        source: sourceFour,
+        style: feature => {
+            return new Style({
+                image: new CircleStyle({
+                    radius: 5,
+                    fill: new Fill({
+                        color: 'red'
+                    })
+                }),
+                text: new Text({
+                    text: (feature.get('id') + 1).toString(),
+                })
+            })
+        }
+    })
+    map.value.addLayer(layerFour)
+    four.forEach((a, i) => {
+        sourceFour.addFeature(new Feature({
+            geometry: new Point(a),
+            id: i,
+        }))
+    })
+
+    const sourceExtent = new VectorSource({})
+    const layerExtent = new Vector({
+        source: sourceExtent,
+        style: feature => {
+            return new Style({
+                image: new CircleStyle({
+                    radius: 5,
+                    fill: new Fill({
+                        color: 'yellow'
+                    })
+                }),
+                text: new Text({
+                    text: (feature.get('id') + 1).toString(),
+                })
+            })
+        }
+    })
+    map.value.addLayer(layerExtent)
+    fourA.forEach((a, i) => {
+        sourceExtent.addFeature(new Feature({
+            geometry: new Point(a),
+            id: i,
+        }))
+    })
+
+    const layerCenter1 = new Vector({
+        source: new VectorSource({
+            features: [new Feature({
+                geometry: new Point(center)
+            })]
+        }),
+        style: feature => {
+            return new Style({
+                image: new CircleStyle({
+                    radius: 5,
+                    fill: new Fill({
+                        color: 'blue'
+                    })
+                }),
+                text: new Text({
+                    text: '1',
+                })
+            })
+        }
+    })
+    map.value.addLayer(layerCenter1)
+
 })
 
 function rotateProjection(projection: Projection, angle: number, extent: number[]) {
