@@ -2,7 +2,7 @@
  * @Author: Dreamice dreamice13@foxmail.com
  * @Date: 2023-08-01 15:37:09
  * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2023-08-02 15:54:03
+ * @LastEditTime: 2023-08-03 13:52:55
  * @FilePath: \GisShow\src\utils\image-georeference.js
  * @Description: 
  */
@@ -43,7 +43,8 @@ export function getImageHorizontalExtent(points) {
     const rightPoint = getEndPoint(center, distanceH / 2, 90)
     const topPoint = getEndPoint(center, distanceV / 2, 0)
     const bottomPoint = getEndPoint(center, distanceV / 2, 180)
-    return [leftPoint[0], bottomPoint[1], rightPoint[0], topPoint[1]]
+    const selfCorrection = 0.0001  // 手动矫正坐标值
+    return [leftPoint[0] + selfCorrection, bottomPoint[1] - selfCorrection, rightPoint[0] - selfCorrection, topPoint[1] + selfCorrection]
 }
 /**
  * @description: 获取图片旋转角度
@@ -101,7 +102,7 @@ function getDistance(coor1, coor2) {
  * @param { Number } angle 角度
  * @return { Array } 终点坐标
  */
-export function getEndPoint(start, distance, angle) {debugger
+export function getEndPoint(start, distance, angle) {
     const startLng = start[0]
     const startLat = start[1]
     // 将角度转换为弧度

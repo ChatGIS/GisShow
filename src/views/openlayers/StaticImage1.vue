@@ -2,15 +2,7 @@
  * @Author: Dreamice dreamice13@foxmail.com
  * @Date: 2023-07-19 14:30:30
  * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2023-08-02 16:09:50
- * @FilePath: \GisShow\src\views\openlayers\StaticImage1.vue
- * @Description: 
--->
-<!--
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2023-06-20 16:40:39
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2023-08-01 16:58:32
+ * @LastEditTime: 2023-08-04 14:01:15
  * @FilePath: \GisShow\src\views\openlayers\StaticImage1.vue
  * @Description: 
 -->
@@ -38,7 +30,7 @@ const map = ref()
 onMounted(() => {
     // 左上、右上、右下、左下
     const four = [[108.07117747198237, 24.392007671359593], [108.07159380169678, 24.39470651497463], [108.07303816899555, 24.394523604074635], [108.07261826918632, 24.391825240375738]]
-    // const four = [[108.07117747198237, 24.392007671359593], [108.07159380169678, 24.39470651497463], [108.07303816899555, 24.394523604074635], [108.07261826918632, 24.391825240375738]]
+
     const center = getImageCenter(four)
     const extent = getImageHorizontalExtent(four)
     const b = getImageRotateRadian(four[1], four[0])
@@ -73,7 +65,7 @@ onMounted(() => {
                     projection: rotateProjection(projection, b, extent),
                     imageExtent: extent,
                 }),
-                opacity: 0.6
+                opacity: 1
             }),
             new ImageLayer({
                 source: new Static({
@@ -157,6 +149,7 @@ onMounted(() => {
     })
     map.value.addLayer(layerCenter1)
 
+    map.value.getView().setRotation(2 * Math.PI - b)
 })
 
 function rotateProjection(projection: Projection, angle: number, extent: number[]) {
@@ -178,6 +171,8 @@ function rotateProjection(projection: Projection, angle: number, extent: number[
 
     var normalProjection = getProjection(projection)
 
+    debugger
+
     var rotatedProjection = new Projection({
         code:
       normalProjection?.getCode() +
@@ -186,16 +181,16 @@ function rotateProjection(projection: Projection, angle: number, extent: number[
       ':' +
       extent.toString(),
         units: normalProjection?.getUnits(),
-        extent: extent,
+        // extent: extent,
     })
     addProjection(rotatedProjection)
 
-    addCoordinateTransforms(
-        projection,
-        rotatedProjection,
-        rotateTransform,
-        normalTransform
-    )
+    // addCoordinateTransforms(
+    //     projection,
+    //     rotatedProjection,
+    //     rotateTransform,
+    //     normalTransform
+    // )
 
     addCoordinateTransforms(
         'EPSG:4326',
@@ -208,45 +203,45 @@ function rotateProjection(projection: Projection, angle: number, extent: number[
         }
     )
 
-    addCoordinateTransforms(
-        'EPSG:3857',
-        rotatedProjection,
-        function (coordinate: any) {
-            return rotateTransform(transform(coordinate, 'EPSG:3857', projection))
-        },
-        function (coordinate: any) {
-            return transform(normalTransform(coordinate), projection, 'EPSG:3857')
-        }
-    )
+    // addCoordinateTransforms(
+    //     'EPSG:3857',
+    //     rotatedProjection,
+    //     function (coordinate: any) {
+    //         return rotateTransform(transform(coordinate, 'EPSG:3857', projection))
+    //     },
+    //     function (coordinate: any) {
+    //         return transform(normalTransform(coordinate), projection, 'EPSG:3857')
+    //     }
+    // )
 
     // also set up transforms with any projections defined using proj4
-    if (typeof proj4 !== 'undefined') {
-        var projCodes = Object.keys(proj4.default.defs)
-        projCodes.forEach(function (code) {
-            var proj4Projection = getProjection(code) as Projection
-            if(!proj4Projection) {
-                return
-            }
-            if (!getTransform(proj4Projection, rotatedProjection)) {
-                addCoordinateTransforms(
-                    proj4Projection,
-                    rotatedProjection,
-                    function (coordinate: any) {
-                        return rotateTransform(
-                            transform(coordinate, proj4Projection, projection)
-                        )
-                    },
-                    function (coordinate: any) {
-                        return transform(
-                            normalTransform(coordinate),
-                            projection,
-                            proj4Projection
-                        )
-                    }
-                )
-            }
-        })
-    }
+    // if (typeof proj4 !== 'undefined') {
+    //     var projCodes = Object.keys(proj4.default.defs)
+    //     projCodes.forEach(function (code) {
+    //         var proj4Projection = getProjection(code) as Projection
+    //         if(!proj4Projection) {
+    //             return
+    //         }
+    //         if (!getTransform(proj4Projection, rotatedProjection)) {
+    //             addCoordinateTransforms(
+    //                 proj4Projection,
+    //                 rotatedProjection,
+    //                 function (coordinate: any) {
+    //                     return rotateTransform(
+    //                         transform(coordinate, proj4Projection, projection)
+    //                     )
+    //                 },
+    //                 function (coordinate: any) {
+    //                     return transform(
+    //                         normalTransform(coordinate),
+    //                         projection,
+    //                         proj4Projection
+    //                     )
+    //                 }
+    //             )
+    //         }
+    //     })
+    // }
 
     return rotatedProjection
 }
