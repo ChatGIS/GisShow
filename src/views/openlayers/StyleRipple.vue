@@ -15,8 +15,9 @@ import RenderEvent from 'ol/render/Event'
 
 // 定义map
 const mapObj = {
-    center: [117.024, 36.676],
-    zoom: 15
+    // center: [117.024, 36.676],
+    center: [143.55, 39.50],
+    zoom: 6
 }
 let zoom = ref(0)
 let radiusRipple = 0
@@ -25,7 +26,8 @@ let widthRipple = 4
 var map = new Map({})
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, layerPoint],
+        // layers: [gaodeTileLayer, layerPoint],
+        layers: [gaodeTileLayer, layerTileRoadNetGaode],
         target: 'map',
         view: new View({
             center: mapObj.center,
@@ -34,15 +36,15 @@ onMounted(() => {
         })
     })
     // 添加鼠标位置
-    map.addControl(controlMousePosition)
+    // map.addControl(controlMousePosition)
     // 获取地图层级
     map.on('moveend', () => {
         zoom.value = Math.round(map.getView().getZoom() as number)
     })
     // 水波效果1
-    layerPoint.on('postrender', rippleFun1)
+    // layerPoint.on('postrender', rippleFun1)
     // 水波效果2
-    rippleFun2()
+    // rippleFun2()
 
     rippleFun3()
 })
@@ -50,10 +52,15 @@ onMounted(() => {
 // 高德瓦片
 const gaodeTileLayer = new TileLayer({
     source: new XYZ({
-        url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+        url: 'http://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=6&x={x}&y={y}&z={z}'
     })
 })
-
+// 高德路网瓦片图层
+const layerTileRoadNetGaode = new TileLayer({
+    source: new XYZ({
+        url: 'http://webst0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=8&x={x}&y={y}&z={z}'
+    })
+})
 // 点图层
 const featurePoint1 = new Feature({
     geometry: new Point(mapObj.center)
@@ -103,7 +110,7 @@ const rippleFun2 = () => {
         element: ele,
         positioning: 'center-center'
     })
-    overlayPoint.setPosition([117.026, 36.676])
+    overlayPoint.setPosition(mapObj.center)
     map.addOverlay(overlayPoint)
 }
 
@@ -113,13 +120,13 @@ const rippleFun3 = () => {
         element: ele,
         positioning: 'center-center'
     })
-    overlayPoint.setPosition([117.029, 36.676])
+    overlayPoint.setPosition(mapObj.center)
     map.addOverlay(overlayPoint)
 }
 </script>
 
 <template>
-    <div id="zoom-level-now">当前级别：{{zoom}}</div>
+    <!-- <div id="zoom-level-now">当前级别：{{zoom}}</div> -->
     <div id="map" class="map"></div>
     <div id="div1" class="point_animation">
         <p></p>
@@ -180,9 +187,9 @@ const rippleFun3 = () => {
  }
 
  .css_animation{
-    height:50px;
-    width:50px;
-    border-radius: 25px;
+    height:100px;
+    width:100px;
+    border-radius: 50px;
     background: rgba(255, 0, 0, 0.9);
     transform: scale(0);
     animation: mypoint 2s;

@@ -74,6 +74,11 @@ const allMenu = [{
     showRoute: '/data-type',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 }, {
+    title: '行政区划',
+    imgSrc: getAssetsFile('menu_data_type.gif'),
+    showRoute: '/district-show',
+    desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
+}, {
     title: 'HelloCesium',
     imgSrc: getAssetsFile('menu_hello_cesium.gif'),
     showRoute: '/hello-cesium',
