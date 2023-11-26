@@ -44,6 +44,11 @@ const allMenu = [{
     showRoute: '/style-ripple',
     desc: '水波告警样式'
 }, {
+    title: '双屏联动',
+    imgSrc: getAssetsFile('map_swipe.gif'),
+    showRoute: '/dual-screen-linkage',
+    desc: '双屏联动效果'
+}, {
     title: '地图卷帘',
     imgSrc: getAssetsFile('map_swipe.gif'),
     showRoute: '/map-swipe',

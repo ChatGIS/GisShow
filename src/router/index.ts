@@ -164,6 +164,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'DualScreenLinkage',
+        path: '/dual-screen-linkage',
+        component: () => import('@/views/openlayers/DualScreenLinkage.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 
