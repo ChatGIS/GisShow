@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup>
 import { onMounted, ref } from 'vue'
 import 'ol/ol.css'
 import Map from 'ol/Map'
@@ -6,8 +6,9 @@ import View from 'ol/View'
 import { XYZ, Vector as VectorSource } from 'ol/source'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { Draw, Snap } from 'ol/interaction'
-import { Type } from 'ol/geom/Geometry'
+// import { Type } from 'ol/geom/Geometry'
 import { GeoJSON } from 'ol/format'
+import { LineString } from 'ol/geom'
 
 let map = new Map({})
 const gaodeTileLayer = new TileLayer({
@@ -27,6 +28,17 @@ const baseLayer = new VectorLayer({
         'stroke-width': 0.8,
     },
 })
+const baseLayer2 = new VectorLayer({
+    source: new VectorSource({
+        format: new GeoJSON(),
+        url: '/gisdata/371400.geojson',
+    }),
+    style: {
+        'fill-color': 'rgba(255, 125, 125, 0.3)',
+        'stroke-color': 'rgba(255, 0, 0, 0.9)',
+        'stroke-width': 0.8,
+    },
+})
 // 绘制图层
 const drawLayer = new VectorLayer({
     source: new VectorSource(),
@@ -40,7 +52,7 @@ const drawLayer = new VectorLayer({
 // 注册周期钩子
 onMounted(() => {
     map = new Map({
-        layers: [gaodeTileLayer, baseLayer, drawLayer],
+        layers: [gaodeTileLayer, baseLayer, baseLayer2, drawLayer],
         target: 'map',
         view: new View({
             center: [117, 37],
@@ -53,10 +65,11 @@ onMounted(() => {
 
 // 定义地图交互
 const snapInteraction = new Snap({
-    source: baseLayer.getSource() as VectorSource
+    source: baseLayer.getSource()
+    // source: [baseLayer.getSource() as VectorSource, baseLayer2.getSource() as VectorSource]
 })
 // const modify = new Modify({ source: sourceDraw })
-let drawInteraction: Draw
+let drawInteraction
 
 // 选择框数据
 let isModify = ref(false)
@@ -74,10 +87,10 @@ const selectDrawOptions = [{
 // 添加交互
 const addInteractions = () => {
     drawInteraction = new Draw({
-        source: drawLayer.getSource() as VectorSource,
-        type: selectDrawType.value as Type,
+        source: drawLayer.getSource(),
+        type: selectDrawType.value,
         trace: true,
-        traceSource: baseLayer.getSource() as VectorSource,
+        traceSource: baseLayer.getSource(),
         style: {
             'stroke-color': 'rgba(10, 255, 255, 0.5)',
             'stroke-width': 1.5,
@@ -95,6 +108,30 @@ const addInteractions = () => {
                 return true
             }
         },
+        geometryFunction: function(coordinates, geometry) {
+            if (!geometry) {
+                geometry = new LineString([])
+            }
+            var startPoint = coordinates[0]
+            var endPoint = coordinates[1]
+            var arcPoints = [] // 用于存储圆弧上的点
+            var center = [(startPoint[0] + endPoint[0]) / 2, (startPoint[1] + endPoint[1]) / 2] // 圆弧的中心点
+            var radius = Math.sqrt(Math.pow(endPoint[0] - startPoint[0], 2) + Math.pow(endPoint[1] - startPoint[1], 2)) / 2 // 圆弧的半径
+            var startAngle = Math.atan2(startPoint[1] - center[1], startPoint[0] - center[0]) // 圆弧的起始角度
+            var endAngle = Math.atan2(endPoint[1] - center[1], endPoint[0] - center[0]) // 圆弧的终止角度
+            var angle = endAngle - startAngle // 圆弧的角度
+
+            // 将圆弧上的点添加到arcPoints数组中
+            for (var i = 0; i <= 100; i++) {
+                var angleStep = startAngle + angle * (i / 100)
+                var x = center[0] + radius * Math.cos(angleStep)
+                var y = center[1] + radius * Math.sin(angleStep)
+                arcPoints.push([x, y])
+            }
+
+            geometry.setCoordinates(arcPoints) // 设置线几何对象的坐标为圆弧上的点
+            return geometry
+        }
     })
     map.addInteraction(drawInteraction)
     map.addInteraction(snapInteraction)

@@ -18,6 +18,11 @@ const allMenu = [{
     imgSrc: getAssetsFile('map1.png'),
     showRoute: '/map-base',
     desc: '基础高德地图展示，包括放大、缩小、定位等功能'
+},{
+    title: '坐标转换',
+    imgSrc: getAssetsFile('map1.png'),
+    showRoute: '/coor-convert',
+    desc: '坐标转换(new)：线要素.geojson'
 }, {
     title: '地图纠偏',
     imgSrc: getAssetsFile('menu_map_rectification.gif'),

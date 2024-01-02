@@ -171,6 +171,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'CoorConvert',
+        path: '/coor-convert',
+        component: () => import('@/views/openlayers/CoorConvert.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 
