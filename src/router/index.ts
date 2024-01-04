@@ -178,6 +178,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'SpatialAnalysis',
+        path: '/spatial-analysis',
+        component: () => import('@/views/openlayers/SpatialAnalysis.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 

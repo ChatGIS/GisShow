@@ -23,6 +23,11 @@ const allMenu = [{
     imgSrc: getAssetsFile('map1.png'),
     showRoute: '/coor-convert',
     desc: '坐标转换(new)：线要素.geojson'
+},{
+    title: '空间分析',
+    imgSrc: getAssetsFile('map1.png'),
+    showRoute: '/spatial-analysis',
+    desc: '面是否自相交'
 }, {
     title: '地图纠偏',
     imgSrc: getAssetsFile('menu_map_rectification.gif'),
