@@ -1,15 +1,19 @@
-<script setup lang='ts'>
+<!--
+ * @Author: Dreamice dreamice13@foxmail.com
+ * @Date: 2024-02-06 10:05:39
+ * @LastEditors: Dreamice dreamice13@foxmail.com
+ * @LastEditTime: 2024-02-06 10:17:53
+ * @FilePath: \GisShow\src\views\openlayers\MapBase.vue
+ * @Description: 
+-->
+<script setup>
 import 'ol/ol.css'
-import Map from 'ol/Map'
+import { Map, View } from 'ol'
 import { Tile as TileLayer } from 'ol/layer'
 import { XYZ } from 'ol/source'
-import View from 'ol/View'
-import { onMounted, ref } from 'vue'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
-import trainRoadJson from '@/assets/data/trainRoad1.json'
-import saveAs from 'file-saver'
-import transCoor from '@/utils/trans-coor'
+import { onMounted, ref } from 'vue'
 
 // 定义map
 const mapObj = {
@@ -32,7 +36,7 @@ onMounted(() => {
     map.addControl(controlMousePosition)
     // 获取地图层级
     map.on('moveend', () => {
-        zoom.value = Math.round(map.getView().getZoom() as number)
+        zoom.value = Math.round(map.getView().getZoom())
     })
 })
 
@@ -48,45 +52,11 @@ const controlMousePosition = new MousePosition({
     coordinateFormat: createStringXY(6),
     projection: 'EPSG:4326',
     className: 'custom-mouse-position',
-    target: document.getElementById('mouse-position') as HTMLElement
+    target: document.getElementById('mouse-position')
 })
-// 
-const beidou = () => {
-    const trainRoad: any[] = trainRoadJson
-    const points = []
-    for(let i = 0; i < trainRoad.length; i++) {
-        const lon1 = parseFloat(trainRoad[i].longitude)
-        const lat1 = parseFloat(trainRoad[i].latitude)
-        if(lon1 === 0 || lat1 === 0) {
-            continue
-        }
-        // 北斗转84
-        let lon = Math.floor(lon1 / 100) + (lon1 % 100) / 60
-        let lat = Math.floor(lat1 / 100) + (lat1 % 100) / 60
-        
-        // console.log(lon)
-        // console.log(lat)
-        // 84转gcj02
-        const a = transCoor([lon, lat], 1, 2)
-        lon = parseFloat(a[0].toFixed(7))
-        lat = parseFloat(a[1].toFixed(7))
-        // console.log(a)
-        // console.log(lon)
-        // console.log(lat)
-        trainRoad[i].lon = lon
-        trainRoad[i].lat = lat
-        points.push([lon, lat])
-    }
-    var file1 = new File([JSON.stringify(trainRoad)], 'trainRoad.json', {type: 'text/plain;charset=utf-8'})
-    // saveAs(file1)
-    const lineJson = {'type':'FeatureCollection','features':[{'type':'Feature','geometry':{'type':'LineString','coordinates':points},'properties':null}]}
-    var file2 = new File([JSON.stringify(lineJson)], 'trainRoad.geojson', {type: 'text/plain;charset=utf-8'})
-    saveAs(file2)
-}
 </script>
 
 <template>
-    <el-button @click="beidou">北斗坐标转换并下载文件</el-button>
     <div id="zoom-level-now">当前级别：{{zoom}}</div>
     <div id="map" class="map"></div>
 </template>
@@ -102,6 +72,10 @@ const beidou = () => {
     position: absolute;
     bottom: 20px;
     right: 20px;
+    font-size: 15px;   /*设置文字大小*/
+    color:#3366FF;  /*设置文字颜色*/
+    text-shadow: 0 8px 10px #6699FF;  /*设置文字阴影*/                  
+    font-weight: bolder;  /*设置文字宽度*/      
 }
 
 #zoom-level-now {
@@ -109,5 +83,9 @@ const beidou = () => {
     bottom: 20px;
     right: 200px;
     z-index: 1;
+    font-size: 15px;   /*设置文字大小*/
+    color:#3366FF;  /*设置文字颜色*/
+    text-shadow: 0 8px 10px #6699FF;  /*设置文字阴影*/                  
+    font-weight: bolder;  /*设置文字宽度*/                              
 }
 </style>
