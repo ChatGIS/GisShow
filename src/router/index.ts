@@ -185,6 +185,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'Overlay',
+        path: '/overlay',
+        component: () => import('@/views/openlayers/MapOverlay.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 
