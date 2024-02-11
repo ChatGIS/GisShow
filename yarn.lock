@@ -557,24 +557,10 @@
   "resolved" "https://registry.npmmirror.com/@mapbox/geojson-types/-/geojson-types-1.0.2.tgz"
   "version" "1.0.2"
 
-"@mapbox/jsonlint-lines-primitives@^2.0.2", "@mapbox/jsonlint-lines-primitives@~2.0.2":
+"@mapbox/jsonlint-lines-primitives@^2.0.2":
   "integrity" "sha512-rY0o9A5ECsTQRVhv7tL/OyDpGAoUB4tTvLiW1DSzQGq4bvTPhNw1VpSNjDJc5GFZ2XuyOtSWSVN05qOtcD71qQ=="
   "resolved" "https://registry.npmjs.org/@mapbox/jsonlint-lines-primitives/-/jsonlint-lines-primitives-2.0.2.tgz"
   "version" "2.0.2"
-
-"@mapbox/mapbox-gl-style-spec@^13.23.1":
-  "integrity" "sha512-B8xM7Fp1nh5kejfIl4SWeY0gtIeewbuRencqO3cJDrCHZpaPg7uY+V8abuR+esMeuOjRl5cLhVTP40v+1ywxbg=="
-  "resolved" "https://registry.npmmirror.com/@mapbox/mapbox-gl-style-spec/-/mapbox-gl-style-spec-13.28.0.tgz"
-  "version" "13.28.0"
-  dependencies:
-    "@mapbox/jsonlint-lines-primitives" "~2.0.2"
-    "@mapbox/point-geometry" "^0.1.0"
-    "@mapbox/unitbezier" "^0.0.0"
-    "csscolorparser" "~1.0.2"
-    "json-stringify-pretty-compact" "^2.0.0"
-    "minimist" "^1.2.6"
-    "rw" "^1.3.3"
-    "sort-object" "^0.3.2"
 
 "@mapbox/mapbox-gl-supported@^1.5.0":
   "integrity" "sha512-/PT1P6DNf7vjEEiPkVIRJkvibbqWtqnyGaBz3nfRdcxclNSnSdaLU5tfAgcD7I8Yt5i+L19s406YLl1koLnLbg=="
@@ -2521,6 +2507,26 @@
   "resolved" "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz"
   "version" "1.1.3"
 
+"color-parse@^2.0.0":
+  "integrity" "sha512-g2Z+QnWsdHLppAbrpcFWo629kLOnOPtpxYV69GCqm92gqSgyXbzlfyN3MXs0412fPBkFmiuS+rXposgBgBa6Kg=="
+  "resolved" "https://registry.npmjs.org/color-parse/-/color-parse-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "color-name" "^1.0.0"
+
+"color-rgba@^3.0.0":
+  "integrity" "sha512-PPwZYkEY3M2THEHHV6Y95sGUie77S7X8v+h1r6LSAPF3/LL2xJ8duUXSrkic31Nzc4odPwHgUbiX/XuTYzQHQg=="
+  "resolved" "https://registry.npmjs.org/color-rgba/-/color-rgba-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "color-parse" "^2.0.0"
+    "color-space" "^2.0.0"
+
+"color-space@^2.0.0", "color-space@^2.0.1":
+  "integrity" "sha512-nKqUYlo0vZATVOFHY810BSYjmCARrG7e5R3UE3CQlyjJTvv5kSSmPG1kzm/oDyyqjehM+lW1RnEt9It9GNa5JA=="
+  "resolved" "https://registry.npmjs.org/color-space/-/color-space-2.0.1.tgz"
+  "version" "2.0.1"
+
 "color-string@^1.9.0":
   "integrity" "sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg=="
   "resolved" "https://registry.npmjs.org/color-string/-/color-string-1.9.1.tgz"
@@ -2590,7 +2596,7 @@
   dependencies:
     "utrie" "^1.0.2"
 
-"csscolorparser@~1.0.2", "csscolorparser@~1.0.3":
+"csscolorparser@~1.0.3":
   "integrity" "sha512-umPSgYwZkdFoUrH5hIq5kf0wPSXiro51nPw0j2K/c83KflkPSTBGMz6NJvMB+07VlL0y7VPo6QJcDjcgKTTm3w=="
   "resolved" "https://registry.npmjs.org/csscolorparser/-/csscolorparser-1.0.3.tgz"
   "version" "1.0.3"
@@ -3536,11 +3542,6 @@
   "resolved" "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
   "version" "1.0.1"
 
-"json-stringify-pretty-compact@^2.0.0":
-  "integrity" "sha512-WRitRfs6BGq4q8gTgOy4ek7iPFXjbra0H3PmDLKm2xnZ+Gh1HUhiKGgCZkSPNULlP7mvfu6FV/mOLhCarspADQ=="
-  "resolved" "https://registry.npmmirror.com/json-stringify-pretty-compact/-/json-stringify-pretty-compact-2.0.0.tgz"
-  "version" "2.0.0"
-
 "json5@^2.2.1":
   "integrity" "sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA=="
   "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
@@ -3738,11 +3739,6 @@
     "tinyqueue" "^2.0.3"
     "vt-pbf" "^3.1.1"
 
-"mapbox-to-css-font@^2.4.1":
-  "integrity" "sha512-f+NBjJJY4T3dHtlEz1wCG7YFlkODEjFIYlxDdLIDMNpkSksqTt+l/d4rjuwItxuzkuMFvPyrjzV2lxRM4ePcIA=="
-  "resolved" "https://registry.npmmirror.com/mapbox-to-css-font/-/mapbox-to-css-font-2.4.2.tgz"
-  "version" "2.4.2"
-
 "memoize-one@^6.0.0":
   "integrity" "sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw=="
   "resolved" "https://registry.npmjs.org/memoize-one/-/memoize-one-6.0.0.tgz"
@@ -3924,22 +3920,15 @@
   "resolved" "https://registry.npmmirror.com/ol-ext/-/ol-ext-4.0.10.tgz"
   "version" "4.0.10"
 
-"ol-mapbox-style@^9.2.0":
-  "integrity" "sha512-YX3u8FBJHsRHaoGxmd724Mp5WPTuV7wLQW6zZhcihMuInsSdCX1EiZfU+8IAL7jG0pbgl5YgC0aWE/MXJcUXxg=="
-  "resolved" "https://registry.npmmirror.com/ol-mapbox-style/-/ol-mapbox-style-9.7.0.tgz"
-  "version" "9.7.0"
+"ol@^9.1.0", "ol@>= 5.3.0":
+  "integrity" "sha512-nDrkJ2tzZNpo/wzN/PpHV5zdxbnXZaFktoMaD2cFLEc6gCwlgLY21Yd8wnt/4FjaVYwLBnbN9USXSwIBGcyksQ=="
+  "resolved" "https://registry.npmmirror.com/ol/-/ol-9.1.0.tgz"
+  "version" "9.1.0"
   dependencies:
-    "@mapbox/mapbox-gl-style-spec" "^13.23.1"
-    "mapbox-to-css-font" "^2.4.1"
-
-"ol@^7.3.0", "ol@>= 5.3.0":
-  "integrity" "sha512-08vJE4xITKPazQ9qJjeqYjRngnM9s+1eSv219Pdlrjj3LpLqjEH386ncq+76Dw1oGPGR8eLVEePk7FEd9XqqMw=="
-  "resolved" "https://registry.npmmirror.com/ol/-/ol-7.3.0.tgz"
-  "version" "7.3.0"
-  dependencies:
+    "color-rgba" "^3.0.0"
+    "color-space" "^2.0.1"
     "earcut" "^2.2.3"
     "geotiff" "^2.0.7"
-    "ol-mapbox-style" "^9.2.0"
     "pbf" "3.2.1"
     "rbush" "^3.0.1"
 
@@ -4399,24 +4388,6 @@
   "integrity" "sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q=="
   "resolved" "https://registry.npmjs.org/slash/-/slash-3.0.0.tgz"
   "version" "3.0.0"
-
-"sort-asc@^0.1.0":
-  "integrity" "sha512-jBgdDd+rQ+HkZF2/OHCmace5dvpos/aWQpcxuyRs9QUbPRnkEJmYVo81PIGpjIdpOcsnJ4rGjStfDHsbn+UVyw=="
-  "resolved" "https://registry.npmmirror.com/sort-asc/-/sort-asc-0.1.0.tgz"
-  "version" "0.1.0"
-
-"sort-desc@^0.1.1":
-  "integrity" "sha512-jfZacW5SKOP97BF5rX5kQfJmRVZP5/adDUTY8fCSPvNcXDVpUEe2pr/iKGlcyZzchRJZrswnp68fgk3qBXgkJw=="
-  "resolved" "https://registry.npmmirror.com/sort-desc/-/sort-desc-0.1.1.tgz"
-  "version" "0.1.1"
-
-"sort-object@^0.3.2":
-  "integrity" "sha512-aAQiEdqFTTdsvUFxXm3umdo04J7MRljoVGbBlkH7BgNsMvVNAJyGj7C/wV1A8wHWAJj/YikeZbfuCKqhggNWGA=="
-  "resolved" "https://registry.npmmirror.com/sort-object/-/sort-object-0.3.2.tgz"
-  "version" "0.3.2"
-  dependencies:
-    "sort-asc" "^0.1.0"
-    "sort-desc" "^0.1.1"
 
 "sortablejs@~1.15.0", "sortablejs@1.15.0":
   "integrity" "sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w=="

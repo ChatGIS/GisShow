@@ -32,6 +32,7 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MapMenu: typeof import('./src/components/mapMenu/index.vue')['default']
+    MultiFeatureSelectDialog: typeof import('./src/components/MultiFeatureSelectDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     WeatherTimeLine: typeof import('./src/components/WeatherTimeLine.vue')['default']
