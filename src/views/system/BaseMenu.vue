@@ -113,6 +113,11 @@ const allMenu = [{
     imgSrc: getAssetsFile('hello_canvas.png'),
     showRoute: '/hello-canvas',
     desc: 'Canvas基础'
+}, {
+    title: '楼层选择控件',
+    imgSrc: getAssetsFile('floor_bar.png'),
+    showRoute: '/indoor-map',
+    desc: '楼层选择控件'
 }]
 
 // 计算属性，拆为二维数组

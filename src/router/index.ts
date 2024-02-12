@@ -192,6 +192,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'IndoorMap',
+        path: '/indoor-map',
+        component: () => import('@/views/openlayers/IndoorMap.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 
