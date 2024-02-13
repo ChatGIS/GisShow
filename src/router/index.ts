@@ -144,20 +144,6 @@ const routes:Array<RouteRecordRaw> = [
             keepAlive: false
         }
     },{
-        name: 'StaticImage',
-        path: '/static-image',
-        component: () => import('@/views/openlayers/StaticImage.vue'),
-        meta: {
-            keepAlive: false
-        }
-    },{
-        name: 'StaticImage1',
-        path: '/static-image1',
-        component: () => import('@/views/openlayers/StaticImage1.vue'),
-        meta: {
-            keepAlive: false
-        }
-    },{
         name: 'DistrictShow',
         path: '/district-show',
         component: () => import('@/views/openlayers/DistrictShow.vue'),
