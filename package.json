@@ -16,7 +16,6 @@
     "@siedlerchr/types-ol-ext": "^3.2.0",
     "@turf/turf": "^6.5.0",
     "axios": "^1.2.1",
-    "cesium": "^1.98.1",
     "element-plus": "^2.2.12",
     "file-saver": "^2.0.5",
     "jsts": "^2.11.0",
@@ -25,7 +24,6 @@
     "ol": "^9.1.0",
     "ol-ext": "^4.0.10",
     "proj4": "^2.9.0",
-    "vite-plugin-cesium": "^1.2.22",
     "vue": "^3.2.25",
     "vue-router": "^4.0.16"
   },

@@ -94,11 +94,6 @@ const allMenu = [{
     showRoute: '/district-show',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 }, {
-    title: 'HelloCesium',
-    imgSrc: getAssetsFile('menu_hello_cesium.gif'),
-    showRoute: '/hello-cesium',
-    desc: 'Cesium基础功能'
-}, {
     title: 'HelloLeaflet',
     imgSrc: getAssetsFile('map1.png'),
     showRoute: '/hello-leaflet',

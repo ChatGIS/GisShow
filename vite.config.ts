@@ -1,3 +1,11 @@
+/*
+ * @Author: Dreamice dreamice13@foxmail.com
+ * @Date: 2023-04-27 15:49:19
+ * @LastEditors: Dreamice dreamice13@foxmail.com
+ * @LastEditTime: 2024-02-13 22:02:34
+ * @FilePath: \GisShow\vite.config.ts
+ * @Description: 
+ */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -5,7 +13,6 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import {resolve} from 'path'
 import eslintPlugin from 'vite-plugin-eslint'
-import cesium from 'vite-plugin-cesium'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,8 +26,7 @@ export default defineConfig({
         }),
         eslintPlugin({
             include: ['src/**/*.js', 'src/**/*.vue', 'src/**/*.ts', 'src/*.js', 'src/*.vue', 'src/*.ts']
-        }),
-        cesium()
+        })
     ],
     resolve: {
         alias: {

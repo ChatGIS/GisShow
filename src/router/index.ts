@@ -53,13 +53,6 @@ const routes:Array<RouteRecordRaw> = [
             keepAlive: false
         }
     },{
-        name: 'HelloCesium',
-        path: '/hello-cesium',
-        component: () => import('@/views/cesium/HelloCesium.vue'),
-        meta: {
-            keepAlive: false
-        }
-    },{
         name: 'MapRectification',
         path: '/map-rectification',
         component: () => import('@/views/openlayers/MapRectification.vue'),
