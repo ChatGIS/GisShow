@@ -74,6 +74,13 @@ const routes:Array<RouteRecordRaw> = [
             keepAlive: false
         }
     },{
+        name: 'SwipeVertical',
+        path: '/swipe-vertical',
+        component: () => import('@/views/openlayers/SwipeVertical.vue'),
+        meta: {
+            keepAlive: false
+        }
+    },{
         name: 'MapOnline',
         path: '/map-online',
         component: () => import('@/views/openlayers/MapOnline.vue'),

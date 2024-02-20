@@ -64,6 +64,11 @@ const allMenu = [{
     showRoute: '/map-swipe',
     desc: '基于canvas实现地图卷帘效果'
 }, {
+    title: '地图卷帘(上下)',
+    imgSrc: getAssetsFile('swipe_vertical.png'),
+    showRoute: '/swipe-vertical',
+    desc: '上下地图对比地铁建设情况'
+}, {
     title: '底图换色',
     imgSrc: getAssetsFile('menu_map_color.gif'),
     showRoute: '/map-color',
