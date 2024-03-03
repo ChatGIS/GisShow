@@ -185,6 +185,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'CalcCenter',
+        path: '/calc-center',
+        component: () => import('@/views/openlayers/CalcCenter.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 

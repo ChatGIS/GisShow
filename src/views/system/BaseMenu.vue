@@ -118,6 +118,11 @@ const allMenu = [{
     imgSrc: getAssetsFile('floor_bar.png'),
     showRoute: '/indoor-map',
     desc: '楼层选择控件'
+}, {
+    title: '计算中心点',
+    imgSrc: getAssetsFile('floor_bar.png'),
+    showRoute: '/calc-center',
+    desc: '计算中心点'
 }]
 
 // 计算属性，拆为二维数组
