@@ -192,6 +192,13 @@ const routes:Array<RouteRecordRaw> = [
         meta: {
             keepAlive: false
         }
+    },{
+        name: 'EventClick',
+        path: '/event-click',
+        component: () => import('@/views/openlayers/EventClick.vue'),
+        meta: {
+            keepAlive: false
+        }
     }
 ]
 
