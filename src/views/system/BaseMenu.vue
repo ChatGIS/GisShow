@@ -96,7 +96,7 @@ const allMenu = [{
 }, {
     title: '行政区划',
     imgSrc: getAssetsFile('menu_data_type.gif'),
-    showRoute: '/district-show',
+    showRoute: '/area-show',
     desc: '通过编辑生成各类GIS数据类型，提供编辑、下载功能'
 }, {
     title: 'HelloLeaflet',

@@ -144,9 +144,9 @@ const routes:Array<RouteRecordRaw> = [
             keepAlive: false
         }
     },{
-        name: 'DistrictShow',
-        path: '/district-show',
-        component: () => import('@/views/openlayers/DistrictShow.vue'),
+        name: 'AreaShow',
+        path: '/area-show',
+        component: () => import('@/views/openlayers/AreaShow.vue'),
         meta: {
             keepAlive: false
         }

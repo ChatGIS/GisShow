@@ -6126,5 +6126,5 @@ src/assets/private/private.json
 src/assets/gis_employee_in.json
 src/assets/gis_employee_out.json
 src/assets/data/trainRoad1.json
-public/gisdata/railway_bd.geojson
 src/assets/data/railway_bd.geojson
+public/gisdata/*
