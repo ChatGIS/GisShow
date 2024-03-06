@@ -2,7 +2,7 @@
  * @Author: Dreamice dreamice13@foxmail.com
  * @Date: 2024-02-06 10:05:39
  * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-02-06 10:17:53
+ * @LastEditTime: 2024-05-24 14:37:25
  * @FilePath: \GisShow\src\views\openlayers\MapBase.vue
  * @Description: 
 -->
@@ -14,6 +14,8 @@ import { XYZ } from 'ol/source'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import { onMounted, ref } from 'vue'
+import gcjMecator from '@/utils/gcj02ToWgs84.js'
+
 
 // 定义map
 const mapObj = {
@@ -43,6 +45,7 @@ onMounted(() => {
 // 高德瓦片
 const gaodeTileLayer = new TileLayer({
     source: new XYZ({
+        projection: gcjMecator,
         url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
     })
 })
