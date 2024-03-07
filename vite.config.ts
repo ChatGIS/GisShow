@@ -1,10 +1,6 @@
 /*
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2023-04-27 15:49:19
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-02-13 22:02:34
- * @FilePath: \GisShow\vite.config.ts
- * @Description: 
+ * @Author: ChatGIS
+ * @Description: 配置信息
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -14,6 +10,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import {resolve} from 'path'
 import eslintPlugin from 'vite-plugin-eslint'
 
+const pjoneServer = 'http://127.0.0.1:13041/'
 // https://vitejs.dev/config/
 export default defineConfig({
     base: '/gisshow/',
@@ -35,6 +32,11 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '/pjone-server': {
+                target: pjoneServer,
+                changeOrigin: true,
+                // rewrite: (path) => path.replace(/^\/pjone-server/, '')
+            },
             '/gaodetile': { // 请求路径关键字
                 target: 'http://webst01.is.autonavi.com/', // 对应自己的接口
                 changeOrigin: true, // 是否允许跨域,在本地会创建一个虚拟服务端，然后发送请求的数据，
