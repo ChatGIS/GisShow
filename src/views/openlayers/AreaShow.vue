@@ -2,7 +2,7 @@
  * @Author: Dreamice dreamice13@foxmail.com
  * @Date: 2024-02-06 10:05:39
  * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-30 11:49:28
+ * @LastEditTime: 2024-05-30 17:13:29
  * @FilePath: \GisShow\src\views\openlayers\AreaShow.vue
  * @Description: 
 -->
@@ -107,12 +107,14 @@ const handleChange = (value) => {
   areaApi.getAreaByLevelCodeType(level, code, type).then((res) => {
     sourceArea.clear()
     res.forEach(element => {
-      const format = new WKT()
-      const feature = format.readFeature(element.geo)
-      delete element.geo
-      feature.setProperties(element)
-      sourceArea.addFeature(feature)
-      map.getView().fit(sourceArea.getExtent())
+      if(element.geo) {
+        const format = new WKT()
+        const feature = format.readFeature(element.geo)
+        delete element.geo
+        feature.setProperties(element)
+        sourceArea.addFeature(feature)
+        map.getView().fit(sourceArea.getExtent())
+      }
     })
   })
 }
