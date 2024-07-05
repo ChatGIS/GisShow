@@ -1,11 +1,12 @@
 /*
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2024-05-15 11:39:38
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-29 17:27:04
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2024-05-15 22:39:38
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 10:55:35
  * @FilePath: \GisShow\.eslintrc.js
  * @Description: 
  */
+
 // eslint-disable-next-line no-undef
 
 module.exports = {

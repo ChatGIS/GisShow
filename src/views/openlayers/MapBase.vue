@@ -1,10 +1,10 @@
 <!--
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2024-02-06 10:05:39
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-24 14:37:25
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2023-07-18 22:11:00
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 22:33:32
  * @FilePath: \GisShow\src\views\openlayers\MapBase.vue
- * @Description: 
+ * @Description: 基础地图
 -->
 <script setup>
 import 'ol/ol.css'
@@ -19,43 +19,43 @@ import gcjMecator from '@/utils/gcj02ToWgs84.js'
 
 // 定义map
 const mapObj = {
-    center: [117.024, 36.676],
-    zoom: 15
+  center: [117.024, 36.676],
+  zoom: 15
 }
 let zoom = ref(0)
 
 onMounted(() => {
-    const map = new Map({
-        layers: [gaodeTileLayer],
-        target: 'map',
-        view: new View({
-            center: mapObj.center,
-            zoom: mapObj.zoom,
-            projection: 'EPSG:4326',
-        })
+  const map = new Map({
+    layers: [gaodeTileLayer],
+    target: 'map',
+    view: new View({
+      center: mapObj.center,
+      zoom: mapObj.zoom,
+      projection: 'EPSG:4326',
     })
-    // 添加鼠标位置
-    map.addControl(controlMousePosition)
-    // 获取地图层级
-    map.on('moveend', () => {
-        zoom.value = Math.round(map.getView().getZoom())
-    })
+  })
+  // 添加鼠标位置
+  map.addControl(controlMousePosition)
+  // 获取地图层级
+  map.on('moveend', () => {
+    zoom.value = Math.round(map.getView().getZoom())
+  })
 })
 
 // 高德瓦片
 const gaodeTileLayer = new TileLayer({
-    source: new XYZ({
-        projection: gcjMecator,
-        url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
-    })
+  source: new XYZ({
+    projection: gcjMecator,
+    url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+  })
 })
 
 // 鼠标拾取位置坐标控件
 const controlMousePosition = new MousePosition({
-    coordinateFormat: createStringXY(6),
-    projection: 'EPSG:4326',
-    className: 'custom-mouse-position',
-    target: document.getElementById('mouse-position')
+  coordinateFormat: createStringXY(6),
+  projection: 'EPSG:4326',
+  className: 'custom-mouse-position',
+  target: document.getElementById('mouse-position')
 })
 </script>
 

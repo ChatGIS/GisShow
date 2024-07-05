@@ -1,11 +1,12 @@
 <!--
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2024-05-15 11:40:19
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-03-09 23:01:56
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2024-05-15 22:40:19
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 22:47:34
  * @FilePath: \GisShow\src\App.vue
  * @Description: 
 -->
+
 <script setup lang="ts"></script>
 
 <template>

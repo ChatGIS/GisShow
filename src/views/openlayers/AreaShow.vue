@@ -1,11 +1,12 @@
 <!--
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2024-02-06 10:05:39
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-30 17:13:29
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2024-07-18 22:24:55
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 22:51:04
  * @FilePath: \GisShow\src\views\openlayers\AreaShow.vue
  * @Description: 
 -->
+
 <script setup>
 import 'ol/ol.css'
 import { Map, View } from 'ol'

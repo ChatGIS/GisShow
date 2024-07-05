@@ -1,11 +1,12 @@
 /*
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2022-10-23 17:44:09
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-29 17:42:00
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2024-05-15 22:40:22
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 10:55:52
  * @FilePath: \GisShow\src\main.ts
  * @Description: 
  */
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

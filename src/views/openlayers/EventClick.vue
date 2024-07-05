@@ -1,8 +1,8 @@
 <!--
- * @Author: Dreamice dreamice13@foxmail.com
- * @Date: 2024-02-06 10:05:39
- * @LastEditors: Dreamice dreamice13@foxmail.com
- * @LastEditTime: 2024-05-20 14:54:59
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2024-05-20 22:45:10
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-18 22:52:46
  * @FilePath: \GisShow\src\views\openlayers\EventClick.vue
  * @Description: 
 -->
@@ -18,53 +18,53 @@ import { LineString } from 'ol/geom'
 
 // 定义map
 const mapObj = {
-    center: [117.024, 36.676],
-    zoom: 15
+  center: [117.024, 36.676],
+  zoom: 15
 }
 let zoom = ref(0)
 
 const sourceDraw = new VectorSource({
-    features: [new Feature({
-        geometry: new LineString([[117.005493,37.455933],[116.410858,36.873657],[118.050568,37.041199],[116.104614,36.3573]])
-    })]
+  features: [new Feature({
+    geometry: new LineString([[117.005493,37.455933],[116.410858,36.873657],[118.050568,37.041199],[116.104614,36.3573]])
+  })]
 })
 const vectorDraw = new VectorLayer({
-    source: sourceDraw,
+  source: sourceDraw,
 })
 onMounted(() => {
-    const map = new Map({
-        layers: [gaodeTileLayer, vectorDraw],
-        target: 'map',
-        view: new View({
-            center: mapObj.center,
-            zoom: mapObj.zoom,
-            projection: 'EPSG:4326',
-        })
+  const map = new Map({
+    layers: [gaodeTileLayer, vectorDraw],
+    target: 'map',
+    view: new View({
+      center: mapObj.center,
+      zoom: mapObj.zoom,
+      projection: 'EPSG:4326',
     })
-    // 添加鼠标位置
-    map.addControl(controlMousePosition)
-    // 获取地图层级
-    map.on('moveend', () => {
-        zoom.value = Math.round(map.getView().getZoom())
-    })
-    vectorDraw.on('singleclick', e => {
-        console.log(e, 'eeeeeeeeeeeeeeeeeeeee')
-    })
+  })
+  // 添加鼠标位置
+  map.addControl(controlMousePosition)
+  // 获取地图层级
+  map.on('moveend', () => {
+    zoom.value = Math.round(map.getView().getZoom())
+  })
+  vectorDraw.on('singleclick', e => {
+    console.log(e, 'eeeeeeeeeeeeeeeeeeeee')
+  })
 })
 
 // 高德瓦片
 const gaodeTileLayer = new TileLayer({
-    source: new XYZ({
-        url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
-    })
+  source: new XYZ({
+    url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+  })
 })
 
 // 鼠标拾取位置坐标控件
 const controlMousePosition = new MousePosition({
-    coordinateFormat: createStringXY(6),
-    projection: 'EPSG:4326',
-    className: 'custom-mouse-position',
-    target: document.getElementById('mouse-position')
+  coordinateFormat: createStringXY(6),
+  projection: 'EPSG:4326',
+  className: 'custom-mouse-position',
+  target: document.getElementById('mouse-position')
 })
 </script>
 
