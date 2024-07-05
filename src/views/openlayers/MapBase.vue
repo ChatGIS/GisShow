@@ -2,7 +2,7 @@
  * @Author: ChatGIS ChatGIS@outlook.com
  * @Date: 2023-07-18 22:11:00
  * @LastEditors: ChatGIS ChatGIS@outlook.com
- * @LastEditTime: 2024-07-18 22:33:32
+ * @LastEditTime: 2024-07-18 11:08:40
  * @FilePath: \GisShow\src\views\openlayers\MapBase.vue
  * @Description: 基础地图
 -->
@@ -18,6 +18,7 @@ import gcjMecator from '@/utils/gcj02ToWgs84.js'
 
 
 // 定义map
+let map = new Map({})
 const mapObj = {
   center: [117.024, 36.676],
   zoom: 15
@@ -25,7 +26,7 @@ const mapObj = {
 let zoom = ref(0)
 
 onMounted(() => {
-  const map = new Map({
+  map = new Map({
     layers: [gaodeTileLayer],
     target: 'map',
     view: new View({
