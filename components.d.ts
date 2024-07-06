@@ -42,6 +42,7 @@ declare module '@vue/runtime-core' {
     FloorBar: typeof import('./src/components/FloorBar.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MapMenu: typeof import('./src/components/mapMenu/index.vue')['default']
+    PopupList: typeof import('./src/components/openlayers/PopupList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     WeatherTimeLine: typeof import('./src/components/WeatherTimeLine.vue')['default']

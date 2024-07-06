@@ -24,6 +24,11 @@ const allMenu = [{
   showRoute: '/area-show',
   desc: '行政区划数据：省、市、区县'
 }, {
+  title: '弹框展示',
+  imgSrc: getAssetsFile('popup_show.png'),
+  showRoute: '/popup-show',
+  desc: '弹框展示多个要素列表'
+}, {
   title: 'GIS数据类型',
   imgSrc: getAssetsFile('menu_data_type.gif'),
   showRoute: '/data-type',

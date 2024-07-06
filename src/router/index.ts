@@ -199,6 +199,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'PopupShow',
+    path: '/popup-show',
+    component: () => import('@/views/openlayers/PopupShow.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 
