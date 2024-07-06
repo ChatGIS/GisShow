@@ -13,7 +13,7 @@
             <div>
                 <div id="popup-title" class="popup-title">
                     <div class="title">景点列表</div>
-                    <i class="fa fa-close" @click="closePopup()">×</i>
+                    <i class="popup-close" @click="closePopup()">×</i>
                 </div>
                 <div class="popup-content" v-for="(item, index) in featureInfos" :key="index">
                     <div v-if="index < 8">
@@ -30,9 +30,8 @@
 import Overlay from 'ol/Overlay'
 import { onMounted } from 'vue'
 
-let parentMap = null
 let overlay = null
-const props = defineProps({
+defineProps({
   featureInfos: Array
 })
 const emits = defineEmits(['clickInfo', 'closePopup'])
@@ -51,7 +50,6 @@ onMounted(() => {
  * @return {*}
  */
 const createPopup = (coord, map) => {
-  parentMap = map
   overlay.setPosition(coord)
   map.addOverlay(overlay)
 }
@@ -114,7 +112,7 @@ defineExpose({
 .popup-title .title {
     display: inline-block;
 }
-.popup-container .fa-close {
+.popup-container .popup-close {
     color: rgb(24, 228, 235);
     font-weight: bold;
     font-size: 20px;
