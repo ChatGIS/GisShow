@@ -2,26 +2,22 @@
  * @Author: ChatGIS ChatGIS@outlook.com
  * @Date: 2024-07-06 22:05:28
  * @LastEditors: ChatGIS ChatGIS@outlook.com
- * @LastEditTime: 2024-07-06 22:42:36
+ * @LastEditTime: 2024-07-07 22:52:26
  * @FilePath: \GisShow\src\components\openlayers\PopupList.vue
  * @Description: 弹框组件
 -->
 
 <template>
-    <div>
-        <div class="popup-container" id="popup-container">
-            <div>
-                <div id="popup-title" class="popup-title">
-                    <div class="title">景点列表</div>
-                    <i class="popup-close" @click="closePopup()">×</i>
-                </div>
-                <div class="popup-content" v-for="(item, index) in featureInfos" :key="index">
-                    <div v-if="index < 8">
-                        <span class="popup-item" @click="clickInfo(item)">{{ item.name }}</span>
-                    </div>
-                    <div v-else> <span class="popup-item-more">......</span></div>
-                </div>
+    <div class="popup-container" id="popup-list">
+        <div id="popup-header" class="popup-header">
+            <div class="popup-title">景点列表</div>
+            <i class="popup-close" @click="closePopup()">×</i>
+        </div>
+        <div class="popup-content" v-for="(item, index) in featureInfos" :key="index">
+            <div v-if="index < 8">
+                <span class="popup-item" @click="clickInfo(item)">{{ item.name }}</span>
             </div>
+            <div v-else> <span class="popup-item-more">......</span></div>
         </div>
     </div>
 </template>
@@ -37,7 +33,7 @@ defineProps({
 const emits = defineEmits(['clickInfo', 'closePopup'])
 onMounted(() => {
   overlay = new Overlay({
-    element: document.getElementById('popup-container'),
+    element: document.getElementById('popup-list'),
     offset: [8, 8],
     className: 'popup-container',
   })
@@ -96,7 +92,7 @@ defineExpose({
 .popup-item:hover {
     cursor: pointer;
 }
-.popup-title {
+.popup-header {
     margin-bottom: 0;
     width: 100%;
     color: rgb(24, 228, 235);
@@ -109,7 +105,7 @@ defineExpose({
     justify-content: space-between;
     vertical-align: middle;
 }
-.popup-title .title {
+.popup-header .popup-title {
     display: inline-block;
 }
 .popup-container .popup-close {
@@ -118,6 +114,9 @@ defineExpose({
     font-size: 20px;
     margin-right: 10px;
     margin-left: 10px;
+}
+.popup-container .popup-close:hover {
+    cursor: pointer;
 }
 .popup-content {
     text-align: left;
