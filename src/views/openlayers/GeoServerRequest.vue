@@ -1,3 +1,11 @@
+<!--
+ * @Author: ChatGIS ChatGIS@outlook.com
+ * @Date: 2023-07-18 22:11:00
+ * @LastEditors: ChatGIS ChatGIS@outlook.com
+ * @LastEditTime: 2024-07-22 16:22:07
+ * @FilePath: \GisShow\src\views\openlayers\GeoServerRequest.vue
+ * @Description: 基础地图
+-->
 <script setup>
 import 'ol/ol.css'
 import { Map, View } from 'ol'
@@ -7,6 +15,7 @@ import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
 import { onMounted, ref } from 'vue'
 import gcjMecator from '@/utils/gcj02ToWgs84.js'
+import { geoserverApi } from '@/api'
 
 
 // 定义map
@@ -33,6 +42,7 @@ onMounted(() => {
   map.on('moveend', () => {
     zoom.value = Math.round(map.getView().getZoom())
   })
+  test()
 })
 
 // 高德瓦片
@@ -50,6 +60,13 @@ const controlMousePosition = new MousePosition({
   className: 'custom-mouse-position',
   target: document.getElementById('mouse-position')
 })
+
+const test = () => {
+  geoserverApi.getFeatures('CMap:v_gis_building_test').then(res => {
+    console.log(res, 'GisShow-07-22 15:35:08测试打印内容m')
+    
+  })
+}
 </script>
 
 <template>

@@ -206,6 +206,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'GeoServerRequest',
+    path: '/geoServer-request',
+    component: () => import('@/views/openlayers/GeoServerRequest.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 

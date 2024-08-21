@@ -29,6 +29,11 @@ const allMenu = [{
   showRoute: '/popup-show',
   desc: '弹框展示多个要素列表'
 }, {
+  title: 'GeoServer请求',
+  imgSrc: getAssetsFile('popup_show.png'),
+  showRoute: '/geoServer-request',
+  desc: 'GeoServer请求'
+}, {
   title: 'GIS数据类型',
   imgSrc: getAssetsFile('menu_data_type.gif'),
   showRoute: '/data-type',
