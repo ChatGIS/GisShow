@@ -13,28 +13,28 @@ import { saveAs } from 'file-saver'
 const decimalCoor = ref(6)
 let map = new Map({})
 const gaodeTileLayer = new TileLayer({
-    source: new XYZ({
-        url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
-    })
+  source: new XYZ({
+    url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
+  })
 })
 
 const sourceDraw = new VectorSource()
 const vectorDraw = new VectorLayer({
-    source: sourceDraw,
+  source: sourceDraw,
 })
 
 // 注册周期钩子
 onMounted(() => {
-    map = new Map({
-        layers: [gaodeTileLayer, vectorDraw],
-        target: 'map',
-        view: new View({
-            center: [117, 37],
-            zoom: 10,
-            projection: 'EPSG:4326',
-        })
+  map = new Map({
+    layers: [gaodeTileLayer, vectorDraw],
+    target: 'map',
+    view: new View({
+      center: [117, 37],
+      zoom: 10,
+      projection: 'EPSG:4326',
     })
-    addInteractions()
+  })
+  addInteractions()
 })
 // 是否使用捕捉功能
 let isSnap = ref(false)
@@ -42,20 +42,20 @@ let isSnap = ref(false)
 let isModify = ref(false)
 const selectDrawType = ref('Point')
 const selectDrawOptions = [{
-    value: 'Point',
-    label: '点',
+  value: 'Point',
+  label: '点',
 },
 {
-    value: 'LineString',
-    label: '线',
+  value: 'LineString',
+  label: '线',
 },
 {
-    value: 'Polygon',
-    label: '面',
+  value: 'Polygon',
+  label: '面',
 },
 {
-    value: 'Circle',
-    label: '圆',
+  value: 'Circle',
+  label: '圆',
 }]
 // 抽屉相关参数
 const isShowDrawer = ref(false)
@@ -70,63 +70,63 @@ const modify = new Modify({ source: sourceDraw })
 let draw: Interaction, snap: Interaction
 // 添加交互
 const addInteractions = () => {
-    draw = new Draw({
-        source: sourceDraw,
-        type: selectDrawType.value as Type,
-    })
-    map.addInteraction(draw)
-    // 必须在添加“Modify”和“Draw”交互之后添加Snap交互
-    snapSwitch()
+  draw = new Draw({
+    source: sourceDraw,
+    type: selectDrawType.value as Type,
+  })
+  map.addInteraction(draw)
+  // 必须在添加“Modify”和“Draw”交互之后添加Snap交互
+  snapSwitch()
 }
 // 修改
 const addInteractionModify = () => {
-    if (isModify.value) {
-        map.removeInteraction(draw)
-        map.addInteraction(modify)
-    } else {
-        map.removeInteraction(modify)
-    }
-    isModify.value = !isModify.value
+  if (isModify.value) {
+    map.removeInteraction(draw)
+    map.addInteraction(modify)
+  } else {
+    map.removeInteraction(modify)
+  }
+  isModify.value = !isModify.value
 }
 // 清空绘制图层
-function clearDrawLayer(){
-    sourceDraw.clear()
+function clearDrawLayer() {
+  sourceDraw.clear()
 }
 // 选择框改变事件
 function selectChange() {
-    map.removeInteraction(draw)
-    map.removeInteraction(snap)
-    addInteractions()
+  map.removeInteraction(draw)
+  map.removeInteraction(snap)
+  addInteractions()
 }
 // 捕捉功能开关函数
 const snapSwitch = () => {
-    if (isSnap.value) {
-        snap = new Snap({ source: sourceDraw })
-        map.addInteraction(snap)
-    } else {
-        map.removeInteraction(snap)
-    }
+  if (isSnap.value) {
+    snap = new Snap({ source: sourceDraw })
+    map.addInteraction(snap)
+  } else {
+    map.removeInteraction(snap)
+  }
 }
 // 抽屉开关
 function openDrawe() {
-    isShowDrawer.value = true
-    const featuresDraw = sourceDraw.getFeatures()
-    const geoJsonDraw = new GeoJSON().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
-    const wktDraw = new WKT().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
-    const esriJsonDraw = new EsriJSON().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
-    const kmlDraw = new KML().writeFeatures(featuresDraw, {decimals: decimalCoor.value})
-    geojsonDrawTextarea.value = geoJsonDraw
-    wktDrawTextarea.value = wktDraw
-    esrijsonDrawTextarea.value = esriJsonDraw
-    kmlDrawTextarea.value = kmlDraw
+  isShowDrawer.value = true
+  const featuresDraw = sourceDraw.getFeatures()
+  const geoJsonDraw = new GeoJSON().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
+  const wktDraw = new WKT().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
+  const esriJsonDraw = new EsriJSON().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
+  const kmlDraw = new KML().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
+  geojsonDrawTextarea.value = geoJsonDraw
+  wktDrawTextarea.value = wktDraw
+  esrijsonDrawTextarea.value = esriJsonDraw
+  kmlDrawTextarea.value = kmlDraw
 }
 function closeDrawer() {
-    isShowDrawer.value = false
+  isShowDrawer.value = false
 }
 // 下载数据
 function downloadFile() {
-    var file = new File([geojsonDrawTextarea.value], 'GeoJsonDraw.geojson', {type: 'text/plain;charset=utf-8'})
-    saveAs(file)
+  var file = new File([geojsonDrawTextarea.value], 'GeoJsonDraw.geojson', { type: 'text/plain;charset=utf-8' })
+  saveAs(file)
 }
 </script>
 

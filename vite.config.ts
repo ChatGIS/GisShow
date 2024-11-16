@@ -10,7 +10,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import {resolve} from 'path'
 import eslintPlugin from 'vite-plugin-eslint'
 
-const pjoneServer = 'http://127.0.0.1:13041/'
+const pjoneServer = 'http://127.0.0.1:1304/'
 const geoserver = 'http://127.0.0.1:1302/'
 // https://vitejs.dev/config/
 export default defineConfig({
