@@ -213,6 +213,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'CompTraffic',
+    path: '/comp-traffic',
+    component: () => import('@/views/openlayers/CompTraffic.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 

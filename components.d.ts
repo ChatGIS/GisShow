@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElRadio: typeof import('element-plus/es')['ElRadio']
+    ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
@@ -45,6 +46,7 @@ declare module '@vue/runtime-core' {
     PopupList: typeof import('./src/components/openlayers/PopupList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TrafficNav: typeof import('./src/components/TrafficNav.vue')['default']
     WeatherTimeLine: typeof import('./src/components/WeatherTimeLine.vue')['default']
   }
 }

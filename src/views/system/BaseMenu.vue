@@ -133,6 +133,12 @@ const allMenu = [{
   imgSrc: getAssetsFile('floor_bar.png'),
   showRoute: '/calc-center',
   desc: '计算中心点'
+}, {
+  title: '交通控制组件',
+  imgSrc: getAssetsFile('floor_bar.png'),
+  showRoute: '/comp-traffic',
+  desc: '交通控制组件',
+  tags: ['组件', '交通']
 }]
 
 // 计算属性，拆为二维数组
