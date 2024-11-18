@@ -220,6 +220,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'CompLegend',
+    path: '/comp-legend',
+    component: () => import('@/views/openlayers/CompLegend.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 

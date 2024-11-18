@@ -42,6 +42,8 @@ declare module '@vue/runtime-core' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     FloorBar: typeof import('./src/components/FloorBar.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Legend: typeof import('./src/components/Legend.vue')['default']
+    LegendShow: typeof import('./src/components/LegendShow.vue')['default']
     MapMenu: typeof import('./src/components/mapMenu/index.vue')['default']
     PopupList: typeof import('./src/components/openlayers/PopupList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

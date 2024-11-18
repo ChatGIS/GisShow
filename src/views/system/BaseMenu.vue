@@ -139,6 +139,12 @@ const allMenu = [{
   showRoute: '/comp-traffic',
   desc: '交通控制组件',
   tags: ['组件', '交通']
+}, {
+  title: '图例组件',
+  imgSrc: getAssetsFile('floor_bar.png'),
+  showRoute: '/comp-legend',
+  desc: '图例组件',
+  tags: ['组件', '图例']
 }]
 
 // 计算属性，拆为二维数组
