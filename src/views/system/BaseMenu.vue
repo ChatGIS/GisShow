@@ -145,6 +145,12 @@ const allMenu = [{
   showRoute: '/comp-legend',
   desc: '图例组件',
   tags: ['组件', '图例']
+}, {
+  title: '数据过滤组件',
+  imgSrc: getAssetsFile('floor_bar.png'),
+  showRoute: '/comp-data-filter',
+  desc: '图例组件',
+  tags: ['组件', '数据过滤']
 }]
 
 // 计算属性，拆为二维数组

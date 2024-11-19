@@ -227,6 +227,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'CompDataFilter',
+    path: '/comp-data-filter',
+    component: () => import('@/views/openlayers/CompDataFilter.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 
