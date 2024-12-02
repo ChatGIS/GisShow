@@ -234,6 +234,13 @@ const routes:Array<RouteRecordRaw> = [
     meta: {
       keepAlive: false
     }
+  },{
+    name: 'BeiDouGridLocationCode',
+    path: '/beidou-grid-location-code',
+    component: () => import('@/views/openlayers/BeiDouGridLocationCode.vue'),
+    meta: {
+      keepAlive: false
+    }
   }
 ]
 

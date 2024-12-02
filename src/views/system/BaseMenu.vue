@@ -151,6 +151,12 @@ const allMenu = [{
   showRoute: '/comp-data-filter',
   desc: '图例组件',
   tags: ['组件', '数据过滤']
+}, {
+  title: '北斗网格位置码',
+  imgSrc: getAssetsFile('beidou-grid-location-code.png'),
+  showRoute: '/beidou-grid-location-code',
+  desc: '北斗网格位置码',
+  tags: ['北斗', '网格码']
 }]
 
 // 计算属性，拆为二维数组
