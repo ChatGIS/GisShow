@@ -157,6 +157,12 @@ const allMenu = [{
   showRoute: '/beidou-grid-location-code',
   desc: '北斗网格位置码',
   tags: ['北斗', '网格码']
+}, {
+  title: '北斗网格位置码分析',
+  imgSrc: getAssetsFile('beidou-grid-location-code.png'),
+  showRoute: '/beidou-grid-location-code-ana',
+  desc: '北斗网格位置码分析',
+  tags: ['北斗', '网格码']
 }]
 
 // 计算属性，拆为二维数组
