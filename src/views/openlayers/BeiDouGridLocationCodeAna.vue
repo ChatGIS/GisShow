@@ -28,6 +28,36 @@
     <el-button type="primary" round @click="handleAnalyse">分析</el-button>
     <span>分析结果：</span><span>{{ result }}</span>
   </el-card>
+  <el-card id="tool-card1">
+    <el-button type="primary" round @click="handleGetFourGridCode">获取四向网格</el-button>
+    <el-button type="primary" round @click="handleGetFourGridCodeAuto">自动获取四向网格</el-button>
+    <el-form :model="form" label-width="auto" style="max-width: 600px">
+      <el-form-item label="当前上">
+        <el-input v-model="form.nowTop" />
+      </el-form-item>
+      <el-form-item label="当前下">
+        <el-input v-model="form.nowBottom" />
+      </el-form-item>
+      <el-form-item label="当前左">
+        <el-input v-model="form.nowLeft" />
+      </el-form-item>
+      <el-form-item label="当前右">
+        <el-input v-model="form.nowRight" />
+      </el-form-item>
+      <el-form-item label="相交上(y1)">
+        <el-input v-model="form.top" />
+      </el-form-item>
+      <el-form-item label="相交下(y0)">
+        <el-input v-model="form.bottom" />
+      </el-form-item>
+      <el-form-item label="相交左(x0)">
+        <el-input v-model="form.left" />
+      </el-form-item>
+      <el-form-item label="相交右(x1)">
+        <el-input v-model="form.right" />
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>
 <script setup>
 import 'ol/ol.css'
@@ -37,12 +67,13 @@ import { XYZ, Vector as VectorSource } from 'ol/source'
 import { Style, Fill, Text, Stroke, Circle } from 'ol/style'
 import { MousePosition } from 'ol/control'
 import { createStringXY } from 'ol/coordinate'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import gcjMecator from '@/utils/gcj02ToWgs84.js'
 import EntityCode2d from '@/utils/beidou/EntityCode2d'
 import { Codec2D, Codec3D } from '@/utils/beidou/index'
 import { WKT } from 'ol/format'
 
+let interval = null
 const typeAna = ref('1')
 const result = ref('')
 const textarea1 = ref('')
@@ -51,6 +82,16 @@ const textarea3 = ref('')
 const textarea4 = ref('')
 const numLevel = ref(4)
 const numGrids = ref(0)
+const form = reactive({
+  nowTop: '@@',
+  nowBottom: '@@',
+  nowLeft: '@@',
+  nowRight: '@@',
+  top: '##',
+  bottom: '##',
+  left: '##',
+  right: '##',
+})
 const options = [
   {
     value: '1',
@@ -154,10 +195,43 @@ const layerGrid04 = new VectorLayer({
     })
   }
 })
-
+const sourceGrid05 = new VectorSource({})
+const layerGrid05 = new VectorLayer({
+  source: sourceGrid05,
+  style: (feature) => {
+    return new Style({
+      fill: new Fill({
+        color: 'rgba(0, 0, 255, 0.3)'
+      }),
+      stroke: new Stroke({
+        color: 'rgba(0, 0, 255, 0.9)'
+      }),
+      text: new Text({
+        text: feature.get('name')
+      })
+    })
+  }
+})
+const sourceGrid06 = new VectorSource({})
+const layerGrid06 = new VectorLayer({
+  source: sourceGrid06,
+  style: (feature) => {
+    return new Style({
+      fill: new Fill({
+        color: 'rgba(255, 0, 0, 0.3)'
+      }),
+      stroke: new Stroke({
+        color: 'rgba(255, 0, 0, 0.9)'
+      }),
+      text: new Text({
+        text: feature.get('name')
+      })
+    })
+  }
+})
 onMounted(() => {
   map = new Map({
-    layers: [gaodeTileLayer, layerGrid02, layerGrid04, layerGrid01, layerGrid03],
+    layers: [gaodeTileLayer, layerGrid02, layerGrid04, layerGrid01, layerGrid03, layerGrid05, layerGrid06],
     target: 'map',
     view: new View({
       center: mapObj.center,
@@ -214,6 +288,11 @@ const handleInput01 = () => {
     sourceGrid02.clear()
     sourceGrid02.addFeature(grid)
 
+    form.nowTop = textarea2.value
+    form.nowBottom = textarea2.value
+    form.nowLeft = textarea2.value
+    form.nowRight = textarea2.value
+    sourceGrid06.clear()
   } else if(typeAna.value == '2') {
     // todo
   }
@@ -279,6 +358,10 @@ const extentToWkt = (extent) => {
 const handleChangeLevel = () => {
   handleInput01()
   handleInput03()
+  form.top='##'
+  form.bottom='##'
+  form.left='##'
+  form.right='##'
 }
 const handleAnalyse = () => {
   if(typeAna.value == '1') {
@@ -297,7 +380,7 @@ const handleAnalyse = () => {
     }
   } else if(typeAna.value == '3') {
     // todo
-    if(handleRelPointPolygon()) {
+    if(handleRelPointPolygon(textarea2.value, form.left, form.right, form.bottom, form.top)) {
       result.value = '相交'
     } else {
       result.value = '未相交'
@@ -311,20 +394,129 @@ const handleChangeType = (val) => {
   textarea3.value = ''
   textarea4.value = ''
 }
-const handleRelPointPolygon = () => {
-  // textarea1.value = textarea2.value
-  // handleInput01()
+const handleRelPointPolygon = (p1, x0, x1, y0, y1) => {
   let res = false
-  if(textarea4.value.indexOf(',') == -1) {
-    if(textarea4.value == textarea2.value) {
-      res = true
-    } else {
-      res = false
-    }
-  } else {
-    //todo
+  const rx0 = getRelation(p1, x0, 1)
+  const rx1 = getRelation(p1, x1, 2)
+  const ry0 = getRelation(p1, y0, 3)
+  const ry1 = getRelation(p1, y1, 4)
+  console.log(rx0, rx1, ry0, ry1, 'GisShow-12-10 16:58:13测试打印内容m')
+  
+  if(rx0 & rx1 && ry0 & ry1) {
+    res = true
   }
   return res
+}
+const getSameGridLevel = (code1, code2) => {
+  let length = 0
+  for (let i = 0; i < Math.min(code1.length, code2.length); i++) {
+    if (code1[i] === code2[i]) {
+      length++
+    } else {
+      break
+    }
+  }
+  return length
+}
+const getRelation = (code1, code2, direction) => {
+  let length = getSameGridLevel(code1, code2)
+  if(length == 0) {
+    return false
+  } else if (length == 1 || length == 2) {
+    const mayuan23 = code1.substr(1, 2)
+    if(parseInt(mayuan23) <= 30) {
+      // 西半球
+      if(direction == 1) {
+        return parseInt(code1.substr(1, 2)) <= parseInt(code2.substr(1, 2))
+      } else if (direction == 2) {
+        return parseInt(code1.substr(1, 2)) >= parseInt(code2.substr(1, 2))
+      }
+    } else {
+      // 东半球
+      if(direction == 1) {
+        return parseInt(code1.substr(1, 2)) >= parseInt(code2.substr(1, 2))
+      } else if (direction == 2) {
+        return parseInt(code1.substr(1, 2)) <= parseInt(code2.substr(1, 2))
+      }
+    }
+  } else {
+    if(direction == 1 || direction == 3) {
+      return code1[length].charCodeAt(0) >= code2[length].charCodeAt(0)
+    } else {
+      return code1[length].charCodeAt(0) <= code2[length].charCodeAt(0)
+    }     
+  }
+}
+const handleGetFourGridCode = () => {
+  form.nowTop = Codec2D.getRelativeGrid(form.nowTop, 0, 1)
+  form.nowBottom = Codec2D.getRelativeGrid(form.nowBottom, 0, -1)
+  form.nowLeft = Codec2D.getRelativeGrid(form.nowLeft, -1, 0)
+  form.nowRight = Codec2D.getRelativeGrid(form.nowRight, 1, 0)
+  const nowFourGrid = [
+    form.nowTop,
+    form.nowBottom,
+    form.nowLeft,
+    form.nowRight
+  ]
+  const wktFormat = new WKT()
+  sourceGrid05.clear()
+  for(let i = 0; i < nowFourGrid.length; i++) {
+    let extent = Codec2D.codeToExtent(nowFourGrid[i])
+    let polywkt = extentToWkt(extent)
+    const grid = wktFormat.readFeature(polywkt)
+    grid.setProperties({
+      name: nowFourGrid[i]
+    })
+    sourceGrid05.addFeature(grid)
+  }
+  if(form.top == '##' && textarea4.value.indexOf(form.nowTop) > -1) {
+    form.top = form.nowTop
+    let extent = Codec2D.codeToExtent(form.top)
+    let polywkt = extentToWkt(extent)
+    const grid = wktFormat.readFeature(polywkt)
+    grid.setProperties({
+      name: form.top
+    })
+    sourceGrid06.addFeature(grid)
+  }
+  if(form.bottom == '##' && textarea4.value.indexOf(form.nowBottom) > -1) {
+    form.bottom = form.nowBottom
+    let extent = Codec2D.codeToExtent(form.bottom)
+    let polywkt = extentToWkt(extent)
+    const grid = wktFormat.readFeature(polywkt)
+    grid.setProperties({
+      name: form.bottom
+    })
+    sourceGrid06.addFeature(grid)
+  }
+  if(form.left == '##' && textarea4.value.indexOf(form.nowLeft) > -1) {
+    form.left = form.nowLeft
+    let extent = Codec2D.codeToExtent(form.left)
+    let polywkt = extentToWkt(extent)
+    const grid = wktFormat.readFeature(polywkt)
+    grid.setProperties({
+      name: form.left
+    })
+    sourceGrid06.addFeature(grid)
+  }
+  if(form.right == '##' && textarea4.value.indexOf(form.nowRight) > -1) {
+    form.right = form.nowRight
+    let extent = Codec2D.codeToExtent(form.right)
+    let polywkt = extentToWkt(extent)
+    const grid = wktFormat.readFeature(polywkt)
+    grid.setProperties({
+      name: form.right
+    })
+    sourceGrid06.addFeature(grid)
+  }
+  if(form.top!= '##' && form.bottom!= '##' && form.left!= '##' && form.right!= '##') {
+    clearInterval(interval)
+  }
+}
+const handleGetFourGridCodeAuto = () => {
+  interval = setInterval(() => {
+    handleGetFourGridCode()
+  }, 100)
 }
 </script>
 <style scoped>
@@ -366,6 +558,13 @@ const handleRelPointPolygon = () => {
 #tool-card {
   position: absolute;
   top: 10px;
+  left: 10px;
+  z-index: 1;
+  width: 500px;
+}
+#tool-card1 {
+  position: absolute;
+  top: 400px;
   left: 10px;
   z-index: 1;
   width: 500px;
