@@ -9,6 +9,7 @@ import { GeoJSON, WKT, EsriJSON, KML } from 'ol/format'
 import { Type } from 'ol/geom/Geometry'
 import { onMounted, ref } from 'vue'
 import { saveAs } from 'file-saver'
+import { wkt2CoorArrayStr } from '@/utils/data-type.js'
 
 const decimalCoor = ref(6)
 let map = new Map({})
@@ -60,9 +61,10 @@ const selectDrawOptions = [{
 // 抽屉相关参数
 const isShowDrawer = ref(false)
 const directionDrawer = ref('rtl')
-const activeNameCollapse = ref('1')
+const activeNameCollapse = ref('2')
 const geojsonDrawTextarea = ref('')
 const wktDrawTextarea = ref('')
+const coorArrayTextarea = ref('')
 const esrijsonDrawTextarea = ref('')
 const kmlDrawTextarea = ref('')
 
@@ -117,6 +119,7 @@ function openDrawe() {
   const kmlDraw = new KML().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
   geojsonDrawTextarea.value = geoJsonDraw
   wktDrawTextarea.value = wktDraw
+  coorArrayTextarea.value = wkt2CoorArrayStr(wktDrawTextarea.value)
   esrijsonDrawTextarea.value = esriJsonDraw
   kmlDrawTextarea.value = kmlDraw
 }
@@ -156,10 +159,13 @@ function downloadFile() {
                 <el-collapse-item title="WKT" name="2">
                     <el-input v-model="wktDrawTextarea" :autosize="{ minRows: 8, maxRows: 8 }" type="textarea" />
                 </el-collapse-item>
-                <el-collapse-item title="EsriJson" name="3">
+                <el-collapse-item title="坐标数组(可用于Turf)" name="3">
+                    <el-input v-model="coorArrayTextarea" :autosize="{ minRows: 8, maxRows: 8 }" type="textarea" />
+                </el-collapse-item>
+                <el-collapse-item title="EsriJson" name="4">
                     <el-input v-model="esrijsonDrawTextarea" :autosize="{ minRows: 8, maxRows: 16 }" type="textarea" />
                 </el-collapse-item>
-                <el-collapse-item title="GML" name="4">
+                <el-collapse-item title="GML" name="5">
                     <el-input v-model="kmlDrawTextarea" :autosize="{ minRows: 8, maxRows: 16 }" type="textarea" />
                 </el-collapse-item>
             </el-collapse>
