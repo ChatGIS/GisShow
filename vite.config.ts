@@ -32,6 +32,7 @@ export default defineConfig({
     }
   },
   server: {
+    port: 1303,
     proxy: {
       '/pjone-server': {
         target: pjoneServer,
