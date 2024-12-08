@@ -10,11 +10,13 @@ import { Type } from 'ol/geom/Geometry'
 import { onMounted, ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { wkt2CoorArrayStr } from '@/utils/data-type.js'
+import gcjMecator from '@/utils/gcj02ToWgs84.js'
 
 const decimalCoor = ref(6)
 let map = new Map({})
 const gaodeTileLayer = new TileLayer({
   source: new XYZ({
+    projection: gcjMecator,
     url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}'
   })
 })
