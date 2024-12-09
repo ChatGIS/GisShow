@@ -9,8 +9,8 @@ import { GeoJSON, WKT, EsriJSON, KML } from 'ol/format'
 import { Type } from 'ol/geom/Geometry'
 import { onMounted, ref } from 'vue'
 import { saveAs } from 'file-saver'
-import { wkt2CoorArrayStr } from '@/utils/data-type.js'
 import gcjMecator from '@/utils/gcj02ToWgs84.js'
+import * as huanyu from 'huanyu'
 
 const decimalCoor = ref(6)
 let map = new Map({})
@@ -121,7 +121,7 @@ function openDrawe() {
   const kmlDraw = new KML().writeFeatures(featuresDraw, { decimals: decimalCoor.value })
   geojsonDrawTextarea.value = geoJsonDraw
   wktDrawTextarea.value = wktDraw
-  coorArrayTextarea.value = wkt2CoorArrayStr(wktDrawTextarea.value)
+  coorArrayTextarea.value = huanyu.wkt2CoorArrayStr(wktDrawTextarea.value) || ''
   esrijsonDrawTextarea.value = esriJsonDraw
   kmlDrawTextarea.value = kmlDraw
 }

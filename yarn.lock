@@ -3505,10 +3505,10 @@ html2canvas@^1.0.0-rc.5:
     css-line-break "^2.1.0"
     text-segmentation "^1.0.3"
 
-huanyu@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/huanyu/-/huanyu-1.0.0.tgz"
-  integrity sha512-6KxFxgAJRJUEn7JM3JiiQvrsHCBXz5bfEQz6dd8Rkp2C4pkEj9QcEbh16LDYvNZWrcAXMVYE6cgxqEnnmrFKQA==
+huanyu@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/huanyu/-/huanyu-1.1.1.tgz"
+  integrity sha512-nKebn3Ur/9N6Yl7Hbxk0HCSm5JW4FV1idk8kv6F42hs9USJuz9rN50kFD3WBN8jT3tHUqKgL8qH6j+eYfqyUww==
 
 iconv-lite@0.4:
   version "0.4.24"

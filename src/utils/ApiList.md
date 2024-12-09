@@ -1,2 +1,0 @@
-- wkt2CoorArray: wkt转坐标数组,支持点、线、面(暂不支持多点多线多面)
-- wkt2CoorArrayStr: wkt转坐标数组字符串,支持点、线、面(暂不支持多点多线多面)

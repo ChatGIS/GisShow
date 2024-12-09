@@ -18,7 +18,7 @@
     "axios": "^1.2.1",
     "element-plus": "^2.2.12",
     "file-saver": "^2.0.5",
-    "huanyu": "^1.0.0",
+    "huanyu": "^1.1.1",
     "jsts": "^2.11.0",
     "leaflet": "^1.9.3",
     "npc": "^0.0.1",
